@@ -1,0 +1,71 @@
+// class ApiUrls {
+//   static const String baseUrl = 'https://newline.dev/currency/api/v1';
+
+//   // auth
+//   // static const String login = '$baseUrl/auth/login';
+//   // get data
+//   static const String getData = '$baseUrl/currencies/list?';
+// }
+import '../Util/constants/constants.dart';
+
+class ApiUrls {
+  static const String baseUrl = 'http://sayyarte.com/';
+
+  // Account
+  static const login = '${baseUrl}api/login';
+  static const String getData = '$baseUrl/users?';
+  static const register = '${baseUrl}api/singup';
+  static const changePassword = '${baseUrl}api/changePassword';
+  static const logout = '${baseUrl}api/logout';
+  static const activate = '${baseUrl}api/activate';
+  // static const login = '${baseUrl}api/login';
+
+// user_car
+  static const cars = '${baseUrl}api/cars';
+  // static const editCars = '${baseUrl}api/cars';
+  static String editCars({required int id}) =>
+      '${baseUrl}api/cars/${id.toString()}';
+  static const addcars = '${baseUrl}api/cars';
+  //
+
+  //profile
+  static String profileShow = '${baseUrl}api/profile_show';
+  static String profileUpdate = '${baseUrl}api/profile_update';
+  static String changeUserPassword = '${baseUrl}api/changeUserPassword';
+
+  //api/companies
+  static String companyPage = '${baseUrl}api/companies';
+  static String showCompany({required id}) =>
+      '${baseUrl}api/company/${id.toString()}';
+
+  //api/orders
+  static String ordersPage = '${baseUrl}api/orders';
+  static String showOrder() => '${baseUrl}api/orders}';
+
+  //api/favs
+  static String favPage = '${baseUrl}api/favorites';
+  static String deleteFav({required id}) =>
+      '${baseUrl}api/favorites/${id.toString()}}';
+  static String showFav({required id}) =>
+      '${baseUrl}api/favorites/${id.toString()}}';
+
+  //api/products
+  static String allProductsPage = '${baseUrl}api/all_products';
+  static String salePoductsPage = '${baseUrl}api/sale_products';
+
+  static String singleProductPage({required id}) =>
+      '${baseUrl}api/product/${id.toString()}';
+  static String showproductByServises({required id}) =>
+      '${baseUrl}api/products/${id.toString()}';
+  static String showproductByCompany({required id}) =>
+      '${baseUrl}api/products_company/${id.toString()}';
+
+  //api/services
+  static String servicesList = '${baseUrl}api/services';
+
+  // api/intro
+  static String introList = '${baseUrl}api/intro';
+
+  //api/notifications
+  static String notificationsList = '${baseUrl}api/notifications';
+}

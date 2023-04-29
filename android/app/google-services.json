@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "615602429310",
+    "project_id": "sayyarte-f6029",
+    "storage_bucket": "sayyarte-f6029.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615602429310:android:2e6f890d03bee64bca272f",
+        "android_client_info": {
+          "package_name": "com.tintix.saudia.tinti_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "615602429310-l48onbf746usu536djoggks148kh0n6s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tintix.saudia.tinti_app",
+            "certificate_hash": "b3fe693f901e3baf702d36f3963b556c81a3ace1"
+          }
+        },
+        {
+          "client_id": "615602429310-o5854kt63o8rgmo8t58gpjr0tk8amvnn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXFiHpnKkSitnM_ROX6FZ8l7lsHKWF-4s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "615602429310-o5854kt63o8rgmo8t58gpjr0tk8amvnn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "615602429310-nnataehkbb42fgjehiubt35q2fcboji6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tintix.saudia.tintiApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
