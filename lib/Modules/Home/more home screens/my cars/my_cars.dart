@@ -58,136 +58,195 @@ class _MyCarsScreenState extends ConsumerState<MyCarsScreen> {
             return _fetchedMyRequest;
           },
           child: SafeArea(
-            child: Consumer(
-              builder: (context, ref, child) => FutureBuilder(
-                future: _fetchedMyRequest,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SizedBox(
-                      height: 70.h,
-                      child: const Center(
-                        child: LoaderWidget(),
-                      ),
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  }
-                  if (snapshot.hasData) {
-                    if (snapshot.data is Failure) {
-                      return Center(
-                          child: TextWidget(snapshot.data.toString()));
+            child: Container(
+              width: double.infinity,
+              child: Consumer(
+                builder: (context, ref, child) => FutureBuilder(
+                  future: _fetchedMyRequest,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return SizedBox(
+                        height: 70.h,
+                        child: const Center(
+                          child: LoaderWidget(),
+                        ),
+                      );
                     }
-                    //
-                    //  print("snapshot data is ${snapshot.data}");
-                    var serviceModel =
-                        ref.watch(carProvider).getDataList ?? CarModel();
-                    print('lingth ${serviceModel.carModles?.length}');
-                    return ListView.builder(
-                      physics: const ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: serviceModel.carModles?.length ?? 0,
-                      itemBuilder: (BuildContext context, int index) => Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.w, vertical: 10.h),
-                        child: Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  borderRadius: BorderRadius.circular(10.w)),
-                              width: 370.w,
-                              height: 160.h,
-                              padding: EdgeInsets.all(10.w),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      if (snapshot.data is Failure) {
+                        return Center(
+                            child: TextWidget(snapshot.data.toString()));
+                      }
+                      //
+                      //  print("snapshot data is ${snapshot.data}");
+                      var serviceModel =
+                          ref.watch(carProvider).getDataList ?? CarModel();
+                      print('lingth ${serviceModel.carModles?.length}');
+                      return serviceModel.carModles?.length != 0
+                          ? ListView.builder(
+                              physics: const ClampingScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: serviceModel.carModles?.length ?? 0,
+                              itemBuilder: (BuildContext context, int index) =>
+                                  Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w, vertical: 10.h),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          color: AppColors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10.w)),
+                                      width: 370.w,
+                                      height: 160.h,
+                                      padding: EdgeInsets.all(10.w),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          CustomText(
-                                            fontFamily: 'DINNEXTLTARABIC',
-                                            color: AppColors.scadryColor,
-                                            serviceModel?.carModles?[index]
-                                                    .carModelName ??
-                                                ' أودي  ',
-                                            fontSize: 14.sp,
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  CustomText(
+                                                    fontFamily:
+                                                        'DINNEXTLTARABIC',
+                                                    color:
+                                                        AppColors.scadryColor,
+                                                    serviceModel
+                                                            ?.carModles?[index]
+                                                            .carModelName ??
+                                                        ' أودي  ',
+                                                    fontSize: 14.sp,
+                                                  ),
+                                                ],
+                                              ),
+                                              CustomText(
+                                                fontFamily: 'DINNEXTLTARABIC',
+                                                color: AppColors.orange,
+                                                serviceModel?.carModles?[index]
+                                                        .carNumber ??
+                                                    ' 2020  ',
+                                                fontSize: 14.sp,
+                                              ),
+                                              CustomText(
+                                                fontFamily: 'DINNEXTLTARABIC',
+                                                color: AppColors.scadryColor,
+                                                serviceModel?.carModles?[index]
+                                                        .color ??
+                                                    ' أحمر  ',
+                                                fontSize: 14.sp,
+                                              ),
+                                            ],
                                           ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              showBottomSheet(
+                                                  context,
+                                                  'تعديل بيانات السيارة ',
+                                                  serviceModel
+                                                          ?.carModles?[index]
+                                                          .name ??
+                                                      '',
+                                                  serviceModel
+                                                          ?.carModles?[index]
+                                                          .carModelName ??
+                                                      '',
+                                                  serviceModel
+                                                          ?.carModles?[index]
+                                                          .carSizeName ??
+                                                      '',
+                                                  serviceModel
+                                                          ?.carModles?[index]
+                                                          .color ??
+                                                      '',
+                                                  serviceModel
+                                                          ?.carModles?[index]
+                                                          .carNumber ??
+                                                      '');
+                                            },
+                                            child: Container(
+                                              alignment: Alignment.bottomLeft,
+                                              child: Image.asset(
+                                                  'assets/images/update_car.png'),
+                                            ),
+                                          )
                                         ],
                                       ),
-                                      CustomText(
-                                        fontFamily: 'DINNEXTLTARABIC',
-                                        color: AppColors.orange,
-                                        serviceModel
-                                                ?.carModles?[index].carNumber ??
-                                            ' 2020  ',
-                                        fontSize: 14.sp,
+                                    ),
+                                    Container(
+                                      width: 370.w,
+                                      height: 180.h,
+                                      alignment: Alignment.bottomRight,
+                                      child: Image.network(
+                                        serviceModel.carModles?[index].image ??
+                                            '',
+                                        width: 300.w,
+                                        height: 100.h,
+                                        fit: BoxFit.fill,
+                                        alignment: Alignment.bottomRight,
                                       ),
-                                      CustomText(
-                                        fontFamily: 'DINNEXTLTARABIC',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.all(20.w),
+                              child: Container(
+                                  padding: EdgeInsets.all(20.w),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20.w),
+                                      color: AppColors.lightPrimaryColor
+                                          .withOpacity(0.2)),
+                                  width: 320.w,
+                                  height: 500.h,
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                          'assets/images/nullstate.png'),
+                                      SizedBox(
+                                        height: 20.h,
+                                      ),
+                                      Container(
+                                        width: 300.w,
+                                        child: CustomText(
+                                          'لم تقم باضافة اي سيارات  يمكنك اضافة واحده الان',
+                                          color: AppColors.black,
+                                          fontWeight: FontWeight.bold,
+                                          textAlign: TextAlign.center,
+                                          fontSize: 18.sp,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 60.h,
+                                      ),
+                                      RaisedGradientButton(
+                                        text: 'تصفح المنتجات',
                                         color: AppColors.scadryColor,
-                                        serviceModel?.carModles?[index].color ??
-                                            ' أحمر  ',
-                                        fontSize: 14.sp,
+                                        height: 48.h,
+                                        width: 320.w,
+                                        circular: 10.w,
+                                        onPressed: () {},
                                       ),
                                     ],
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      showBottomSheet(
-                                          context,
-                                          'تعديل بيانات السيارة ',
-                                          serviceModel
-                                                  ?.carModles?[index].name ??
-                                              '',
-                                          serviceModel?.carModles?[index]
-                                                  .carModelName ??
-                                              '',
-                                          serviceModel?.carModles?[index]
-                                                  .carSizeName ??
-                                              '',
-                                          serviceModel
-                                                  ?.carModles?[index].color ??
-                                              '',
-                                          serviceModel?.carModles?[index]
-                                                  .carNumber ??
-                                              '');
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Image.asset(
-                                          'assets/images/update_car.png'),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: 370.w,
-                              height: 180.h,
-                              alignment: Alignment.bottomRight,
-                              child: Image.network(
-                                serviceModel.carModles?[index].image ?? '',
-                                width: 300.w,
-                                height: 100.h,
-                                fit: BoxFit.fill,
-                                alignment: Alignment.bottomRight,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-                  return Container();
-                },
+                                  )),
+                            );
+                      ;
+                    }
+                    return Container();
+                  },
+                ),
               ),
             ),
           ),

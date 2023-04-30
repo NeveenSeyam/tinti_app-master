@@ -1,16 +1,14 @@
 import '../api_urls.dart';
 import '../base_dio_api.dart';
 
-class ChangeProfilePasswordApi extends BaseDioApi {
+class ChangePasswordApi extends BaseDioApi {
+  String email;
   String password;
-  String old_password;
-  String c_password;
 
-  ChangeProfilePasswordApi({
+  ChangePasswordApi({
+    required this.email,
     required this.password,
-    required this.c_password,
-    required this.old_password,
-  }) : super(ApiUrls.changeUserPassword);
+  }) : super(ApiUrls.addcars);
 
   @override
   body() {

@@ -4,7 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tinti_app/provider/order_provider.dart';
 
 import '../../../Helpers/failure.dart';
+import '../../../Util/theme/app_colors.dart';
 import '../../../Widgets/custom_appbar.dart';
+import '../../../Widgets/custom_text.dart';
+import '../../../Widgets/gradint_button.dart';
 import '../../../Widgets/loader_widget.dart';
 import '../../../Widgets/order_list_card.dart';
 import '../../../Widgets/text_widget.dart';
@@ -50,52 +53,104 @@ class _CartPageState extends ConsumerState<CartPage> {
             });
             return _fetchedOrderRequest;
           },
-          child: Consumer(
-            builder: (context, ref, child) => FutureBuilder(
-              future: _fetchedOrderRequest,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return SizedBox(
-                    height: 70.h,
-                    child: const Center(
-                      child: LoaderWidget(),
-                    ),
-                  );
-                }
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                }
-                if (snapshot.hasData) {
-                  if (snapshot.data is Failure) {
-                    return Center(child: TextWidget(snapshot.data.toString()));
+          child: Container(
+            width: double.infinity,
+            child: Consumer(
+              builder: (context, ref, child) => FutureBuilder(
+                future: _fetchedOrderRequest,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return SizedBox(
+                      height: 70.h,
+                      child: const Center(
+                        child: LoaderWidget(),
+                      ),
+                    );
                   }
-                  //
-                  //  print("snapshot data is ${snapshot.data}");
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    if (snapshot.data is Failure) {
+                      return Center(
+                          child: TextWidget(snapshot.data.toString()));
+                    }
+                    //
+                    //  print("snapshot data is ${snapshot.data}");
 
-                  var ordersModel = ref.watch(ordersProvider).getOrdersDataList;
+                    var ordersModel =
+                        ref.watch(ordersProvider).getOrdersDataList;
 
-                  return ListView.builder(
-                    physics: const ClampingScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: ordersModel?.orders?.length,
-                    itemBuilder: (BuildContext context, int index) => OrderListCard(
-                        image: ordersModel?.orders?[index].image ??
-                            'assets/images/sa1.jpeg',
-                        title: ordersModel?.orders?[index].name ??
-                            'تنظيف بالبخار ',
-                        compeny: ordersModel?.orders?[index].company ??
-                            'شركة ليومار',
-                        details: ordersModel?.orders?[index].description ??
-                            'تلعب العناية المنتظمة بالسيارة دورا كبيرا في المحافظة على السيارات وهذا هو السبب الذي يجعل بعض السيارات تستمر   ',
-                        price: ordersModel?.orders?[index].price.toString() ??
-                            '460'),
-                  );
-                }
-                return Container();
-              },
+                    return ordersModel?.orders?.length != 0
+                        ? ListView.builder(
+                            physics: const ClampingScrollPhysics(),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: ordersModel?.orders?.length,
+                            itemBuilder: (BuildContext context, int index) =>
+                                OrderListCard(
+                              image: ordersModel?.orders?[index].image ??
+                                  'assets/images/sa1.jpeg',
+                              title: ordersModel?.orders?[index].name ??
+                                  'تنظيف بالبخار ',
+                              compeny: ordersModel?.orders?[index].company ??
+                                  'شركة ليومار',
+                              details: ordersModel
+                                      ?.orders?[index].description ??
+                                  'تلعب العناية المنتظمة بالسيارة دورا كبيرا في المحافظة على السيارات وهذا هو السبب الذي يجعل بعض السيارات تستمر   ',
+                              price: ordersModel?.orders?[index].price
+                                      .toString() ??
+                                  '460',
+                              id: ordersModel?.orders?[index].productId ?? 0,
+                            ),
+                          )
+                        : Padding(
+                            padding: EdgeInsets.all(20.w),
+                            child: Container(
+                                padding: EdgeInsets.all(20.w),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.w),
+                                    color: AppColors.lightPrimaryColor
+                                        .withOpacity(0.2)),
+                                width: 320.w,
+                                height: 500.h,
+                                child: Column(
+                                  children: [
+                                    Image.asset('assets/images/nullstate.png'),
+                                    SizedBox(
+                                      height: 20.h,
+                                    ),
+                                    Container(
+                                      width: 300.w,
+                                      child: CustomText(
+                                        'لم تقم بطلب اي خدمة حتى الان يمكنك اضافة واحده الان',
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.bold,
+                                        textAlign: TextAlign.center,
+                                        fontSize: 18.sp,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 60.h,
+                                    ),
+                                    RaisedGradientButton(
+                                      text: 'تصفح المنتجات',
+                                      color: AppColors.scadryColor,
+                                      height: 48.h,
+                                      width: 320.w,
+                                      circular: 10.w,
+                                      onPressed: () {},
+                                    ),
+                                  ],
+                                )),
+                          );
+                  }
+                  return Container();
+                },
+              ),
             ),
           ),
         ),

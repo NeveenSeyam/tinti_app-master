@@ -40,6 +40,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   TextEditingController _numberController = TextEditingController();
   TextEditingController _addressController = TextEditingController();
   late PageController _pageController;
+
+  TextEditingController _oldPassController = TextEditingController();
+  TextEditingController _newPasswordController = TextEditingController();
+  TextEditingController _confirmNewPassController = TextEditingController();
+
   File? img;
   File? _image2;
   Future<void> _getImage() async {
@@ -64,7 +69,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   late Future _fetchedMyRequest;
+//  Future _getChangPass() async {
+//     final prov = ref.read(accountProvider);
 
+//     return await prov.editProfilePasswordRequset();
+//   }
+
+  // late Future _fetchedMyRequest;
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
@@ -132,6 +143,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ref.watch(accountProvider).getProfileModel ??
                           ProfileModel();
                   var profileModel = ref.watch(accountProvider);
+                  var changPassModel = ref.watch(accountProvider);
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -384,7 +396,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                               horizontal: 16.h),
                                                       child: ButtonWidget(
                                                         onPressed: () async {
-                                                          await profileModel
+                                                          await changPassModel
                                                               .editUserRequset(
                                                                   data: {
                                                                 "fname":
@@ -483,6 +495,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                               icon: Icon(Icons.key),
                                               hintColor: AppColors.grey
                                                   .withOpacity(0.7),
+                                              controller: _oldPassController,
                                             ),
                                           ),
                                           Center(
@@ -497,6 +510,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                               icon: Icon(Icons.key),
                                               hintColor: AppColors.grey
                                                   .withOpacity(0.7),
+                                              controller:
+                                                  _newPasswordController,
                                             ),
                                           ),
                                           Center(
@@ -510,6 +525,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                               onChanged: (value) {},
                                               seen: true,
                                               icon: Icon(Icons.key),
+                                              controller:
+                                                  _confirmNewPassController,
                                               hintColor: AppColors.grey
                                                   .withOpacity(0.7),
                                             ),
@@ -531,7 +548,25 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 horizontal: 16.h,
                                                 vertical: 12.h),
                                             child: ButtonWidget(
-                                              onPressed: () {
+                                              onPressed: () async {
+                                                await profileModel
+                                                    .editProfilePasswordRequset(
+                                                  data: {
+                                                    "password":
+                                                        _newPasswordController
+                                                            .text,
+                                                    "c_password":
+                                                        _confirmNewPassController
+                                                            .text,
+                                                    "old_password":
+                                                        _oldPassController.text,
+                                                  },
+                                                );
+                                                setState(() {
+                                                  _fetchedMyRequest =
+                                                      _getContentData();
+                                                });
+
                                                 Navigator.pop(context);
                                               },
                                               title: 'حفظ',
