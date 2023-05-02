@@ -41,6 +41,7 @@ class ApiUrls {
   //api/orders
   static String ordersPage = '${baseUrl}api/orders';
   static String showOrder() => '${baseUrl}api/orders}';
+  static String addFav = '${baseUrl}api/favorites';
 
   //api/favs
   static String favPage = '${baseUrl}api/favorites';

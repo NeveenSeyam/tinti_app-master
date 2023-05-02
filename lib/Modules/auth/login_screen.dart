@@ -7,12 +7,14 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:regexpattern/regexpattern.dart';
 import 'package:tinti_app/Widgets/custom_button.dart';
 
 import '../../Helpers/failure.dart';
 import '../../Util/constants/constants.dart';
+import '../../Util/constants/keys.dart';
 import '../../Widgets/auth_screens.dart';
 import '../../Widgets/custom_text.dart';
 import '../../Widgets/custom_text_field.dart';
@@ -121,6 +123,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         }
         if (value != false) {
           Constants.token = value["data"]["token"];
+          SharedPreferences? _prefs = await SharedPreferences.getInstance();
+          _prefs.setString(Keys.hasSaveUserData, value["data"]["token"]);
+          await AuthProvider.getUserProfileRequset();
+
           Navigator.pop(context);
           Navigator.pushNamed(context, '/navegaitor_screen');
         } else {

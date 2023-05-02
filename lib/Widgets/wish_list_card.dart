@@ -38,7 +38,10 @@ class _WishListCardState extends State<WishListCard> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ServiceDetailsScreen(id: widget.id)),
+                builder: (context) => ServiceDetailsScreen(
+                      id: widget.id,
+                      row_id: widget.id,
+                    )),
           );
         },
         child: Container(

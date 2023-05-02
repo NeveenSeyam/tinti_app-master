@@ -105,18 +105,18 @@ class AccountProvider with ChangeNotifier {
     }
   }
 
-  Future AactivateRequest2() async {
-    try {
-      final response = await GetActivateApi().fetch();
+  // Future AactivateRequest2() async {
+  //   try {
+  //     final response = await GetActivateApi().fetch();
 
-      setActivateModel(ActivateModel.fromJson(response));
+  //     setActivateModel(ActivateModel.fromJson(response));
 
-      return response;
-    } on Failure catch (f) {
-      UIHelper.showNotification(f.message);
-      return false;
-    }
-  } // where  home page?>
+  //     return response;
+  //   } on Failure catch (f) {
+  //     UIHelper.showNotification(f.message);
+  //     return false;
+  //   }
+  // } // where  home page?>
 
   Future AactivateRequest() async //required String image
   {
@@ -199,6 +199,7 @@ class AccountProvider with ChangeNotifier {
   // }
 
   // edit user info  with image mlutform
+
   Future editUserRequset(
       {required Map<String, dynamic> data,
       required File? file}) async //required String image
@@ -231,6 +232,36 @@ class AccountProvider with ChangeNotifier {
       log("response $response");
 
       return response.data;
+    } on DioError catch (e) {
+      UIHelper.showNotification(e.response?.data['message']);
+
+      // log(e.message);
+      return Failure;
+    }
+  }
+
+  Future activateUserRequset() async //required String image
+  {
+    try {
+      Dio dio = Dio();
+
+      var response = await dio.post(
+        ApiUrls.activate,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': "Bearer ${Constants.token}",
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        UIHelper.showNotification(response.data['message'],
+            backgroundColor: AppColors.green);
+      }
+      log("response $response");
+
+      return response;
     } on DioError catch (e) {
       UIHelper.showNotification(e.response?.data['message']);
 

@@ -1,22 +1,20 @@
 import '../api_urls.dart';
 import '../base_dio_api.dart';
 
-class AddFav extends BaseDioApi {
+class RemoveFav extends BaseDioApi {
   dynamic product_id;
 
-  AddFav({
+  RemoveFav({
     required this.product_id,
-  }) : super(ApiUrls.addFav);
+  }) : super(ApiUrls.deleteFav(id: product_id));
 
   @override
   body() {
-    return {
-      "product_id": product_id,
-    };
+    return {};
   }
 
   Future fetch() async {
-    final response = await postRequest();
+    final response = await deleteRequest();
     return response;
   }
 }

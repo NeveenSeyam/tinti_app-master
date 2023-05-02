@@ -220,17 +220,18 @@ class _MainPageState extends ConsumerState<MainPage> {
                                                 '',
                                         id: companyModel.companies?[3].id ?? 0,
                                       ),
-                                      OnBoardingContentHome(
-                                        image:
-                                            companyModel.companies?[4].image ??
-                                                'assets/images/sa5.jpeg',
-                                        text: companyModel.companies?[4].name ??
-                                            'جونسون اند جونسون',
-                                        about:
-                                            companyModel.companies?[4].about ??
-                                                '',
-                                        id: companyModel.companies?[4].id ?? 0,
-                                      ),
+                                      //   OnBoardingContentHome(
+                                      //     image:
+                                      //         companyModel.companies?[4].image ??
+                                      //             'assets/images/sa5.jpeg',
+                                      //     text: companyModel.companies?[4].name ??
+                                      //         'جونسون اند جونسون',
+                                      //     about:
+                                      //         companyModel.companies?[4].about ??
+                                      //             '',
+                                      //     id: companyModel.companies?[4].id ?? 0,
+                                      //   ),
+                                      //
                                     ],
                                   );
                                 }
@@ -302,14 +303,24 @@ class _MainPageState extends ConsumerState<MainPage> {
                             fontFamily: 'DINNextLTArabic',
                           )),
                     ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.only(end: 15.w, top: 5.h),
-                      child: Text('المزيد',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 11.sp,
-                            fontFamily: 'DINNextLTArabic',
-                          )),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SaelsScreen()),
+                        );
+                      },
+                      child: Padding(
+                        padding:
+                            EdgeInsetsDirectional.only(end: 15.w, top: 5.h),
+                        child: Text('المزيد',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11.sp,
+                              fontFamily: 'DINNextLTArabic',
+                            )),
+                      ),
                     ),
                   ],
                 ),
@@ -355,10 +366,23 @@ class _MainPageState extends ConsumerState<MainPage> {
                               itemBuilder: (BuildContext context, int index) =>
                                   GestureDetector(
                                 onTap: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => SaelsScreen()),
+                                  // );
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SaelsScreen()),
+                                        builder: (context) =>
+                                            ServiceDetailsScreen(
+                                              id: productModel?.success
+                                                      ?.items?[index].id ??
+                                                  0,
+                                              row_id: productModel?.success
+                                                      ?.items?[index].id ??
+                                                  0,
+                                            )),
                                   );
                                 },
                                 child: latestOffersCard(
@@ -551,6 +575,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                                                               ?.items?[index]
                                                               .id ??
                                                           0,
+                                                      row_id: 0 ?? 0,
                                                     )),
                                           );
                                         },
@@ -614,9 +639,7 @@ class _MainPageState extends ConsumerState<MainPage> {
               child: Center(
                 child: Text(
                   name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 10.sp),
                 ),
               ),
             )

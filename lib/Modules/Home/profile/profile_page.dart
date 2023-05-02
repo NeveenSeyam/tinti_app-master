@@ -6,13 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pinput/pinput.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Models/auth/profile_model.dart';
+import 'package:tinti_app/Util/constants/constants.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/button_widget.dart';
 import 'package:tinti_app/Widgets/custom_text.dart';
 import 'package:tinti_app/provider/account_provider.dart';
 
 import '../../../Helpers/failure.dart';
+import '../../../Util/constants/keys.dart';
 import '../../../Widgets/custom_appbar.dart';
 import '../../../Widgets/custom_text_field.dart';
 import '../../../Widgets/gradint_button.dart';
@@ -715,7 +718,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 width: 340.w,
                                 height: 48.h,
                                 circular: 10.w,
-                                onPressed: () {},
+                                onPressed: () async {
+                                  Constants.token = null;
+                                  SharedPreferences? _prefs =
+                                      await SharedPreferences.getInstance();
+                                  _prefs.clear();
+                                  Navigator.popAndPushNamed(
+                                      context, '/login_screen');
+                                },
                               ),
                             ],
                           ),

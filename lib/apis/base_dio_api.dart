@@ -132,7 +132,11 @@ class BaseDioApi {
         url,
         options: Options(
           headers: {
-            'Authorization': '',
+            'Content-Type': 'application/json',
+            'device_id': '123456789',
+            'os': 'ios',
+            "Authorization": "Bearer ${Constants.token}",
+            'language': 'ar',
           },
         ),
         queryParameters: queryParameters(),
@@ -169,7 +173,11 @@ class BaseDioApi {
         url,
         options: Options(
           headers: {
-            'Authorization': '',
+            'Content-Type': 'application/json',
+            'device_id': '123456789',
+            'os': 'ios',
+            "Authorization": "Bearer ${Constants.token}",
+            'language': 'ar',
           },
         ),
         queryParameters: queryParameters(),

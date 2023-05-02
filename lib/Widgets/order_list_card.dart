@@ -14,6 +14,7 @@ class OrderListCard extends StatelessWidget {
   String details;
   String price;
   int id;
+  String stats;
   OrderListCard({
     super.key,
     required this.image,
@@ -22,6 +23,7 @@ class OrderListCard extends StatelessWidget {
     required this.details,
     required this.price,
     required this.id,
+    required this.stats,
   });
 
   @override
@@ -30,11 +32,16 @@ class OrderListCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ServiceDetailsScreen(id: id)),
-          );
+          stats == 'منتهي'
+              ? Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ServiceDetailsScreen(
+                            id: id,
+                            row_id: id,
+                          )),
+                )
+              : null;
         },
         child: Container(
           margin: const EdgeInsets.all(5),
@@ -110,15 +117,19 @@ class OrderListCard extends StatelessWidget {
                               height: 34.h,
                               padding: EdgeInsets.symmetric(horizontal: 20.w),
                               decoration: BoxDecoration(
-                                  color: AppColors.orange,
+                                  color: stats != 'منتهي'
+                                      ? AppColors.orange
+                                      : AppColors.grey.withOpacity(0.5),
                                   borderRadius: BorderRadius.circular(10.w)),
                               child: Center(
                                 child: TextButton(
                                     onPressed: () {},
                                     child: CustomText(
-                                      'قيد التنفيذ',
+                                      stats ?? 'قيد التنفيذ',
                                       textAlign: TextAlign.center,
-                                      color: AppColors.white,
+                                      color: stats != 'منتهي'
+                                          ? AppColors.white
+                                          : AppColors.black,
                                       fontFamily: 'DINNextLTArabic',
                                       fontSize: 12.sp,
                                     )),

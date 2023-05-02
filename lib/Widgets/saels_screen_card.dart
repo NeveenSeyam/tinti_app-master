@@ -37,7 +37,10 @@ class _SaelsScreenCardCardState extends State<SaelsScreenCardCard> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ServiceDetailsScreen(id: 0)),
+                builder: (context) => ServiceDetailsScreen(
+                      id: 0,
+                      row_id: 0,
+                    )),
           );
         },
         child: Container(

@@ -6,7 +6,11 @@ import 'package:tinti_app/Models/favorites_model.dart';
 import 'package:tinti_app/Models/orders_model.dart';
 import 'package:tinti_app/apis/favorites/get_favorites_data_api.dart';
 
+import '../Models/product/service_products_model.dart';
+import '../apis/favorites/add_favorite_api.dart';
+import '../apis/favorites/remove_favorite_api.dart';
 import '../helpers/failure.dart';
+import '../helpers/ui_helper.dart';
 
 final favsProvider =
     ChangeNotifierProvider<FvorateProvider>((ref) => FvorateProvider());
@@ -42,23 +46,38 @@ class FvorateProvider extends ChangeNotifier {
     }
   }
 
-  // Future getSingleProductDataRequset({required int id}) async {
-  //   //! we create this object to set new data to the data object
-  //   SingleProductModel? productList = SingleProductModel();
+  Future addFavRequset({
+    required id,
+  }) async //required String image
+  {
+    try {
+      final response = await AddFav(product_id: id).fetch();
 
-  //   try {
-  //     //! here we call the api and get the data using the Fetch method
-  //     final response = await GetSingleProductDataApi(id: id.toString()).fetch();
-  //     log("response getProductDataByCompanyRequsett $response");
+      log("FirstSteop $response");
+      // setActiveOffers(storeOffers);
+      return response;
+    } on Failure catch (f) {
+      UIHelper.showNotification(f.message);
+      return false;
+    }
+  }
 
-  //     //! use FormJson method to convert the data to the data object
-  //     productList = SingleProductModel.fromJson(response);
-  //     //! set the new data to the data object
-  //     setSingleProductList(productList);
+  Future removeFavRequset({
+    required id,
+  }) async //required String image
+  {
+    try {
+      final response = await RemoveFav(product_id: id).fetch();
 
-  //     return response;
-  //   } on Failure catch (f) {
-  //     return f;
-  //   }
-  // }
+      log("FirstSteop $response");
+      // serviceProductModel = ServiceProductModel.fromJson(response);
+      // //! set the new data to the data object
+      // setDataSirvesList(serviceProductModel);
+      // setActiveOffers(storeOffers);
+      return response;
+    } on Failure catch (f) {
+      UIHelper.showNotification(f.message);
+      return false;
+    }
+  }
 }

@@ -197,12 +197,20 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           ServiceDetailsScreen(
-                                                              id: productByServiceModel
-                                                                      .success
-                                                                      ?.items?[
-                                                                          index]
-                                                                      .id ??
-                                                                  0)),
+                                                            id: productByServiceModel
+                                                                    .success
+                                                                    ?.items?[
+                                                                        index]
+                                                                    .id ??
+                                                                0,
+                                                            row_id:
+                                                                productByServiceModel
+                                                                        .success
+                                                                        ?.items?[
+                                                                            index]
+                                                                        .id ??
+                                                                    0,
+                                                          )),
                                                 );
                                                 print(
                                                     ' sssssssss ${productByServiceModel.success?.items?.length}');

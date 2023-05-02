@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pinput/pinput.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:regexpattern/regexpattern.dart';
 import 'package:tinti_app/Widgets/custom_button.dart';
@@ -18,6 +19,7 @@ import 'package:tinti_app/provider/account_provider.dart';
 import '../../Helpers/failure.dart';
 import '../../Models/auth/user_model.dart';
 import '../../Util/constants/constants.dart';
+import '../../Util/constants/keys.dart';
 import '../../Widgets/auth_screens.dart';
 import '../../Widgets/custom_text.dart';
 import '../../Widgets/custom_text_field.dart';
@@ -87,7 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController otpController = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  bool otpVisibility = false;
+  bool otpVerfied = false;
   User? user;
 
   String? validateConfiremPassword(String? value) {
@@ -100,7 +102,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future _activeFun(BuildContext context, WidgetRef ref) async {
     var ActivateProvider = ref.read(accountProvider);
-    final response = await ActivateProvider.AactivateRequest();
+    final response = await ActivateProvider.activateUserRequset();
+    return response;
   }
 
   Future _loginFun(BuildContext context, WidgetRef ref) async {
@@ -129,7 +132,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         }
 
         Constants.token = value["data"]["token"];
-
+        SharedPreferences? _prefs = await SharedPreferences.getInstance();
+        _prefs.setString(Keys.hasSaveUserData, value["data"]["token"]);
         await AuthProvider.getUserProfileRequset();
         Navigator.pop(context); //134092
 
@@ -195,9 +199,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               height: 48.h,
                               circular: 10.w,
                               onPressed: () async {
-                                await _activeFun(context, ref);
-                                Navigator.popAndPushNamed(
-                                    context, '/navegaitor_screen');
+                                verifyOTP();
+                                otpVerfied == true
+                                    ? ref
+                                        .read(accountProvider)
+                                        .activateUserRequset()
+                                    : null;
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MyHomePage(),
+                                  ),
+                                );
                               },
                             ),
                             SizedBox(
@@ -222,12 +235,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   SizedBox(
                                     width: 5.w,
                                   ),
-                                  CustomText(
-                                    'اعادة الارسال ',
-                                    textAlign: TextAlign.start,
-                                    fontSize: 16.sp,
-                                    fontFamily: 'DINNEXTLTARABIC',
-                                    fontWeight: FontWeight.w400,
+                                  GestureDetector(
+                                    onTap: () {
+                                      loginWithPhone();
+                                    },
+                                    child: CustomText(
+                                      'اعادة الارسال ',
+                                      textAlign: TextAlign.start,
+                                      fontSize: 16.sp,
+                                      fontFamily: 'DINNEXTLTARABIC',
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -482,12 +500,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   height: 48.h,
                                   circular: 10.w,
                                   onPressed: () {
-                                    if (otpVisibility) {
-                                      verifyOTP();
-                                    } else {
-                                      loginWithPhone();
-                                    }
                                     _loginFun(context, ref);
+
+                                    loginWithPhone();
                                   },
                                 ));
                           },
@@ -575,13 +590,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
       verificationCompleted: (PhoneAuthCredential credential) async {
         await auth.signInWithCredential(credential).then((value) {
           print("You are logged in successfully");
+          Navigator.popAndPushNamed(context, '/navegaitor_screen');
         });
       },
       verificationFailed: (FirebaseAuthException e) {
         print(e.message);
       },
       codeSent: (String verificationId, int? resendToken) {
-        otpVisibility = true;
+        otpVerfied = true;
         verificationID = verificationId;
         setState(() {});
       },
@@ -589,10 +605,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void verifyOTP() async {
+  verifyOTP() async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationID, smsCode: otpController.text);
-
     await auth.signInWithCredential(credential).then(
       (value) {
         setState(() {
@@ -611,12 +626,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Home(),
-            ),
-          );
+
+          otpVerfied = true;
         } else {
           Fluttertoast.showToast(
             msg: "your login is failed",
@@ -627,6 +638,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
+          otpVerfied = false;
         }
       },
     );

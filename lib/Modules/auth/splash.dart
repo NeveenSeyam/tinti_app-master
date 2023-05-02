@@ -1,12 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tbib_splash_screen/splash_screen.dart';
 import 'package:tbib_splash_screen/splash_screen_view.dart';
 import 'package:tinti_app/Modules/OnBoarding/on_boarding_screen.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 
-class SplashScreen extends StatefulWidget {
+import '../../Util/constants/constants.dart';
+import '../../Util/constants/keys.dart';
+import '../../provider/account_provider.dart';
+
+class SplashScreen extends ConsumerStatefulWidget {
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -19,18 +25,29 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   bool isLoaded = false;
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3)).then((value) => setState(() {
-          isLoaded = true;
-          Navigator.popAndPushNamed(context, '/poard_screen');
-        }));
+    Future.delayed(const Duration(seconds: 3))
+        .then((value) => setState(() async {
+              SharedPreferences? _prefs = await SharedPreferences.getInstance();
+
+              isLoaded = true;
+              if (_prefs.getString(Keys.hasSaveUserData) == null) {
+                Navigator.popAndPushNamed(context, '/poard_screen');
+              } else {
+                var AuthProvider = ref.read(accountProvider);
+
+                Constants.token = _prefs.getString(Keys.hasSaveUserData);
+                await AuthProvider.getUserProfileRequset();
+                Navigator.pushNamed(context, '/navegaitor_screen');
+              }
+            }));
   }
 
   @override

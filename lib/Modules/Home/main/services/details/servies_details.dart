@@ -15,11 +15,13 @@ import '../../../../../Widgets/page_view_indicator_Home.dart';
 import '../../../../../Widgets/servies_images.dart';
 
 import '../../../../../Widgets/text_widget.dart';
+import '../../../../../provider/favorites_provider.dart';
 import '../service_page.dart';
 
 class ServiceDetailsScreen extends ConsumerStatefulWidget {
+  dynamic row_id;
   int id;
-  ServiceDetailsScreen({super.key, required this.id});
+  ServiceDetailsScreen({super.key, required this.id, required this.row_id});
 
   @override
   _ServiceDetailsScreenState createState() => _ServiceDetailsScreenState();
@@ -85,7 +87,8 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
 
                 var productDetailsModel =
                     ref.watch(productsProvider).getSingleProduct;
-
+                var addToFavModel = ref.watch(favsProvider);
+                // var removeFavModel = ref.watch(favsProvider);
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -210,6 +213,9 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                     fontFamily: 'DINNextLTArabic',
                                     textAlign: TextAlign.start,
                                   ),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
                                   CustomText(
                                     productDetailsModel?.product?.service ??
                                         'جونسون اند جونسون ',
@@ -241,10 +247,21 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                     isFav == true
                                         ? isFav = false
                                         : isFav = true;
+                                    isFav == true
+                                        ? addToFavModel.addFavRequset(
+                                            id: productDetailsModel
+                                                    ?.product?.id ??
+                                                0)
+                                        : addToFavModel.removeFavRequset(
+                                            id: productDetailsModel
+                                                ?.product?.id);
                                   });
                                 },
                               ),
                             ],
+                          ),
+                          SizedBox(
+                            height: 30.h,
                           ),
                           Row(
                             // mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -265,7 +282,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                           // border: Border.all(color: Colors.grey),
                                         ),
                                         child: Container(
-                                          width: 105.w,
+                                          width: 165.w,
                                           child: const Center(
                                             child: Text(
                                               "عن الخدمة ",
@@ -278,7 +295,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                         ),
                                       )
                                     : Container(
-                                        width: 105.w,
+                                        width: 165.w,
                                         padding: EdgeInsets.all(3.w),
                                         decoration: BoxDecoration(
                                           // color: Colors.orange[300],
@@ -307,56 +324,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                 },
                                 child: pageIndex == 1
                                     ? Container(
-                                        width: 105.w,
-                                        padding: EdgeInsets.all(3.w),
-                                        decoration: BoxDecoration(
-                                          color: Color(0xffF57A38),
-                                          borderRadius:
-                                              BorderRadius.circular(10.w),
-                                          // border: Border.all(color: Colors.grey),
-                                        ),
-                                        child: const Center(
-                                          child: Text(
-                                            textAlign: TextAlign.center,
-                                            "تفاصيل الخدمة ",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : Container(
-                                        width: 105.w,
-                                        // height: 30.h,
-                                        padding: EdgeInsets.all(3.w),
-                                        decoration: BoxDecoration(
-                                          // color: Colors.orange[300],
-                                          borderRadius:
-                                              BorderRadius.circular(10.w),
-                                          border: Border.all(
-                                            color: const Color(0xffF57A38),
-                                          ),
-                                        ),
-                                        child: Container(
-                                          child: Text(
-                                            "تفاصيل الخدمة ",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    pageIndex = 2;
-                                  });
-                                },
-                                child: pageIndex == 2
-                                    ? Container(
-                                        width: 105.w,
+                                        width: 165.w,
                                         padding: EdgeInsets.all(3.w),
                                         decoration: BoxDecoration(
                                           color: Color(0xffF57A38),
@@ -374,7 +342,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                         ),
                                       )
                                     : Container(
-                                        width: 105.w,
+                                        width: 165.w,
                                         padding: EdgeInsets.all(3.w),
                                         decoration: BoxDecoration(
                                           // color: Colors.orange[300],
@@ -406,77 +374,54 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                               ?.product?.description ??
                                           'تلعب العناية المنتظمة بالسيارة دورا كبيرا في المحافظة على السيارات وهذا هو السبب الذي يجعل بعض السيارات تستمر في العمل بشكل جيد'),
                                 )
-                              : pageIndex == 1
-                                  ? Padding(
-                                      padding: EdgeInsets.all(5.w),
-                                      child: Column(
+                              : Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 5.w, horizontal: 12.w),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           CustomText(
-                                            productDetailsModel
-                                                    ?.product?.description ??
-                                                'يتم تسليم السيارة في مقر الشركة ويتم غسلها وتركيب النانو سيراميك خلال مده أقصاها أسبوع ومن ثم يتم التسليم \n \nملاحظة / يمكنك طلب تسليم  السيارة الى المنزل من قبل الشركة من خلال التواصل معنا',
+                                            productDetailsModel?.product?.rating
+                                                    .toString() ??
+                                                '4.2',
                                             fontFamily: 'DINNEXTLTARABIC',
                                             color: AppColors.scadryColor,
                                           ),
+                                          RatingBarIndicator(
+                                              rating: double.parse(
+                                                  productDetailsModel
+                                                          ?.product?.rating ??
+                                                      '5'),
+                                              itemCount: 5,
+                                              itemSize: 40.0,
+                                              itemBuilder: (context, _) =>
+                                                  const Icon(
+                                                    Icons.star_rate_rounded,
+                                                    color: Colors.orange,
+                                                  )),
                                           CustomText(
-                                            'الاحجام المتاحة',
+                                            "${productDetailsModel?.product?.ratingCount.toString()}  اشخاص" ??
+                                                ' اشخاص',
                                             fontFamily: 'DINNEXTLTARABIC',
                                             color: AppColors.scadryColor,
                                           ),
-                                          AvailableSizes()
                                         ],
                                       ),
-                                    )
-                                  : Column(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 5.w, horizontal: 12.w),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              CustomText(
-                                                productDetailsModel
-                                                        ?.product?.rating
-                                                        .toString() ??
-                                                    '4.2',
-                                                fontFamily: 'DINNEXTLTARABIC',
-                                                color: AppColors.scadryColor,
-                                              ),
-                                              RatingBarIndicator(
-                                                  rating: double.parse(
-                                                      productDetailsModel
-                                                              ?.product
-                                                              ?.rating ??
-                                                          '5'),
-                                                  itemCount: 5,
-                                                  itemSize: 40.0,
-                                                  itemBuilder: (context, _) =>
-                                                      const Icon(
-                                                        Icons.star_rate_rounded,
-                                                        color: Colors.orange,
-                                                      )),
-                                              CustomText(
-                                                "${productDetailsModel?.product?.ratingCount.toString()}  اشخاص" ??
-                                                    ' اشخاص',
-                                                fontFamily: 'DINNEXTLTARABIC',
-                                                color: AppColors.scadryColor,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        CustomText(
-                                            fontFamily: 'DINNEXTLTARABIC',
-                                            color: AppColors.scadryColor,
-                                            double.parse(productDetailsModel
-                                                            ?.product?.rating ??
-                                                        '0') >=
-                                                    3
-                                                ? 'تم تقييم الخدمة من قبل مشترين وزوار للموقع وكانت من ضمن الأعلى تقييما في الموقع'
-                                                : 'تم تقييم الخدمة من قبل مشترين وزوار للموقع وكانت من ضمن الأقلل تقييما في الموقع'),
-                                      ],
                                     ),
+                                    CustomText(
+                                        fontFamily: 'DINNEXTLTARABIC',
+                                        color: AppColors.scadryColor,
+                                        double.parse(productDetailsModel
+                                                        ?.product?.rating ??
+                                                    '0') >=
+                                                3
+                                            ? 'تم تقييم الخدمة من قبل مشترين وزوار للموقع وكانت من ضمن الأعلى تقييما في الموقع'
+                                            : 'تم تقييم الخدمة من قبل مشترين وزوار للموقع وكانت من ضمن الأقلل تقييما في الموقع'),
+                                  ],
+                                ),
                         ],
                       ),
                     ),
@@ -518,7 +463,8 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                 ],
                                 borderRadius: BorderRadius.circular(10.w)),
                             child: CustomText(
-                              '\$ 100 ',
+                              '\$ ${productDetailsModel?.product?.price}' ??
+                                  '\$ 100 ',
                               color: AppColors.orange,
                               fontSize: 14.sp,
                               fontFamily: 'DINNextLTArabic',

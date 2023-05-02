@@ -93,6 +93,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                                 OrderListCard(
                               image: ordersModel?.orders?[index].image ??
                                   'assets/images/sa1.jpeg',
+                              stats: ordersModel?.orders?[index].status ?? '',
                               title: ordersModel?.orders?[index].name ??
                                   'تنظيف بالبخار ',
                               compeny: ordersModel?.orders?[index].company ??

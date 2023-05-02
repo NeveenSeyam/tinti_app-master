@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tinti_app/Widgets/custom_text.dart';
 
 class latestOffersCard extends StatelessWidget {
   String image;
@@ -53,25 +54,24 @@ class latestOffersCard extends StatelessWidget {
                   ),
             Padding(
               padding: EdgeInsetsDirectional.only(start: 10.w),
-              child: Text(
+              child: CustomText(
                 title,
-                style: const TextStyle(
-                  // fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  fontFamily: 'DINNextLTArabic',
-                ),
+                maxLines: 1,
+                // fontWeight: FontWeight.bold,
+                fontSize: 14.sp,
+                fontFamily: 'DINNextLTArabic',
               ),
             ),
             details != ''
                 ? Padding(
                     padding: EdgeInsetsDirectional.only(start: 10.w),
-                    child: Text(
+                    child: CustomText(
                       details,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.orange[500],
-                        fontFamily: 'DINNextLTArabic',
-                      ),
+                      fontSize: 12.sp,
+                      color: Colors.orange[500],
+                      fontFamily: 'DINNextLTArabic',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   )
                 : Container(),
