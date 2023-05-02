@@ -344,4 +344,43 @@ class AccountProvider with ChangeNotifier {
   //     return false;
   //   }
   // }
+
+  Future forgetPassRequest({
+    required String email,
+  }) async //required String image
+  {
+    try {
+      Dio dio = Dio();
+
+      var response = await dio.post(
+        ApiUrls.forgetPassword,
+        data: email,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': "Bearer ${Constants.token}",
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        UIHelper.showNotification('تم ارسال بريد الكتروني بنجاح',
+            backgroundColor: AppColors.green);
+      } else {
+        UIHelper.showNotification('خطأ', backgroundColor: AppColors.red);
+      }
+      log("response $response");
+
+      return response.data;
+    } on DioError catch (e) {
+      var message;
+      e.response?.data['message'] != 'Validation Error.'
+          ? message = 'تم تغيير كلمة السر بنجاح'
+          : message = ' كلمة مرور غير مناسبة';
+      UIHelper.showNotification(message);
+
+      log(' e.mmm  ${e.message} ${e.response?.data['message']}');
+      return Failure;
+    }
+  }
 }

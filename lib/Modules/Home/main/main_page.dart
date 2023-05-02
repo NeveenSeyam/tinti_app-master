@@ -77,11 +77,7 @@ class _MainPageState extends ConsumerState<MainPage> {
     _fetchedServiceProductsRequest = _getServicesProductData();
     _fetchedMyRequest = _getContentData();
     _fetchedSalesProductsRequest = _getSalesProductContentData();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
-        overlays: [SystemUiOverlay.bottom]);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ));
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
     super.initState();
     _pageController = PageController();
@@ -491,7 +487,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                         return Center(
                           child: SizedBox(
                             width: 370.w,
-                            height: 40.h,
+                            height: 45.h,
                             child: ListView.builder(
                                 physics: null,
                                 shrinkWrap: true,
@@ -551,13 +547,13 @@ class _MainPageState extends ConsumerState<MainPage> {
                               padding: EdgeInsetsDirectional.only(
                                   start: 15.w, end: 15.w, top: 5.h),
                               child: SizedBox(
-                                height: 680.0,
+                                height: 680.h,
                                 child: GridView.builder(
                                     physics: NeverScrollableScrollPhysics(),
                                     gridDelegate:
                                         const SliverGridDelegateWithMaxCrossAxisExtent(
                                             maxCrossAxisExtent: 300,
-                                            childAspectRatio: 2 / 3,
+                                            childAspectRatio: 2 / 2.5,
                                             crossAxisSpacing: 10,
                                             mainAxisSpacing: 10),
                                     itemCount: productByServiceModel
@@ -630,7 +626,7 @@ class _MainPageState extends ConsumerState<MainPage> {
       },
       child: pageIndex == index
           ? Container(
-              padding: EdgeInsets.all(3.w),
+              padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 3.w),
               decoration: BoxDecoration(
                 color: Color(0xffF57A38),
                 borderRadius: BorderRadius.circular(10.w),
@@ -639,14 +635,14 @@ class _MainPageState extends ConsumerState<MainPage> {
               child: Center(
                 child: Text(
                   name,
-                  style: TextStyle(color: Colors.white, fontSize: 10.sp),
+                  style: TextStyle(color: Colors.white, fontSize: 12.sp),
                 ),
               ),
             )
           : Container(
               // width: 60.w,
-              // height: 30.h,
-              padding: EdgeInsets.all(3.w),
+              // height: 40.h,
+              padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 3.w),
               decoration: BoxDecoration(
                 // color: Colors.orange[300],
                 borderRadius: BorderRadius.circular(10.w),
@@ -657,9 +653,7 @@ class _MainPageState extends ConsumerState<MainPage> {
               child: Text(
                 name,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.black,
-                ),
+                style: TextStyle(color: Colors.black, fontSize: 12.sp),
               ),
             ),
     );

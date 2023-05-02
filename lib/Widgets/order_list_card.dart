@@ -81,14 +81,21 @@ class OrderListCard extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CustomText(
-                              title,
-                              fontSize: 13.sp,
+                            Container(
+                              width: 100.w,
+                              child: CustomText(
+                                title,
+                                fontSize: 13.sp,
+                              ),
                             ),
-                            CustomText(
-                              compeny,
-                              fontSize: 12.sp,
-                              color: AppColors.orange,
+                            Container(
+                              width: 80.w,
+                              alignment: Alignment.topLeft,
+                              child: CustomText(
+                                compeny,
+                                fontSize: 11.sp,
+                                color: AppColors.orange,
+                              ),
                             ),
                           ],
                         ),

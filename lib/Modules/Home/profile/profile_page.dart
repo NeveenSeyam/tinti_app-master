@@ -55,7 +55,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
     setState(() {
-      _image2 = File(pickedFile!.path);
+      img = File(pickedFile!.path);
     });
   }
 
@@ -81,11 +81,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   // late Future _fetchedMyRequest;
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
-        overlays: [SystemUiOverlay.bottom]);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ));
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+
     _fetchedMyRequest = _getContentData();
 
     super.initState();
@@ -102,6 +99,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    // _fnameController = 'example';
     return Directionality(
       textDirection: TextDirection.rtl,
       child: RefreshIndicator(
@@ -145,6 +143,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   var serviceModel =
                       ref.watch(accountProvider).getProfileModel ??
                           ProfileModel();
+                  _addressController.text = serviceModel.user?.address ?? '';
+                  _lnameController.text = serviceModel.user?.lname ?? '';
+                  _fnameController.text = serviceModel.user?.fname ?? '';
+                  _emailController.text = serviceModel.user?.email ?? '';
+                  _numberController.text = serviceModel.user?.mobile ?? '';
+
                   var profileModel = ref.watch(accountProvider);
                   var changPassModel = ref.watch(accountProvider);
                   return Column(
@@ -318,35 +322,66 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                         ),
                                                       ),
                                                     ),
-                                                    GestureDetector(
-                                                        onTap: () {
-                                                          _getImageData();
-                                                          // print('img $img');
-                                                        },
-                                                        child: Center(
-                                                          child: Container(
-                                                            width: 350.w,
-                                                            height: 150.h,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10.w),
-                                                              color: AppColors
-                                                                  .scadryColor
-                                                                  .withOpacity(
-                                                                      0.3),
-                                                            ),
-                                                            child: Icon(
-                                                              Icons
-                                                                  .add_to_photos_rounded,
-                                                              color: AppColors
-                                                                  .orange,
-                                                              size: 40.w,
-                                                            ),
-                                                          ),
-                                                        )),
+                                                    Container(
+                                                      width: double.infinity,
+                                                      child: GestureDetector(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              _getImageData();
+
+                                                              _getImage();
+                                                            });
+                                                            // print('img $img');
+                                                          },
+                                                          child: img == null
+                                                              ? Center(
+                                                                  child:
+                                                                      Container(
+                                                                    width:
+                                                                        350.w,
+                                                                    height:
+                                                                        150.h,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10.w),
+                                                                      color: AppColors
+                                                                          .scadryColor
+                                                                          .withOpacity(
+                                                                              0.3),
+                                                                    ),
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .add_to_photos_rounded,
+                                                                      color: AppColors
+                                                                          .orange,
+                                                                      size:
+                                                                          40.w,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : Center(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            8.0),
+                                                                    child: Image
+                                                                        .file(
+                                                                      img ??
+                                                                          File(
+                                                                              'file.txt'),
+                                                                      width:
+                                                                          300.w,
+                                                                      height:
+                                                                          150.h,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                )),
+                                                    ),
                                                     Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -374,7 +409,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                           355.w,
                                                           serviceModel.user
                                                                   ?.email ??
-                                                              'Naji@gmail.com',
+                                                              'example@gmail.com',
                                                           _emailController),
                                                     ),
                                                     Center(
@@ -422,6 +457,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                           setState(() {
                                                             _fetchedMyRequest =
                                                                 _getContentData();
+
+                                                            _addressController
+                                                                .text = '';
+                                                            _emailController
+                                                                .text = '';
+                                                            _fnameController
+                                                                .text = '';
+                                                            _lnameController
+                                                                .text = '';
+                                                            _image2 = null;
+                                                            _numberController
+                                                                .text = '';
+                                                            img = null;
                                                           });
 
                                                           Navigator.pop(
@@ -440,7 +488,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                         horizontalTextPadding:
                                                             0,
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               );

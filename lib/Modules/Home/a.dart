@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:circular_menu/circular_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spincircle_bottom_bar/modals.dart';
 import 'package:tinti_app/Modules/Home/companys/company-profile.dart';
@@ -41,6 +42,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
   GlobalKey<CircularMenuState> key = GlobalKey<CircularMenuState>();
 
   int pageIndex = 0;
+  @override
+  void initState() {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.immersive,
+    );
+    // overlays: [SystemUiOverlay.]);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

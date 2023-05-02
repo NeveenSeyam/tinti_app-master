@@ -58,9 +58,9 @@ class ServicesCard extends StatelessWidget {
               padding: EdgeInsetsDirectional.only(start: 10.w),
               child: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   // fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 14.sp,
                   fontFamily: 'DINNextLTArabic',
                 ),
               ),
@@ -73,7 +73,7 @@ class ServicesCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12.sp,
                         color: Colors.orange[500],
                         fontFamily: 'DINNextLTArabic',
                       ),

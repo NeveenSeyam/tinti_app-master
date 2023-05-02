@@ -277,8 +277,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final defaultPinTheme = PinTheme(
     width: 70.w,
     height: 50.h,
-    padding: EdgeInsets.all(10.w),
-    margin: EdgeInsets.all(10.w),
+    padding: EdgeInsets.all(5.w),
+    margin: EdgeInsets.all(5.w),
     textStyle: const TextStyle(
       fontSize: 32,
       color: Color.fromRGBO(30, 60, 87, 1),

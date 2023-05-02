@@ -81,14 +81,21 @@ class _WishListCardState extends State<WishListCard> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CustomText(
-                              widget.title,
-                              fontSize: 13.sp,
+                            Container(
+                              width: 100.w,
+                              child: CustomText(
+                                widget.title,
+                                fontSize: 13.sp,
+                              ),
                             ),
-                            CustomText(
-                              widget.compeny,
-                              fontSize: 12.sp,
-                              color: AppColors.orange,
+                            Container(
+                              width: 80.w,
+                              alignment: Alignment.topLeft,
+                              child: CustomText(
+                                widget.compeny,
+                                fontSize: 12.sp,
+                                color: AppColors.orange,
+                              ),
                             ),
                           ],
                         ),

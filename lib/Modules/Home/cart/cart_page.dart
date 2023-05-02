@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tinti_app/provider/order_provider.dart';
@@ -31,6 +32,7 @@ class _CartPageState extends ConsumerState<CartPage> {
   @override
   void initState() {
     _fetchedOrderRequest = _getordersData();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
     super.initState();
   }
@@ -85,7 +87,7 @@ class _CartPageState extends ConsumerState<CartPage> {
 
                     return ordersModel?.orders?.length != 0
                         ? ListView.builder(
-                            physics: const ClampingScrollPhysics(),
+                            physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
                             itemCount: ordersModel?.orders?.length,

@@ -18,7 +18,7 @@ class ApiUrls {
   static const changePassword = '${baseUrl}api/changePassword';
   static const logout = '${baseUrl}api/logout';
   static const activate = '${baseUrl}api/activate';
-  // static const login = '${baseUrl}api/login';
+  static const forgetPassword = '${baseUrl}api/frogotPassword';
 
 // user_car
   static const cars = '${baseUrl}api/cars';
