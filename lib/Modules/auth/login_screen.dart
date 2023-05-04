@@ -34,68 +34,17 @@ String? validateEmail(String? value) {
   if (!value!.isEmail() && value.isEmpty) {
     return 'لو سمحت ادخل بريدك الالكتروني';
   }
+  // return value;
 }
 
 String? validatePassword(String? value) {
   if (value!.length < 6) {
     return 'يجب ان تكون كلمة السر 6 احرف على الاقل ';
   }
+  // return value;
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-// ###############################
-
-//  saveForm(BuildContext context, WidgetRef ref) {
-//     print('icslck');
-
-//     final isValid = _Key.currentState!.validate();
-//     if (!isValid) {
-//       print('inVaild');
-
-//       return;
-//     }
-
-//     _Key.currentState!.save();
-
-//     if (isValid) {
-//       loadingDialog(context);
-
-//       var accountPro = ref.read(accountProvider);
-//       accountPro
-//           .postLogin(
-//         email: _emailController.text,
-//         password: _passwordController.text.trim(),
-//       )
-//           .then((value) {
-//         if (value) {
-//           Navigator.of(context).pop();
-//   Navigator.pushNamed(context, '/navegaitor_screen');
-//           } else {
-//           Navigator.of(context).pop();
-//         }
-//       });
-//       //   _addNewVisitFin(context, ref);
-//       //   _loginFun(context, emailControl.text, passwordControl.text, ref);
-//     }
-//   }
-
-//   late Future _fetchStateFuture;
-
-//   @override
-//   void initState() {
-//     _fetchStateFuture = _fetchState();
-
-//     // _getUserVisitsFuture = _fetchGetFeaturedUserVisit();
-//     super.initState();
-//   }
-
-//   Future _fetchState() async {
-//     final userProv = ref.read(accountProvider);
-//     return await userProv.getStateRequset();
-//   }
-
-// #######################################################
-
   final _Key = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
@@ -133,19 +82,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Navigator.pop(context); //134092
         }
 
-        // final userProv = ref.read(userProvider);
-        // userProv.setUser(LoginModel.fromJson(response));
-        // prefs.setString(Keys.hasSaveUserData,
-        log("value $value");
-        //  var user = UserLogin.fromJson(value);
-        // if (isRememberMe) {
-        //   var userData =
-        //       json.encoder.convert(UserLogin.fromJson(user.toJson()));
-        //   SharedPreferences? prefs = await SharedPreferences.getInstance();
-        //   prefs.setString(Keys.hasSaveUserData, userData);
-        // }
+        // // final userProv = ref.read(userProvider);
+        // // userProv.setUser(LoginModel.fromJson(response));
+        // // prefs.setString(Keys.hasSaveUserData,
+        // log("value $value");
+        // //  var user = UserLogin.fromJson(value);
+        // // if (isRememberMe) {
+        // //   var userData =
+        // //       json.encoder.convert(UserLogin.fromJson(user.toJson()));
+        // //   SharedPreferences? prefs = await SharedPreferences.getInstance();
+        // //   prefs.setString(Keys.hasSaveUserData, userData);
+        // // }
 
-        //    Constants.userTokent = user.data?.token ?? "";
+        // //    Constants.userTokent = user.data?.token ?? "";
       } else {
         Navigator.pop(context);
       }

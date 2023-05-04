@@ -1,11 +1,7 @@
 import 'dart:developer';
-
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,22 +9,16 @@ import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:regexpattern/regexpattern.dart';
-import 'package:tinti_app/Widgets/custom_button.dart';
 import 'package:tinti_app/provider/account_provider.dart';
-
 import '../../Helpers/failure.dart';
-import '../../Models/auth/user_model.dart';
 import '../../Util/constants/constants.dart';
 import '../../Util/constants/keys.dart';
-import '../../Widgets/auth_screens.dart';
 import '../../Widgets/custom_text.dart';
 import '../../Widgets/custom_text_field.dart';
 import '../../Widgets/gradint_button.dart';
 import '../../Widgets/loading_dialog.dart';
 import '../../helpers/ui_helper.dart';
 import '../Home/a.dart';
-import 'TRY/home.dart';
-import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -83,7 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _lNameController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
-
+  var mob = '';
   final TextEditingController _confiremPasswordController =
       TextEditingController();
   TextEditingController otpController = TextEditingController();
@@ -119,7 +109,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       confirmPassword: _confiremPasswordController.text,
       email: _emailController.text,
       password: _passwordController.text,
-      phoneNumber: _mobileController.text,
+      phoneNumber: mob,
       lName: _lNameController.text,
     ).onError((error, stackTrace) {
       Navigator.pop(context);
@@ -417,38 +407,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           seen: false,
                           controller: _emailController,
                         ),
-                        Row(
-                          children: [
-                            RoundedInputField(
-                              width: 50.w,
-                              hintText: '+ ',
-                              onChanged: (value) {},
-                              hintColor: AppColors.hint,
-                              color: AppColors.lightgrey,
-                              circuler: 10.w,
-                              height: 48.h,
-                              validator: validateCountryNumber,
-                              seen: false,
-                              controller: _countryController,
-                            ),
-                            RoundedInputField(
-                              hintText: 'رقم الهاتف',
-                              width: 300.w,
-                              onChanged: (value) {},
-                              hintColor: AppColors.hint,
-                              color: AppColors.lightgrey,
-                              circuler: 10.w,
-                              height: 48.h,
-                              icon: Icon(
-                                Icons.mobile_screen_share_sharp,
-                                color: AppColors.hint,
-                                size: 17.w,
+                        Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Container(
+                            width: 350.w,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10.w, vertical: 3.h),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.w),
+                                color: AppColors.grey.withOpacity(0.3)),
+                            child: SizedBox(
+                              width: 200.w,
+                              child: InternationalPhoneNumberInput(
+                                // textAlign: TextAlign.end,
+                                textFieldController: _mobileController,
+                                // ignoreBlank: true,
+                                inputDecoration: InputDecoration(
+                                  hintText: 'Phone Number',
+                                  border: InputBorder.none,
+                                ),
+                                onInputChanged: (PhoneNumber number) {
+                                  print(number.phoneNumber);
+                                  mob = number.phoneNumber.toString();
+                                  print('mob  ${mob}');
+                                },
+                                onInputValidated: (bool value) {
+                                  // print(value);
+                                },
+                                selectorConfig: SelectorConfig(
+                                  selectorType: PhoneInputSelectorType.DIALOG,
+                                ),
                               ),
-                              validator: validateMobileNumber,
-                              seen: false,
-                              controller: _mobileController,
                             ),
-                          ],
+                          ),
                         ),
                         RoundedInputField(
                           hintText: 'كلمة المرور',
@@ -585,8 +576,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void loginWithPhone() async {
+    print('aaaaa,${mob.replaceAll('-', '')}');
     auth.verifyPhoneNumber(
-      phoneNumber: _countryController.text + _mobileController.text,
+      phoneNumber: mob.replaceAll('-', ''),
       verificationCompleted: (PhoneAuthCredential credential) async {
         await auth.signInWithCredential(credential).then((value) {
           print("You are logged in successfully");

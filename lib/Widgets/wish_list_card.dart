@@ -74,30 +74,23 @@ class _WishListCardState extends State<WishListCard> {
                     width: 10.w,
                   ),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      Container(
+                        alignment: Alignment.centerRight,
                         width: 200.w,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: 100.w,
-                              child: CustomText(
-                                widget.title,
-                                fontSize: 13.sp,
-                              ),
-                            ),
-                            Container(
-                              width: 80.w,
-                              alignment: Alignment.topLeft,
-                              child: CustomText(
-                                widget.compeny,
-                                fontSize: 12.sp,
-                                color: AppColors.orange,
-                              ),
-                            ),
-                          ],
+                        child: CustomText(
+                          widget.title,
+                          fontSize: 13.sp,
+                        ),
+                      ),
+                      Container(
+                        width: 200.w,
+                        alignment: Alignment.topRight,
+                        child: CustomText(
+                          widget.compeny,
+                          fontSize: 12.sp,
+                          color: AppColors.orange,
                         ),
                       ),
                       SizedBox(
@@ -171,9 +164,9 @@ class _WishListCardState extends State<WishListCard> {
                   )
                 ],
               ),
-              SizedBox(
-                height: 10.h,
-              ),
+              // SizedBox(
+              //   height: 10.h,
+              // ),
             ],
           ),
         ),

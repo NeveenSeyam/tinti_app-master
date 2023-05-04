@@ -8,11 +8,11 @@ class ChangePasswordApi extends BaseDioApi {
   ChangePasswordApi({
     required this.email,
     required this.password,
-  }) : super(ApiUrls.addcars);
+  }) : super(ApiUrls.changePassword);
 
   @override
   body() {
-    return {};
+    return {'email': email, 'password': password};
   }
 
   Future fetch() async {

@@ -397,7 +397,13 @@ class _MainPageState extends ConsumerState<MainPage> {
                                     'assets/images/cardtile.png',
                                     productModel
                                             ?.success?.items?[index].price ??
-                                        '460\$'),
+                                        '460\$',
+                                    productModel?.success?.items?[index]
+                                            .is_favorite ??
+                                        0,
+                                    productModel?.success?.items?[index].id
+                                            .toString() ??
+                                        '0'),
                               ),
                             ),
                           );
@@ -576,23 +582,25 @@ class _MainPageState extends ConsumerState<MainPage> {
                                           );
                                         },
                                         child: ServicesCard(
-                                            // productByServiceModel.Products.length ??
-                                            productByServiceModel.success
-                                                    ?.items?[index].image ??
-                                                'assets/images/sa1.jpeg',
-                                            productByServiceModel.success
-                                                    ?.items?[index].name ??
-                                                ' تظليل',
-                                            productByServiceModel
-                                                    .success
-                                                    ?.items?[index]
-                                                    .description ??
-                                                'شركة جونسون اد جونسون.',
-                                            productByServiceModel.success
-                                                    ?.items?[index].price ??
-                                                '355',
-                                            '',
-                                            ''),
+                                          // productByServiceModel.Products.length ??
+                                          productByServiceModel.success
+                                                  ?.items?[index].image ??
+                                              'assets/images/sa1.jpeg',
+                                          productByServiceModel.success
+                                                  ?.items?[index].name ??
+                                              ' تظليل',
+                                          productByServiceModel.success
+                                                  ?.items?[index].description ??
+                                              'شركة جونسون اد جونسون.',
+                                          productByServiceModel.success
+                                                  ?.items?[index].price ??
+                                              '355',
+                                          '',
+                                          '',
+                                          productByServiceModel.success
+                                                  ?.items?[index].is_favorite ??
+                                              355,
+                                        ),
                                       );
                                     }),
                               ),

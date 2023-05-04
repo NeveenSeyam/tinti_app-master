@@ -238,7 +238,12 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                                           .price ??
                                                       '355',
                                                   '',
-                                                  ''),
+                                                  '',
+                                                  productByServiceModel
+                                                          .success
+                                                          ?.items?[index]
+                                                          .is_favorite ??
+                                                      0),
                                             );
                                           }),
                                     ),

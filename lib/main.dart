@@ -6,17 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:tinti_app/Modules/Home/companys/company-profile.dart';
 import 'package:tinti_app/Modules/Home/a.dart';
 import 'package:tinti_app/Modules/auth/forgetPassword/final_screen.dart';
-import 'package:tinti_app/Modules/auth/forgetPassword/secound_screen.dart';
-import 'package:tinti_app/Modules/auth/forgetPassword/theard_screen.dart';
 import 'package:tinti_app/Modules/auth/login_screen.dart';
 import 'package:tinti_app/Modules/auth/signup_screen.dart';
 import 'Modules/Home/companys/company_page.dart';
 import 'Modules/OnBoarding/on_boarding_screen.dart';
-import 'Modules/auth/TRY/login.dart';
-import 'Modules/auth/cray/login_with_phone.dart';
 import 'Modules/auth/forgetPassword/first_forget_screen.dart';
 import 'Modules/auth/splash.dart';
 import 'firebase_options.dart';
@@ -57,8 +52,8 @@ class _MyAppState extends State<MyApp> {
                   '/poard_screen': (context) => const OnBoardingScreens(),
                   '/signup_screen': (context) => const SignUpScreen(),
                   '/first_screen': (context) => const FirstForgetScreen(),
-                  '/secound_screen': (context) => const SecoundForgetScreen(),
-                  '/theard_screen': (context) => const TheardForgetScreen(),
+                  // '/secound_screen': (context) => const SecoundForgetScreen(),
+                  // '/theard_screen': (context) => const TheardForgetScreen(),
                   '/navegaitor_screen': (context) => MyHomePage(),
                   '/final_screen': (context) => const FinalForgetScreen(),
                   '/campany_screen': (context) => CampanyPage(),

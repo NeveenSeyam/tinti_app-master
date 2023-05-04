@@ -62,6 +62,7 @@ class Items {
   String? rating;
   String? ratingCount;
   String? image;
+  int? is_favorite;
   List<ProductRating>? productRating;
   List<Null>? productImages;
 
@@ -76,7 +77,8 @@ class Items {
       this.ratingCount,
       this.image,
       this.productRating,
-      this.productImages});
+      this.productImages,
+      this.is_favorite});
 
   Items.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -88,19 +90,21 @@ class Items {
     rating = json['rating'];
     ratingCount = json['rating_count'];
     image = json['image'];
+    is_favorite = json['is_favorite'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['price'] = this.price;
-    data['sale_price'] = this.salePrice;
-    data['service'] = this.service;
-    data['rating'] = this.rating;
-    data['rating_count'] = this.ratingCount;
-    data['image'] = this.image;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['description'] = description;
+    data['price'] = price;
+    data['sale_price'] = salePrice;
+    data['service'] = service;
+    data['rating'] = rating;
+    data['rating_count'] = ratingCount;
+    data['image'] = image;
+    data['is_favorite'] = is_favorite;
 
     return data;
   }

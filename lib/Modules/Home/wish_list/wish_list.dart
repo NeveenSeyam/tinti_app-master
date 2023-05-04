@@ -72,14 +72,103 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                           );
                         }
                         if (snapshot.hasError) {
-                          return Center(
-                            child: Text('Error: ${snapshot.error}'),
+                          return Padding(
+                            padding: EdgeInsets.all(20.w),
+                            child: Container(
+                                padding: EdgeInsets.all(20.w),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        offset: Offset(0, 7),
+                                        blurRadius: 10,
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(20.w),
+                                    color: AppColors.white.withOpacity(0.9)),
+                                width: 320.w,
+                                height: 500.h,
+                                child: Column(
+                                  children: [
+                                    Image.asset('assets/images/nullstate.png'),
+                                    SizedBox(
+                                      height: 20.h,
+                                    ),
+                                    Container(
+                                      width: 300.w,
+                                      child: CustomText(
+                                        '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                        color: AppColors.orange,
+                                        // fontWeight: FontWeight.bold,
+                                        fontFamily: 'DINNEXTLTARABIC',
+
+                                        textAlign: TextAlign.center,
+                                        fontSize: 18.sp,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 60.h,
+                                    ),
+                                    RaisedGradientButton(
+                                      text: 'تواصل معنا',
+                                      color: AppColors.scadryColor,
+                                      height: 48.h,
+                                      width: 320.w,
+                                      circular: 10.w,
+                                      onPressed: () {},
+                                    ),
+                                  ],
+                                )),
                           );
                         }
                         if (snapshot.hasData) {
                           if (snapshot.data is Failure) {
                             return Center(
-                                child: TextWidget(snapshot.data.toString()));
+                                child: Padding(
+                              padding: EdgeInsets.all(20.w),
+                              child: Container(
+                                  padding: EdgeInsets.all(20.w),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20.w),
+                                      color: AppColors.lightPrimaryColor
+                                          .withOpacity(0.2)),
+                                  width: 320.w,
+                                  height: 500.h,
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                          'assets/images/nullstate.png'),
+                                      SizedBox(
+                                        height: 20.h,
+                                      ),
+                                      Container(
+                                        width: 300.w,
+                                        child: CustomText(
+                                          '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                          color: AppColors.orange,
+                                          // fontWeight: FontWeight.bold,
+                                          fontFamily: 'DINNEXTLTARABIC',
+
+                                          textAlign: TextAlign.center,
+                                          fontSize: 18.sp,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 60.h,
+                                      ),
+                                      RaisedGradientButton(
+                                        text: 'تصفح المنتجات',
+                                        color: AppColors.scadryColor,
+                                        height: 48.h,
+                                        width: 320.w,
+                                        circular: 10.w,
+                                        onPressed: () {},
+                                      ),
+                                    ],
+                                  )),
+                            ));
                           }
                           //
                           //  print("snapshot data is ${snapshot.data}");

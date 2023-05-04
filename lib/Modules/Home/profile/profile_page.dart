@@ -72,13 +72,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   late Future _fetchedMyRequest;
-//  Future _getChangPass() async {
-//     final prov = ref.read(accountProvider);
-
-//     return await prov.editProfilePasswordRequset();
-//   }
-
-  // late Future _fetchedMyRequest;
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -89,35 +82,22 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     _pageController = PageController();
   }
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
   String _value = 'العربية';
 
   @override
   Widget build(BuildContext context) {
-    // _fnameController = 'example';
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: RefreshIndicator(
-        onRefresh: () {
-          setState(() {
-            _fetchedMyRequest = _getContentData();
-          });
-          return _fetchedMyRequest;
-        },
-        child: Scaffold(
-          backgroundColor: Colors.grey[100],
-          appBar: CustomAppBar(
-            "حسابي",
-            isNotification: false,
-            isProfile: true,
-            isHome: false,
-          ),
-          body: Consumer(
+      child: Scaffold(
+        appBar: CustomAppBar(
+          isProfile: false,
+          'حسابي',
+          isHome: true,
+          isNotification: true,
+        ),
+        body: Container(
+          width: double.infinity,
+          child: Consumer(
             builder: (context, ref, child) => FutureBuilder(
               future: _fetchedMyRequest,
               builder: (context, snapshot) {
@@ -130,16 +110,108 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   );
                 }
                 if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
+                  return Padding(
+                    padding: EdgeInsets.all(20.w),
+                    child: Container(
+                        padding: EdgeInsets.all(20.w),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0, 7),
+                                blurRadius: 10,
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(20.w),
+                            color: AppColors.white.withOpacity(0.9)),
+                        width: 320.w,
+                        height: 500.h,
+                        child: Column(
+                          children: [
+                            Image.asset('assets/images/nullstate.png'),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Container(
+                              width: 300.w,
+                              child: CustomText(
+                                '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                color: AppColors.orange,
+                                // fontWeight: FontWeight.bold,
+                                fontFamily: 'DINNEXTLTARABIC',
+
+                                textAlign: TextAlign.center,
+                                fontSize: 18.sp,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60.h,
+                            ),
+                            RaisedGradientButton(
+                              text: 'تواصل معنا',
+                              color: AppColors.scadryColor,
+                              height: 48.h,
+                              width: 320.w,
+                              circular: 10.w,
+                              onPressed: () {},
+                            ),
+                          ],
+                        )),
                   );
                 }
                 if (snapshot.hasData) {
                   if (snapshot.data is Failure) {
-                    return Center(child: TextWidget(snapshot.data.toString()));
+                    return Padding(
+                      padding: EdgeInsets.all(20.w),
+                      child: Container(
+                          padding: EdgeInsets.all(20.w),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  offset: Offset(0, 7),
+                                  blurRadius: 10,
+                                ),
+                              ],
+                              borderRadius: BorderRadius.circular(20.w),
+                              color: AppColors.white.withOpacity(0.9)),
+                          width: 320.w,
+                          height: 500.h,
+                          child: Column(
+                            children: [
+                              Image.asset('assets/images/nullstate.png'),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              Container(
+                                width: 300.w,
+                                child: CustomText(
+                                  '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                  color: AppColors.orange,
+                                  // fontWeight: FontWeight.bold,
+                                  fontFamily: 'DINNEXTLTARABIC',
+
+                                  textAlign: TextAlign.center,
+                                  fontSize: 18.sp,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 60.h,
+                              ),
+                              RaisedGradientButton(
+                                text: 'تواصل معنا',
+                                color: AppColors.scadryColor,
+                                height: 48.h,
+                                width: 320.w,
+                                circular: 10.w,
+                                onPressed: () {},
+                              ),
+                            ],
+                          )),
+                    );
                   }
-                  //
-                  //  print("snapshot data is ${snapshot.data}");
                   var serviceModel =
                       ref.watch(accountProvider).getProfileModel ??
                           ProfileModel();
@@ -172,7 +244,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       width: 85.w,
                                       height: 85.h,
                                       child: Image.network(
-                                        '${serviceModel.user?.img}',
+                                        '${serviceModel.user?.img}' ??
+                                            'https://1fid.com/wp-content/uploads/2022/06/cool-profile-picture-2-720x720.jpg',
                                         fit: BoxFit.fill,
                                         width: 85.w,
                                         height: 85.w,
@@ -340,7 +413,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                     width:
                                                                         350.w,
                                                                     height:
-                                                                        150.h,
+                                                                        120.h,
                                                                     decoration:
                                                                         BoxDecoration(
                                                                       borderRadius:
@@ -375,7 +448,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                       width:
                                                                           300.w,
                                                                       height:
-                                                                          150.h,
+                                                                          120.h,
                                                                       fit: BoxFit
                                                                           .cover,
                                                                     ),

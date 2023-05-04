@@ -13,8 +13,12 @@ import '../Apis/auth/login_api.dart';
 import '../Helpers/failure.dart';
 import '../Models/auth/profile_model.dart';
 import '../Models/auth/user_model.dart';
+import '../Models/change.dart';
+import '../Models/forget_pass.dart';
 import '../Util/constants/constants.dart';
 import '../apis/auth/add_user_api.dart';
+import '../apis/auth/change_password_api.dart';
+import '../apis/auth/forget_password.dart';
 import '../apis/user_profile/get_user_profile.dart';
 import '../helpers/ui_helper.dart';
 
@@ -52,6 +56,21 @@ class AccountProvider with ChangeNotifier {
   setActivateModel(ActivateModel activ) {
     _activateModel = activ;
   }
+
+  ForgetPasswordDataModel? _forgetPasswordDataModel;
+  ForgetPasswordDataModel? get getForgetPassModel => _forgetPasswordDataModel;
+
+  setForgetPassModel(ForgetPasswordDataModel profile) {
+    _forgetPasswordDataModel = profile;
+  }
+
+  changePasswordDataModel? _changeData;
+  changePasswordDataModel? get getChangePassModel => _changeData;
+
+  setChangePassModel(changePasswordDataModel change) {
+    _changeData = change;
+  }
+
 // * ===== State List =====
 
   Future postRegisterUser({
@@ -105,19 +124,6 @@ class AccountProvider with ChangeNotifier {
     }
   }
 
-  // Future AactivateRequest2() async {
-  //   try {
-  //     final response = await GetActivateApi().fetch();
-
-  //     setActivateModel(ActivateModel.fromJson(response));
-
-  //     return response;
-  //   } on Failure catch (f) {
-  //     UIHelper.showNotification(f.message);
-  //     return false;
-  //   }
-  // } // where  home page?>
-
   Future AactivateRequest() async //required String image
   {
     try {
@@ -154,43 +160,12 @@ class AccountProvider with ChangeNotifier {
     }
   }
 
-  Future getUserProfileRequset() async {
-    try {
-      final response = await GetUserProfile().fetch();
-
-      setProfileModel(ProfileModel.fromJson(response));
-
-      return response;
-    } on Failure catch (f) {
-      UIHelper.showNotification(f.message);
-      return false;
-    }
-  } // where  home page?>
-
-  // Future updateUserProfileRequset({
-  //   required String fName,
-  //   required String lName,
-  //   required String email,
-  //   required String phoneNumber,
-  //   required String img,
-  //   required String address,
-  // }) async {
-  //   userNameG = fName;
-  //   userEmail = email;
-  //   userPhoneNumber = phoneNumber;
-
+  // Future getUserProfileRequset() async {
   //   try {
-  //     final response = await EditUserProfile(
-  //             email: email,
-  //             img: img,
-  //             address: address,
-  //             phoneNumber: phoneNumber,
-  //             fName: fName,
-  //             lName: lName)
-  //         .fetch();
+  //     final response = await GetUserProfile().fetch();
 
-  //     log("update profile $response");
-  //     // setActiveOffers(storeOffers);
+  //     setProfileModel(ProfileModel.fromJson(response));
+
   //     return response;
   //   } on Failure catch (f) {
   //     UIHelper.showNotification(f.message);
@@ -198,7 +173,25 @@ class AccountProvider with ChangeNotifier {
   //   }
   // }
 
-  // edit user info  with image mlutform
+  Future getUserProfileRequset() async {
+    //! we create this object to set new data to the data object
+    ProfileModel? userList = ProfileModel();
+
+    try {
+      //! here we call the api and get the data using the Fetch method
+      final response = await GetUserProfile().fetch();
+      log("response $response");
+
+      //! use FormJson method to convert the data to the data object
+      userList = ProfileModel.fromJson(response);
+      //! set the new data to the data object
+      setProfileModel(userList);
+
+      return response;
+    } on Failure catch (f) {
+      return f;
+    }
+  }
 
   Future editUserRequset(
       {required Map<String, dynamic> data,
@@ -270,29 +263,6 @@ class AccountProvider with ChangeNotifier {
     }
   }
 
-  // Future updateUserPasswordRequset({
-  //   required String email,
-  //   required String password,
-  //   required String confirm,
-  // }) async {
-  //   password = email;
-  //   confirmPass = email;
-  //   userPhoneNumber = confirm;
-
-  //   try {
-  //     final response =
-  //         await ChangePasswordApi(email: email, password: password).fetch();
-
-  //     log("update password $response");
-  //     // setActiveOffers(storeOffers);
-  //     return response;
-  //   } on Failure catch (f) {
-  //     UIHelper.showNotification(f.message);
-  //     return false;
-  //   }
-  // }
-
-  // edit user info  with image mlutform
   Future editProfilePasswordRequset({
     required Map<String, dynamic> data,
   }) async //required String image
@@ -334,27 +304,62 @@ class AccountProvider with ChangeNotifier {
     }
   }
 
-  // Future getForgetPasswordApiRequset({required String email}) async {
-  //   try {
-  //     await GetForgetPasswordApi(email: email).fetch();
+  Future forgetPassRequest({
+    required String email,
+  }) async {
+    ForgetPasswordDataModel? forgetList = ForgetPasswordDataModel();
 
-  //     return true;
+    try {
+      final response = await GetForgetPasswordApi(
+        email: email,
+      ).fetch();
+      forgetList = ForgetPasswordDataModel.fromJson(response);
+
+      log("checkTwoFactorTkoenCode $response");
+      setForgetPassModel(forgetList);
+
+      // setActiveOffers(storeOffers);
+      return forgetList;
+    } on Failure catch (f) {
+      log("message ${f.message}");
+      return false;
+    }
+  }
+
+  // Future updatePass({
+  //   required String email,
+  //   required String password,
+  // }) async {
+  //   changePasswordDataModel? changeList = changePasswordDataModel();
+
+  //   try {
+  //     final response =
+  //         await ChangePasswordApi(email: email, password: password).fetch();
+  //     changeList = changePasswordDataModel.fromJson(response);
+
+  //     log("check update $response");
+  //     setChangePassModel(changeList);
+
+  //     // setActiveOffers(storeOffers);
+  //     return changeList;
   //   } on Failure catch (f) {
-  //     UIHelper.showNotification(f.message);
+  //     log("message ${f.message}");
   //     return false;
   //   }
   // }
 
-  Future forgetPassRequest({
-    required String email,
+  Future updatePass({
+    required Map<String, dynamic> data,
   }) async //required String image
   {
+    FormData formData = FormData.fromMap(data);
+
     try {
       Dio dio = Dio();
 
       var response = await dio.post(
-        ApiUrls.forgetPassword,
-        data: email,
+        ApiUrls.changePassword,
+        data: formData,
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -364,7 +369,7 @@ class AccountProvider with ChangeNotifier {
         ),
       );
       if (response.statusCode == 200) {
-        UIHelper.showNotification('تم ارسال بريد الكتروني بنجاح',
+        UIHelper.showNotification('تم تغيير كلمة المرور بنجاح',
             backgroundColor: AppColors.green);
       } else {
         UIHelper.showNotification('خطأ', backgroundColor: AppColors.red);

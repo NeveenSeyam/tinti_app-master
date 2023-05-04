@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/custom_text.dart';
 import 'package:tinti_app/provider/services_provider.dart';
 
-class ServicesCard extends StatelessWidget {
+class ServicesCard extends StatefulWidget {
   String image;
   String title;
   String details;
   String price;
   String lastPrice;
   String img2;
+  int is_favorite;
   ServicesCard(this.image, this.title, this.details, this.price, this.img2,
-      this.lastPrice,
+      this.lastPrice, this.is_favorite,
       {super.key});
 
+  @override
+  State<ServicesCard> createState() => _ServicesCardState();
+}
+
+class _ServicesCardState extends State<ServicesCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -24,12 +31,12 @@ class ServicesCard extends StatelessWidget {
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            img2 != ''
+            widget.img2 != ''
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 9.h),
                     child: Center(
                       child: Image.asset(
-                        img2,
+                        widget.img2,
                         fit: BoxFit.fill,
                         width: 57.95.w,
                         height: 14.97.h,
@@ -37,10 +44,10 @@ class ServicesCard extends StatelessWidget {
                     ),
                   )
                 : Container(),
-            img2 != ''
+            widget.img2 != ''
                 ? Center(
                     child: Image.asset(
-                      image,
+                      widget.image,
                       fit: BoxFit.fill,
                       width: 148.w,
                       height: 106.h,
@@ -48,7 +55,7 @@ class ServicesCard extends StatelessWidget {
                   )
                 : Center(
                     child: Image.network(
-                      image,
+                      widget.image,
                       fit: BoxFit.fill,
                       width: double.infinity,
                       height: 106.h,
@@ -57,7 +64,7 @@ class ServicesCard extends StatelessWidget {
             Padding(
               padding: EdgeInsetsDirectional.only(start: 10.w),
               child: Text(
-                title,
+                widget.title,
                 style: TextStyle(
                   // fontWeight: FontWeight.bold,
                   fontSize: 14.sp,
@@ -65,11 +72,11 @@ class ServicesCard extends StatelessWidget {
                 ),
               ),
             ),
-            details != ''
+            widget.details != ''
                 ? Padding(
                     padding: EdgeInsetsDirectional.only(start: 10.w),
                     child: Text(
-                      details,
+                      widget.details,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: TextStyle(
@@ -87,7 +94,7 @@ class ServicesCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomText(
-                    '$price\$',
+                    '${widget.price}\$',
 
                     // fontWeight: FontWeight.bold,
                     fontSize: 13.sp, overflow: TextOverflow.ellipsis,
@@ -97,17 +104,30 @@ class ServicesCard extends StatelessWidget {
                   //   width: 8.w,
                   // ),
 
-                  Container(
-                    width: 25.w,
-                    height: 24.h,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(3.w),
-                      // border: Border.all(color: Colors.grey),
-                    ),
-                    child: const Icon(
-                      Icons.favorite_border,
-                      color: Colors.orange,
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.is_favorite = widget.is_favorite == 0
+                            ? widget.is_favorite = 1
+                            : widget.is_favorite = 0;
+                      });
+                    },
+                    child: Container(
+                      width: 25.w,
+                      height: 24.h,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(3.w),
+                        // border: Border.all(color: Colors.grey),
+                      ),
+                      child: Icon(
+                        widget.is_favorite == 0
+                            ? Icons.favorite_border
+                            : Icons.favorite,
+                        color: widget.is_favorite == 0
+                            ? AppColors.grey
+                            : AppColors.orange,
+                      ),
                     ),
                   )
                 ],

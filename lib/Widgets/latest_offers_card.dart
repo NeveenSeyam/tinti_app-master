@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tinti_app/Widgets/custom_text.dart';
+import 'package:tinti_app/provider/favorites_provider.dart';
 
-class latestOffersCard extends StatelessWidget {
+import '../Util/theme/app_colors.dart';
+import '../provider/products_provider.dart';
+
+class latestOffersCard extends ConsumerStatefulWidget {
+  String id;
   String image;
   String title;
   String details;
   String price;
   String lastPrice;
   String img2;
+  int is_favorite;
   latestOffersCard(this.image, this.title, this.details, this.price, this.img2,
-      this.lastPrice,
+      this.lastPrice, this.is_favorite, this.id,
       {super.key});
 
+  @override
+  _latestOffersCardState createState() => _latestOffersCardState();
+}
+
+class _latestOffersCardState extends ConsumerState<latestOffersCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -22,12 +34,12 @@ class latestOffersCard extends StatelessWidget {
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            img2 != ''
+            widget.img2 != ''
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 9.h),
                     child: Center(
                       child: Image.asset(
-                        img2,
+                        widget.img2,
                         fit: BoxFit.fill,
                         width: 57.95.w,
                         height: 14.97.h,
@@ -35,10 +47,10 @@ class latestOffersCard extends StatelessWidget {
                     ),
                   )
                 : Container(),
-            img2 != ''
+            widget.img2 != ''
                 ? Center(
                     child: Image.network(
-                      image,
+                      widget.image,
                       fit: BoxFit.fill,
                       width: 148.w,
                       height: 106.h,
@@ -46,7 +58,7 @@ class latestOffersCard extends StatelessWidget {
                   )
                 : Center(
                     child: Image.asset(
-                      image,
+                      widget.image,
                       fit: BoxFit.fill,
                       width: double.infinity,
                       height: 106.h,
@@ -55,18 +67,18 @@ class latestOffersCard extends StatelessWidget {
             Padding(
               padding: EdgeInsetsDirectional.only(start: 10.w),
               child: CustomText(
-                title,
+                widget.title,
                 maxLines: 1,
                 // fontWeight: FontWeight.bold,
                 fontSize: 14.sp,
                 fontFamily: 'DINNextLTArabic',
               ),
             ),
-            details != ''
+            widget.details != ''
                 ? Padding(
                     padding: EdgeInsetsDirectional.only(start: 10.w),
                     child: CustomText(
-                      details,
+                      widget.details,
                       fontSize: 12.sp,
                       color: Colors.orange[500],
                       fontFamily: 'DINNextLTArabic',
@@ -81,7 +93,7 @@ class latestOffersCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    lastPrice!,
+                    widget.lastPrice!,
                     style: TextStyle(
                       color: Colors.orange,
                       // fontWeight: FontWeight.bold,
@@ -92,7 +104,7 @@ class latestOffersCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '$price\$',
+                    '${widget.price}\$',
                     style: TextStyle(
                       // fontWeight: FontWeight.bold,
                       fontSize: 13.sp,
@@ -103,17 +115,37 @@ class latestOffersCard extends StatelessWidget {
                   //   width: 8.w,
                   // ),
 
-                  Container(
-                    width: 25.w,
-                    height: 24.h,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(3.w),
-                      // border: Border.all(color: Colors.grey),
-                    ),
-                    child: const Icon(
-                      Icons.favorite_border,
-                      color: Colors.orange,
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.is_favorite = widget.is_favorite == 0
+                            ? widget.is_favorite = 1
+                            : widget.is_favorite = 0;
+                        var favModel = ref.watch(favsProvider);
+
+                        if (widget.is_favorite != 0) {
+                          favModel.addFavRequset(id: widget.id);
+                        } else {
+                          favModel.removeFavRequset(id: widget.id);
+                        }
+                      });
+                    },
+                    child: Container(
+                      width: 25.w,
+                      height: 24.h,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(3.w),
+                        // border: Border.all(color: Colors.grey),
+                      ),
+                      child: Icon(
+                        widget.is_favorite == 0
+                            ? Icons.favorite_border
+                            : Icons.favorite,
+                        color: widget.is_favorite == 0
+                            ? AppColors.grey
+                            : AppColors.orange,
+                      ),
                     ),
                   )
                 ],
