@@ -69,13 +69,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String verificationID = "";
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _cpasswordController = TextEditingController();
+
   final TextEditingController _fNameController = TextEditingController();
   final TextEditingController _lNameController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
   var mob = '';
-  final TextEditingController _confiremPasswordController =
-      TextEditingController();
   TextEditingController otpController = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -83,12 +83,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
   User? user;
 
   String? validateConfiremPassword(String? value) {
-    if (_confiremPasswordController == _passwordController) {
+    if (_cpasswordController.text == _passwordController.text) {
       return ' كلمة مطابقة    ';
     } else {
       return 'يجب ان تكون كلمة السر مطابقة    ';
     }
   }
+
+  // activateFun() async {
+  //   await
+  //     otpVerfied == true
+  //         ?
+  //             userModel.activateUserRequset()
+  //             .then((value) => otpVerfied == true
+  //                 ? Navigator.pushReplacement(
+  //                     context,
+  //                     MaterialPageRoute(
+  //                       builder: (context) => MyHomePage(),
+  //                     ),
+  //                   )
+  //                 : null)
+  //         : null;
+
+  //     return Container();
+
+  // }
 
   Future _activeFun(BuildContext context, WidgetRef ref) async {
     var ActivateProvider = ref.read(accountProvider);
@@ -96,172 +115,166 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return response;
   }
 
+  RegExp pass_valid = RegExp(r"(?=.*[a-z])(?=.*[A-Z])");
+
+  bool validatePassword(String pass) {
+    String _password = pass.trim();
+    if (pass_valid.hasMatch(_password) && pass.length > 6) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool validateConfirmPassword(String pass) {
+    String _password = pass.trim();
+    if (_cpasswordController.text == _passwordController.text) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future _loginFun(BuildContext context, WidgetRef ref) async {
     //context.router.push(const OTPScreenRoute());
 
-    loadingDialog(context);
-    //await AuthProvider.loginOut();
-    // get fcm tokenhld,gdjv
-    //print("token $token");
-    var AuthProvider = ref.read(accountProvider);
-    final response = await AuthProvider.postRegisterUser(
-      fName: _fNameController.text,
-      confirmPassword: _confiremPasswordController.text,
-      email: _emailController.text,
-      password: _passwordController.text,
-      phoneNumber: mob,
-      lName: _lNameController.text,
-    ).onError((error, stackTrace) {
-      Navigator.pop(context);
-    }).then((value) async {
-      if (value is! Failure) {
-        if (value == null) {
-          UIHelper.showNotification("حصل خطأ ما");
-          //    Navigator.pop(context);
-          return;
-        }
-
-        Constants.token = value["data"]["token"];
-        SharedPreferences? _prefs = await SharedPreferences.getInstance();
-        _prefs.setString(Keys.hasSaveUserData, value["data"]["token"]);
-        await AuthProvider.getUserProfileRequset();
-        Navigator.pop(context); //134092
-
-        // Navigator.pushNamed(context, '/navegaitor_screen');
-        if (_Key.currentState!.validate()) {
-          _Key.currentState!.save();
-
-          FocusScope.of(context).unfocus();
-          // ignore: use_build_context_synchronously
-          showDialog(
-              context: context,
-              builder: (context) {
-                // Future.delayed(
-                //     Duration(seconds: 1000), () {
-                //   Navigator.of(context).pop(true);
-                // });
-                return AlertDialog(
-                    insetPadding: EdgeInsets.all(8.0),
-                    title: CustomText(
-                      "تفعيل الحساب",
-                      fontSize: 24.sp,
-                      textAlign: TextAlign.center,
-                      fontFamily: 'DINNEXTLTARABIC',
-                      color: AppColors.scadryColor,
-                    ),
-                    content: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.w)),
-                        width: MediaQuery.of(context).size.width - 100,
-                        height: 300.h,
-                        child: Column(
-                          children: [
-                            CustomText(
-                              'تم ارسال كود التفعيل الى رقم الجوال المدرج سابقاً الرجاء ادخال الكود المرسل في الحقل أدناه',
-                              textAlign: TextAlign.center,
-                              fontFamily: 'DINNEXTLTARABIC',
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w300,
-                            ),
-                            SizedBox(
-                              height: 22.h,
-                            ),
-                            SizedBox(
-                              width: 335.w,
-                              child: Pinput(
-                                length: 6,
-                                // pinContentAlignment: Alignment.center,
-                                obscureText: true,
-                                defaultPinTheme: defaultPinTheme,
-
-                                closeKeyboardWhenCompleted: true,
-                                textInputAction: TextInputAction.next,
-                                controller: otpController,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 22.h,
-                            ),
-                            RaisedGradientButton(
-                              text: 'التالي',
-                              width: 340.w,
-                              color: AppColors.scadryColor,
-                              height: 48.h,
-                              circular: 10.w,
-                              onPressed: () async {
-                                verifyOTP();
-                                otpVerfied == true
-                                    ? ref
-                                        .read(accountProvider)
-                                        .activateUserRequset()
-                                    : null;
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MyHomePage(),
-                                  ),
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              height: 16.h,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, '/navegaitor_screen');
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CustomText(
-                                    'لم تصلك رسالة حتى الان ؟',
-                                    textAlign: TextAlign.start,
-                                    fontSize: 16.sp,
-                                    fontFamily: 'DINNEXTLTARABIC',
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.orange,
-                                  ),
-                                  SizedBox(
-                                    width: 5.w,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      loginWithPhone();
-                                    },
-                                    child: CustomText(
-                                      'اعادة الارسال ',
-                                      textAlign: TextAlign.start,
-                                      fontSize: 16.sp,
-                                      fontFamily: 'DINNEXTLTARABIC',
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        )));
-              });
-        }
-        // final userProv = ref.read(userProvider);
-        // userProv.setUser(LoginModel.fromJson(response));
-        // prefs.setString(Keys.hasSaveUserData,
-        log("value $value");
-        //  var user = UserLogin.fromJson(value);
-        // if (isRememberMe) {
-        //   var userData =
-        //       json.encoder.convert(UserLogin.fromJson(user.toJson()));
-        //   SharedPreferences? prefs = await SharedPreferences.getInstance();
-        //   prefs.setString(Keys.hasSaveUserData, userData);
-        // }
-
-        //    Constants.userTokent = user.data?.token ?? "";
-      } else {
+    if (_Key.currentState!.validate()) {
+      _Key.currentState!.save();
+      loginWithPhone();
+      loadingDialog(context);
+      //await AuthProvider.loginOut();
+      // get fcm tokenhld,gdjv
+      //print("token $token");
+      var AuthProvider = ref.read(accountProvider);
+      final response = await AuthProvider.postRegisterUser(
+        fName: _fNameController.text,
+        confirmPassword: _cpasswordController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        phoneNumber: mob,
+        lName: _lNameController.text,
+      ).onError((error, stackTrace) {
         Navigator.pop(context);
-      }
-    });
-    log("response $response");
+      }).then((value) async {
+        if (value is! Failure) {
+          if (value == null) {
+            UIHelper.showNotification("حصل خطأ ما");
+            //    Navigator.pop(context);
+            return;
+          }
+
+          Constants.token = value["data"]["token"];
+          SharedPreferences? _prefs = await SharedPreferences.getInstance();
+          _prefs.setString(Keys.hasSaveUserData, value["data"]["token"]);
+          await AuthProvider.getUserProfileRequset();
+          Navigator.pop(context); //134092
+        } else {
+          Navigator.pop(context);
+        }
+      });
+      log("response $response");
+
+      FocusScope.of(context).unfocus();
+      // ignore: use_build_context_synchronously
+      showDialog(
+          context: context,
+          builder: (context) {
+            // Future.delayed(
+            //     Duration(seconds: 1000), () {
+            //   Navigator.of(context).pop(true);
+            // });
+            return AlertDialog(
+                insetPadding: EdgeInsets.all(8.0),
+                title: CustomText(
+                  "تفعيل الحساب",
+                  fontSize: 24.sp,
+                  textAlign: TextAlign.center,
+                  fontFamily: 'DINNEXTLTARABIC',
+                  color: AppColors.scadryColor,
+                ),
+                content: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.w)),
+                    width: MediaQuery.of(context).size.width - 100,
+                    height: 300.h,
+                    child: Column(
+                      children: [
+                        CustomText(
+                          'تم ارسال كود التفعيل الى رقم الجوال المدرج سابقاً الرجاء ادخال الكود المرسل في الحقل أدناه',
+                          textAlign: TextAlign.center,
+                          fontFamily: 'DINNEXTLTARABIC',
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        SizedBox(
+                          height: 22.h,
+                        ),
+                        SizedBox(
+                          width: 335.w,
+                          child: Pinput(
+                            length: 6,
+                            // pinContentAlignment: Alignment.center,
+                            obscureText: true,
+                            defaultPinTheme: defaultPinTheme,
+
+                            closeKeyboardWhenCompleted: true,
+                            textInputAction: TextInputAction.next,
+                            controller: otpController,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 22.h,
+                        ),
+                        RaisedGradientButton(
+                          text: 'التالي',
+                          width: 340.w,
+                          color: AppColors.scadryColor,
+                          height: 48.h,
+                          circular: 10.w,
+                          onPressed: () async {
+                            verifyOTP(ref);
+                          },
+                        ),
+                        SizedBox(
+                          height: 16.h,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/navegaitor_screen');
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomText(
+                                'لم تصلك رسالة حتى الان ؟',
+                                textAlign: TextAlign.start,
+                                fontSize: 16.sp,
+                                fontFamily: 'DINNEXTLTARABIC',
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.orange,
+                              ),
+                              SizedBox(
+                                width: 5.w,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  loginWithPhone();
+                                },
+                                child: CustomText(
+                                  'اعادة الارسال ',
+                                  textAlign: TextAlign.start,
+                                  fontSize: 16.sp,
+                                  fontFamily: 'DINNEXTLTARABIC',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    )));
+          });
+    }
   }
 
   final defaultPinTheme = PinTheme(
@@ -423,7 +436,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 textFieldController: _mobileController,
                                 // ignoreBlank: true,
                                 inputDecoration: InputDecoration(
-                                  hintText: 'Phone Number',
+                                  hintText: 'رقم الهاتف',
                                   border: InputBorder.none,
                                 ),
                                 onInputChanged: (PhoneNumber number) {
@@ -431,9 +444,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   mob = number.phoneNumber.toString();
                                   print('mob  ${mob}');
                                 },
-                                onInputValidated: (bool value) {
-                                  // print(value);
-                                },
+                                onInputValidated: (bool value) {},
+                                errorMessage: 'رقم هاتف خاطئ',
                                 selectorConfig: SelectorConfig(
                                   selectorType: PhoneInputSelectorType.DIALOG,
                                 ),
@@ -444,7 +456,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         RoundedInputField(
                           hintText: 'كلمة المرور',
                           onChanged: (value) {},
-                          isObscured: true,
+                          isObscured: false,
                           hintColor: AppColors.hint,
                           color: AppColors.lightgrey,
                           circuler: 10.w,
@@ -455,7 +467,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             size: 17.w,
                           ),
                           seen: true,
-                          validator: validatePassword,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Please enter password";
+                            } else {
+                              //call function to check password
+                              bool result = validatePassword(value);
+                              if (result) {
+                                // create account event
+                                return null;
+                              } else {
+                                return " يجب ان تحتوي كلمة المرور على حروف كبيرة وحروف صغيرة وعلامات مميزة وارقام";
+                              }
+                            }
+                          },
                           controller: _passwordController,
                         ),
                         RoundedInputField(
@@ -472,14 +497,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             size: 17.w,
                           ),
                           seen: true,
-                          // validator: validateConfiremPassword,
-                          controller: _confiremPasswordController,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Please enter password";
+                            } else {
+                              //call function to check password
+                              bool result = validateConfirmPassword(value);
+                              if (result) {
+                                // create account event
+                                return null;
+                              } else {
+                                return "كلمة المرور غير متطابقة ";
+                              }
+                            }
+                          },
+                          controller: _cpasswordController,
                         ),
                         SizedBox(
                           height: 20.h,
                         ),
                         Consumer(
                           builder: (context, ref, _) {
+                            var userModel = ref.read(accountProvider);
                             return GestureDetector(
                                 onTap: () {
                                   _loginFun(context, ref);
@@ -490,10 +529,190 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   width: 340.w,
                                   height: 48.h,
                                   circular: 10.w,
-                                  onPressed: () {
-                                    _loginFun(context, ref);
+                                  onPressed: () async {
+                                    // _loginFun(context, ref);
 
-                                    loginWithPhone();
+                                    if (_Key.currentState!.validate()) {
+                                      _Key.currentState!.save();
+                                      loginWithPhone();
+                                      loadingDialog(context);
+                                      //await AuthProvider.loginOut();
+                                      // get fcm tokenhld,gdjv
+                                      //print("token $token");
+                                      var AuthProvider =
+                                          ref.read(accountProvider);
+                                      final response =
+                                          await AuthProvider.postRegisterUser(
+                                        fName: _fNameController.text,
+                                        confirmPassword:
+                                            _cpasswordController.text,
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                        phoneNumber: mob,
+                                        lName: _lNameController.text,
+                                      ).onError((error, stackTrace) {
+                                        Navigator.pop(context);
+                                      }).then((value) async {
+                                        if (value is! Failure) {
+                                          if (value == null) {
+                                            UIHelper.showNotification(
+                                                "حصل خطأ ما");
+                                            //    Navigator.pop(context);
+                                            return;
+                                          }
+
+                                          Constants.token =
+                                              value["data"]["token"];
+                                          SharedPreferences? _prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          _prefs.setString(Keys.hasSaveUserData,
+                                              value["data"]["token"]);
+                                          await AuthProvider
+                                              .getUserProfileRequset();
+                                          Navigator.pop(context); //134092
+                                        } else {
+                                          Navigator.pop(context);
+                                        }
+                                      });
+                                      log("response $response");
+
+                                      FocusScope.of(context).unfocus();
+                                      // ignore: use_build_context_synchronously
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            // Future.delayed(
+                                            //     Duration(seconds: 1000), () {
+                                            //   Navigator.of(context).pop(true);
+                                            // });
+                                            return AlertDialog(
+                                                insetPadding:
+                                                    EdgeInsets.all(8.0),
+                                                title: CustomText(
+                                                  "تفعيل الحساب",
+                                                  fontSize: 24.sp,
+                                                  textAlign: TextAlign.center,
+                                                  fontFamily: 'DINNEXTLTARABIC',
+                                                  color: AppColors.scadryColor,
+                                                ),
+                                                content: Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    20.w)),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            100,
+                                                    height: 300.h,
+                                                    child: Column(
+                                                      children: [
+                                                        CustomText(
+                                                          'تم ارسال كود التفعيل الى رقم الجوال المدرج سابقاً الرجاء ادخال الكود المرسل في الحقل أدناه',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          fontFamily:
+                                                              'DINNEXTLTARABIC',
+                                                          fontSize: 16.sp,
+                                                          fontWeight:
+                                                              FontWeight.w300,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 22.h,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 335.w,
+                                                          child: Pinput(
+                                                            length: 6,
+                                                            // pinContentAlignment: Alignment.center,
+                                                            obscureText: true,
+                                                            defaultPinTheme:
+                                                                defaultPinTheme,
+
+                                                            closeKeyboardWhenCompleted:
+                                                                true,
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .next,
+                                                            controller:
+                                                                otpController,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 22.h,
+                                                        ),
+                                                        RaisedGradientButton(
+                                                          text: 'التالي',
+                                                          width: 340.w,
+                                                          color: AppColors
+                                                              .scadryColor,
+                                                          height: 48.h,
+                                                          circular: 10.w,
+                                                          onPressed: () async {
+                                                            await verifyOTP(
+                                                                ref);
+                                                          },
+                                                        ),
+                                                        SizedBox(
+                                                          height: 16.h,
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            // Navigator.pushNamed(
+                                                            //     context,
+                                                            //     '/navegaitor_screen');
+                                                          },
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              CustomText(
+                                                                'لم تصلك رسالة حتى الان ؟',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                fontSize: 16.sp,
+                                                                fontFamily:
+                                                                    'DINNEXTLTARABIC',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .orange,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 5.w,
+                                                              ),
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  loginWithPhone();
+                                                                },
+                                                                child:
+                                                                    CustomText(
+                                                                  'اعادة الارسال ',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .start,
+                                                                  fontSize:
+                                                                      16.sp,
+                                                                  fontFamily:
+                                                                      'DINNEXTLTARABIC',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )));
+                                          });
+                                    }
                                   },
                                 ));
                           },
@@ -597,7 +816,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  verifyOTP() async {
+  verifyOTP(WidgetRef ref) async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationID, smsCode: otpController.text);
     await auth.signInWithCredential(credential).then(
@@ -610,7 +829,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       () {
         if (user != null) {
           Fluttertoast.showToast(
-            msg: "You are logged in successfully",
+            msg: "تم تسجيل الدخول بنجاح",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -618,11 +837,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-
           otpVerfied = true;
+          // ref.read(accountProvider).getActivateModel;
+          _activeFun(context, ref);
+          Navigator.pushNamed(context, '/navegaitor_screen');
+          // activateFun();
         } else {
           Fluttertoast.showToast(
-            msg: "your login is failed",
+            msg: "لم يتم تسجيل الدخول",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,

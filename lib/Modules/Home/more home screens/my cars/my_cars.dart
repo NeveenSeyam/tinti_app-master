@@ -33,6 +33,8 @@ class _MyCarsScreenState extends ConsumerState<MyCarsScreen> {
     return await prov.getCarDataRequset();
   }
 
+  String dropdownValue = 'One';
+
   late Future _fetchedMyRequest;
 
   @override
@@ -417,7 +419,7 @@ Future<void> showBottomSheet(
             width: 340.w,
             circular: 10.w,
             onPressed: () {
-              Navigator.popAndPushNamed(context, '/navegaitor_screen');
+              // Navigator.popAndPushNamed(context, '/navegaitor_screen');
             },
           ),
         ]),

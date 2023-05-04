@@ -208,6 +208,24 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 circular: 10.w,
                                 onPressed: () {},
                               ),
+                              SizedBox(
+                                height: 10.h,
+                              ),
+                              RaisedGradientButton(
+                                text: ' تسجيل خروج',
+                                color: AppColors.scadryColor,
+                                width: 340.w,
+                                height: 48.h,
+                                circular: 10.w,
+                                onPressed: () async {
+                                  Constants.token = null;
+                                  SharedPreferences? _prefs =
+                                      await SharedPreferences.getInstance();
+                                  _prefs.clear();
+                                  Navigator.popAndPushNamed(
+                                      context, '/login_screen');
+                                },
+                              ),
                             ],
                           )),
                     );
@@ -509,24 +527,29 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                         onPressed: () async {
                                                           await changPassModel
                                                               .editUserRequset(
-                                                                  data: {
-                                                                "fname":
-                                                                    _fnameController
-                                                                        .text,
-                                                                "lname":
-                                                                    _lnameController
-                                                                        .text,
-                                                                "email":
-                                                                    _emailController
-                                                                        .text,
-                                                                "phoneNumber":
-                                                                    _numberController
-                                                                        .text,
-                                                                "address":
-                                                                    _addressController
-                                                                        .text
-                                                              },
-                                                                  file: img);
+                                                            data: {
+                                                              "fname":
+                                                                  _fnameController
+                                                                      .text,
+                                                              "lname":
+                                                                  _lnameController
+                                                                      .text,
+                                                              "email":
+                                                                  _emailController
+                                                                      .text,
+                                                              "phoneNumber":
+                                                                  _numberController
+                                                                      .text,
+                                                              "address":
+                                                                  _addressController
+                                                                      .text
+                                                            },
+                                                            file: img ??
+                                                                File(serviceModel
+                                                                        .user
+                                                                        ?.img ??
+                                                                    ''),
+                                                          );
                                                           setState(() {
                                                             _fetchedMyRequest =
                                                                 _getContentData();
@@ -542,7 +565,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                             _image2 = null;
                                                             _numberController
                                                                 .text = '';
-                                                            img = null;
                                                           });
 
                                                           Navigator.pop(

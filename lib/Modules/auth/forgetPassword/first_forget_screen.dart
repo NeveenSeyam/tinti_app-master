@@ -569,7 +569,10 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                                     // changPassModel
                                                     //     .getChangePassModel
                                                     //     ?.message;
-
+                                                    Navigator.popAndPushNamed(
+                                                        context,
+                                                        '/final_screen');
+//
                                                     validate = 4;
                                                   },
                                                 ),
@@ -742,7 +745,6 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-          // Navigator.popAndPushNamed(context, '/theard_screen');
           otpVerfied = true;
         } else {
           Fluttertoast.showToast(

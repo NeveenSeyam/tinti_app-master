@@ -42,24 +42,24 @@ class CarProvider extends ChangeNotifier {
     }
   }
 
-//   Future postCarDataRequset({required String name, required String email}) async {
-//     //! we create this object to set new data to the data object
-//     DataModel? contentList = DataModel();
+  // Future postCarDataRequset({required String name, required String email}) async {
+  //   //! we create this object to set new data to the data object
+  //   CarModel? carList = CarModel();
 
-//     try {
-//       //! here we call the api and get the data using the Fetch method
-//       final response = await AddUserCar(
-//       name:name
-//       ).fetch();
-//       //! use FormJson method to convert the data to the data object
-//       contentList = DataModel.fromJson(response);
-//       log("response $response");
-//       //! set the new data to the data object
-//       setDataList(contentList);
+  //   try {
+  //     //! here we call the api and get the data using the Fetch method
+  //     final response = await AddUserCar(
+  //     name:name
+  //     ).fetch();
+  //     //! use FormJson method to convert the data to the data object
+  //     contentList = DataModel.fromJson(response);
+  //     log("response $response");
+  //     //! set the new data to the data object
+  //     setDataList(contentList);
 
-//       return contentList;
-//     } on Failure catch (f) {
-//       return f;
-//     }
-//   }
+  //     return contentList;
+  //   } on Failure catch (f) {
+  //     return f;
+  //   }
+  // }
 }
