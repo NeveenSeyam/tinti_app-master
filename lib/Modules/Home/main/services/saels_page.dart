@@ -58,6 +58,7 @@ class _SaelsScreenState extends State<SaelsScreen> {
                     'تلعب العناية المنتظمة بالسيارة دورا كبيرا في المحافظة على السيارات وهذا هو السبب الذي يجعل بعض السيارات تستمر   ',
                 price: '\$ 460 ',
                 lastPrice: '\$ 600',
+                isFavorite: 0,
               ),
             ),
           ],

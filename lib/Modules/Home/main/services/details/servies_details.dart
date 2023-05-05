@@ -21,7 +21,12 @@ import '../service_page.dart';
 class ServiceDetailsScreen extends ConsumerStatefulWidget {
   dynamic row_id;
   int id;
-  ServiceDetailsScreen({super.key, required this.id, required this.row_id});
+  int isFavorite;
+  ServiceDetailsScreen(
+      {super.key,
+      required this.id,
+      required this.row_id,
+      required this.isFavorite});
 
   @override
   _ServiceDetailsScreenState createState() => _ServiceDetailsScreenState();
@@ -29,7 +34,7 @@ class ServiceDetailsScreen extends ConsumerStatefulWidget {
 
 class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
   int pageIndex = 0;
-  bool isFav = false;
+  // bool isFav = false;
   late PageController _pageController;
   int _currentPage = 0;
   late final _ratingController;
@@ -227,37 +232,38 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                 ],
                               ),
                               GestureDetector(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: AppColors.grey.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(5.w)),
-                                  padding: EdgeInsets.all(8.w),
-                                  child: isFav == true
-                                      ? const Icon(
-                                          Icons.favorite,
-                                          color: AppColors.orange,
-                                        )
-                                      : const Icon(
-                                          Icons.favorite_border,
-                                          color: AppColors.orange,
-                                        ),
-                                ),
                                 onTap: () {
                                   setState(() {
-                                    isFav == true
-                                        ? isFav = false
-                                        : isFav = true;
-                                    isFav == true
-                                        ? addToFavModel.addFavRequset(
-                                            id: productDetailsModel
-                                                    ?.product?.id ??
-                                                0)
-                                        : addToFavModel.removeFavRequset(
-                                            id: productDetailsModel
-                                                ?.product?.id);
+                                    widget.isFavorite == 0
+                                        ? widget.isFavorite = 1
+                                        : widget.isFavorite = 0;
+                                    var favModel = ref.watch(favsProvider);
+
+                                    if (widget.isFavorite != 0) {
+                                      favModel.addFavRequset(id: widget.id);
+                                    } else {
+                                      favModel.removeFavRequset(id: widget.id);
+                                    }
                                   });
                                 },
-                              ),
+                                child: Container(
+                                  width: 25.w,
+                                  height: 24.h,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(3.w),
+                                    // border: Border.all(color: Colors.grey),
+                                  ),
+                                  child: Icon(
+                                    widget.isFavorite == 0
+                                        ? Icons.favorite_border
+                                        : Icons.favorite,
+                                    color: widget.isFavorite == 0
+                                        ? AppColors.grey
+                                        : AppColors.orange,
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                           SizedBox(

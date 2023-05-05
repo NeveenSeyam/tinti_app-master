@@ -14,6 +14,7 @@ class OrderListCard extends StatelessWidget {
   String details;
   String price;
   int id;
+  int isFavorite;
   String stats;
   OrderListCard({
     super.key,
@@ -24,6 +25,7 @@ class OrderListCard extends StatelessWidget {
     required this.price,
     required this.id,
     required this.stats,
+    required this.isFavorite,
   });
 
   @override
@@ -39,6 +41,7 @@ class OrderListCard extends StatelessWidget {
                       builder: (context) => ServiceDetailsScreen(
                             id: id,
                             row_id: id,
+                            isFavorite: isFavorite,
                           )),
                 )
               : null;

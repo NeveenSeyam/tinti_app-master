@@ -18,7 +18,9 @@ import '../../../../provider/services_provider.dart';
 import 'details/servies_details.dart';
 
 class ServicesScreen extends ConsumerStatefulWidget {
-  const ServicesScreen({super.key});
+  ServicesScreen({
+    super.key,
+  });
 
   @override
   _ServicesScreenState createState() => _ServicesScreenState();
@@ -210,6 +212,13 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                                                             index]
                                                                         .id ??
                                                                     0,
+                                                            isFavorite:
+                                                                productByServiceModel
+                                                                        .success
+                                                                        ?.items?[
+                                                                            index]
+                                                                        .is_favorite ??
+                                                                    0,
                                                           )),
                                                 );
                                                 print(
@@ -243,6 +252,9 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                                           .success
                                                           ?.items?[index]
                                                           .is_favorite ??
+                                                      0,
+                                                  productByServiceModel.success
+                                                          ?.items?[index].id ??
                                                       0),
                                             );
                                           }),

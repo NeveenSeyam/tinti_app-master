@@ -49,15 +49,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   TextEditingController _confirmNewPassController = TextEditingController();
 
   File? img;
-  File? _image2;
-  Future<void> _getImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    setState(() {
-      img = File(pickedFile!.path);
-    });
-  }
 
   Future _getImageData() async {
     final picker = ImagePicker();
@@ -258,15 +249,128 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 height: 150.h,
                                 child: Column(
                                   children: [
-                                    SizedBox(
-                                      width: 85.w,
-                                      height: 85.h,
-                                      child: Image.network(
-                                        '${serviceModel.user?.img}' ??
-                                            'https://1fid.com/wp-content/uploads/2022/06/cool-profile-picture-2-720x720.jpg',
-                                        fit: BoxFit.fill,
+                                    GestureDetector(
+                                      onTap: () async {
+                                        showBottomSheet(
+                                          context,
+                                          StatefulBuilder(builder: (BuildContext
+                                                  context,
+                                              StateSetter
+                                                  setState /*You can rename this!*/) {
+                                            return Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: <Widget>[
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    final picker =
+                                                        ImagePicker();
+                                                    final pickedFile =
+                                                        await picker.getImage(
+                                                            source: ImageSource
+                                                                .gallery);
+
+                                                    setState() {
+                                                      img = File(
+                                                          pickedFile!.path);
+                                                    }
+                                                  },
+                                                  child: img == null
+                                                      ? Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  20.w),
+                                                          child: Center(
+                                                            child: Container(
+                                                              color: AppColors
+                                                                  .grey
+                                                                  .withOpacity(
+                                                                      0.3),
+                                                              width: 350.w,
+                                                              height: 250.h,
+                                                              child: Icon(Icons
+                                                                  .add_a_photo_outlined),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Center(
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    20.w),
+                                                            child: Container(
+                                                              height: 250.h,
+                                                              width: 350.w,
+                                                              child: Image.file(
+                                                                img ??
+                                                                    File(
+                                                                        'path'),
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 16.h),
+                                                  child: ButtonWidget(
+                                                    onPressed: () async {
+                                                      await profileModel
+                                                          .editUserImageRequset(
+                                                              data: {},
+                                                              file: img);
+                                                      setState(() {
+                                                        _fetchedMyRequest =
+                                                            _getContentData();
+                                                      });
+
+                                                      Navigator.pop(context);
+                                                    },
+                                                    title: 'حفظ',
+                                                    backgroundColor:
+                                                        AppColors.scadryColor,
+                                                    textColor: AppColors.white,
+                                                    height: 45.h,
+                                                    verticalTextPadding: 0,
+                                                    horizontalTextPadding: 0,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }),
+                                        );
+
+                                        // await _getImageData();
+                                        // final picker = ImagePicker();
+                                        // final pickedFile =
+                                        //     await picker.getImage(
+                                        //         source: ImageSource.gallery);
+                                        // img = File(pickedFile!.path);
+
+                                        // await profileModel.editUserImageRequset(
+                                        //     data: {},
+                                        //     file: img).then((value) async {
+                                        //   _fetchedMyRequest = _getContentData();
+                                        //   await _fetchedMyRequest;
+                                        // });
+
+                                        // _fetchedMyRequest = _getContentData();
+                                        // _fetchedMyRequest;
+                                      },
+                                      child: SizedBox(
                                         width: 85.w,
-                                        height: 85.w,
+                                        height: 85.h,
+                                        child: Image.network(
+                                          '${serviceModel.user?.img}' ??
+                                              'https://1fid.com/wp-content/uploads/2022/06/cool-profile-picture-2-720x720.jpg',
+                                          fit: BoxFit.fill,
+                                          width: 85.w,
+                                          height: 85.w,
+                                        ),
                                       ),
                                     ),
                                     Padding(
@@ -413,66 +517,66 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                         ),
                                                       ),
                                                     ),
-                                                    Container(
-                                                      width: double.infinity,
-                                                      child: GestureDetector(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              _getImageData();
+                                                    // Container(
+                                                    //   width: double.infinity,
+                                                    //   child: GestureDetector(
+                                                    //       onTap: () {
+                                                    //         setState(() {
+                                                    //           _getImageData();
 
-                                                              _getImage();
-                                                            });
-                                                            // print('img $img');
-                                                          },
-                                                          child: img == null
-                                                              ? Center(
-                                                                  child:
-                                                                      Container(
-                                                                    width:
-                                                                        350.w,
-                                                                    height:
-                                                                        120.h,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              10.w),
-                                                                      color: AppColors
-                                                                          .scadryColor
-                                                                          .withOpacity(
-                                                                              0.3),
-                                                                    ),
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .add_to_photos_rounded,
-                                                                      color: AppColors
-                                                                          .orange,
-                                                                      size:
-                                                                          40.w,
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              : Center(
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets.all(
-                                                                            8.0),
-                                                                    child: Image
-                                                                        .file(
-                                                                      img ??
-                                                                          File(
-                                                                              'file.txt'),
-                                                                      width:
-                                                                          300.w,
-                                                                      height:
-                                                                          120.h,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                                  ),
-                                                                )),
-                                                    ),
+                                                    //           _getImage();
+                                                    //         });
+                                                    //         // print('img $img');
+                                                    //       },
+                                                    //       child: img == null
+                                                    //           ? Center(
+                                                    //               child:
+                                                    //                   Container(
+                                                    //                 width:
+                                                    //                     350.w,
+                                                    //                 height:
+                                                    //                     120.h,
+                                                    //                 decoration:
+                                                    //                     BoxDecoration(
+                                                    //                   borderRadius:
+                                                    //                       BorderRadius.circular(
+                                                    //                           10.w),
+                                                    //                   color: AppColors
+                                                    //                       .scadryColor
+                                                    //                       .withOpacity(
+                                                    //                           0.3),
+                                                    //                 ),
+                                                    //                 child: Icon(
+                                                    //                   Icons
+                                                    //                       .add_to_photos_rounded,
+                                                    //                   color: AppColors
+                                                    //                       .orange,
+                                                    //                   size:
+                                                    //                       40.w,
+                                                    //                 ),
+                                                    //               ),
+                                                    //             )
+                                                    //           : Center(
+                                                    //               child:
+                                                    //                   Padding(
+                                                    //                 padding:
+                                                    //                     const EdgeInsets.all(
+                                                    //                         8.0),
+                                                    //                 child: Image
+                                                    //                     .file(
+                                                    //                   img ??
+                                                    //                       File(
+                                                    //                           'file.txt'),
+                                                    //                   width:
+                                                    //                       300.w,
+                                                    //                   height:
+                                                    //                       120.h,
+                                                    //                   fit: BoxFit
+                                                    //                       .cover,
+                                                    //                 ),
+                                                    //               ),
+                                                    //             )),
+                                                    // ),
                                                     Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -544,11 +648,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                   _addressController
                                                                       .text
                                                             },
-                                                            file: img ??
-                                                                File(serviceModel
-                                                                        .user
-                                                                        ?.img ??
-                                                                    ''),
                                                           );
                                                           setState(() {
                                                             _fetchedMyRequest =
@@ -562,7 +661,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                 .text = '';
                                                             _lnameController
                                                                 .text = '';
-                                                            _image2 = null;
+                                                            // _image2 = null;
                                                             _numberController
                                                                 .text = '';
                                                           });

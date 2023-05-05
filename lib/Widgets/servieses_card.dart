@@ -5,7 +5,9 @@ import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/custom_text.dart';
 import 'package:tinti_app/provider/services_provider.dart';
 
-class ServicesCard extends StatefulWidget {
+import '../provider/favorites_provider.dart';
+
+class ServicesCard extends ConsumerStatefulWidget {
   String image;
   String title;
   String details;
@@ -13,15 +15,16 @@ class ServicesCard extends StatefulWidget {
   String lastPrice;
   String img2;
   int is_favorite;
+  int id;
   ServicesCard(this.image, this.title, this.details, this.price, this.img2,
-      this.lastPrice, this.is_favorite,
+      this.lastPrice, this.is_favorite, this.id,
       {super.key});
 
   @override
-  State<ServicesCard> createState() => _ServicesCardState();
+  _ServicesCardState createState() => _ServicesCardState();
 }
 
-class _ServicesCardState extends State<ServicesCard> {
+class _ServicesCardState extends ConsumerState<ServicesCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -110,6 +113,13 @@ class _ServicesCardState extends State<ServicesCard> {
                         widget.is_favorite = widget.is_favorite == 0
                             ? widget.is_favorite = 1
                             : widget.is_favorite = 0;
+                        var favModel = ref.watch(favsProvider);
+
+                        if (widget.is_favorite != 0) {
+                          favModel.addFavRequset(id: widget.id);
+                        } else {
+                          favModel.removeFavRequset(id: widget.id);
+                        }
                       });
                     },
                     child: Container(

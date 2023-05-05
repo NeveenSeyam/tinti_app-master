@@ -98,9 +98,15 @@ class AccountProvider with ChangeNotifier {
       log("FirstSteop $response");
       // setActiveOffers(storeOffers);
       return response;
-    } on Failure catch (f) {
-      UIHelper.showNotification(f.message);
-      return false;
+    } on DioError catch (e) {
+      var message;
+      e.response?.data['message'] != 'Validation Error.'
+          ? message = 'تم تسجيل جديد بنجاح'
+          : message = ' هناك مشكله  ';
+      UIHelper.showNotification(message);
+
+      log(' e.mmm  ${e.message} ${e.response?.data['message']}');
+      return Failure;
     }
   }
 
@@ -193,7 +199,44 @@ class AccountProvider with ChangeNotifier {
     }
   }
 
-  Future editUserRequset(
+  Future editUserRequset({
+    required Map<String, dynamic> data,
+  }) async //required String image
+  {
+    String fileName = "";
+
+    FormData formData = FormData.fromMap(data);
+
+    try {
+      Dio dio = new Dio();
+
+      var response = await dio.post(
+        ApiUrls.profileUpdate,
+        data: formData,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': "Bearer ${Constants.token}",
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        UIHelper.showNotification(response.data['message'],
+            backgroundColor: AppColors.green);
+      }
+      log("response $response");
+
+      return response.data;
+    } on DioError catch (e) {
+      UIHelper.showNotification(e.response?.data['message']);
+
+      // log(e.message);
+      return Failure;
+    }
+  }
+
+  Future editUserImageRequset(
       {required Map<String, dynamic> data,
       required File? file}) async //required String image
   {

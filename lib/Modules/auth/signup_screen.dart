@@ -519,66 +519,50 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Consumer(
                           builder: (context, ref, _) {
                             var userModel = ref.read(accountProvider);
-                            return GestureDetector(
-                                onTap: () {
-                                  _loginFun(context, ref);
-                                },
-                                child: RaisedGradientButton(
-                                  text: 'تسجيل ',
-                                  color: AppColors.scadryColor,
-                                  width: 340.w,
-                                  height: 48.h,
-                                  circular: 10.w,
-                                  onPressed: () async {
-                                    // _loginFun(context, ref);
+                            return RaisedGradientButton(
+                              text: 'تسجيل ',
+                              color: AppColors.scadryColor,
+                              width: 340.w,
+                              height: 48.h,
+                              circular: 10.w,
+                              onPressed: () async {
+                                // _loginFun(context, ref);
 
-                                    if (_Key.currentState!.validate()) {
-                                      _Key.currentState!.save();
+                                if (_Key.currentState!.validate()) {
+                                  _Key.currentState!.save();
+                                  loadingDialog(context);
+                                  //await AuthProvider.loginOut();
+                                  // get fcm tokenhld,gdjv
+                                  //print("token $token");
+                                  var AuthProvider = ref.read(accountProvider);
+                                  final response =
+                                      await AuthProvider.postRegisterUser(
+                                    fName: _fNameController.text,
+                                    confirmPassword: _cpasswordController.text,
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                    phoneNumber: mob,
+                                    lName: _lNameController.text,
+                                  ).onError((error, stackTrace) {
+                                    Navigator.pop(context);
+                                  }).then((value) async {
+                                    if (value is! Failure) {
+                                      if (value == null) {
+                                        UIHelper.showNotification(
+                                            "البريد الالكتروني او رقم الهاتف مستخدم ");
+                                        //    Navigator.pop(context);
+                                        return;
+                                      }
                                       loginWithPhone();
-                                      loadingDialog(context);
-                                      //await AuthProvider.loginOut();
-                                      // get fcm tokenhld,gdjv
-                                      //print("token $token");
-                                      var AuthProvider =
-                                          ref.read(accountProvider);
-                                      final response =
-                                          await AuthProvider.postRegisterUser(
-                                        fName: _fNameController.text,
-                                        confirmPassword:
-                                            _cpasswordController.text,
-                                        email: _emailController.text,
-                                        password: _passwordController.text,
-                                        phoneNumber: mob,
-                                        lName: _lNameController.text,
-                                      ).onError((error, stackTrace) {
-                                        Navigator.pop(context);
-                                      }).then((value) async {
-                                        if (value is! Failure) {
-                                          if (value == null) {
-                                            UIHelper.showNotification(
-                                                "حصل خطأ ما");
-                                            //    Navigator.pop(context);
-                                            return;
-                                          }
 
-                                          Constants.token =
-                                              value["data"]["token"];
-                                          SharedPreferences? _prefs =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          _prefs.setString(Keys.hasSaveUserData,
-                                              value["data"]["token"]);
-                                          await AuthProvider
-                                              .getUserProfileRequset();
-                                          Navigator.pop(context); //134092
-                                        } else {
-                                          Navigator.pop(context);
-                                        }
-                                      });
-                                      log("response $response");
-
-                                      FocusScope.of(context).unfocus();
-                                      // ignore: use_build_context_synchronously
+                                      Constants.token = value["data"]["token"];
+                                      SharedPreferences? _prefs =
+                                          await SharedPreferences.getInstance();
+                                      _prefs.setString(Keys.hasSaveUserData,
+                                          value["data"]["token"]);
+                                      await AuthProvider
+                                          .getUserProfileRequset();
+                                      Navigator.pop(context);
                                       showDialog(
                                           context: context,
                                           builder: (context) {
@@ -712,9 +696,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                       ],
                                                     )));
                                           });
+                                      //134092
+                                    } else {
+                                      Navigator.pop(context);
                                     }
-                                  },
-                                ));
+                                  });
+                                  log("response $response");
+
+                                  FocusScope.of(context).unfocus();
+                                  // ignore: use_build_context_synchronously
+                                }
+                              },
+                            );
                           },
                         ),
                         SizedBox(

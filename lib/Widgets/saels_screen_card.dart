@@ -13,6 +13,7 @@ class SaelsScreenCardCard extends StatefulWidget {
   String details;
   String price;
   String lastPrice;
+  int isFavorite;
   SaelsScreenCardCard(
       {super.key,
       required this.image,
@@ -20,7 +21,8 @@ class SaelsScreenCardCard extends StatefulWidget {
       required this.compeny,
       required this.details,
       required this.price,
-      required this.lastPrice});
+      required this.lastPrice,
+      required this.isFavorite});
 
   @override
   State<SaelsScreenCardCard> createState() => _SaelsScreenCardCardState();
@@ -40,6 +42,7 @@ class _SaelsScreenCardCardState extends State<SaelsScreenCardCard> {
                 builder: (context) => ServiceDetailsScreen(
                       id: 0,
                       row_id: 0,
+                      isFavorite: widget.isFavorite,
                     )),
           );
         },

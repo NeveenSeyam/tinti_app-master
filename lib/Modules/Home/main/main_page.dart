@@ -378,6 +378,11 @@ class _MainPageState extends ConsumerState<MainPage> {
                                               row_id: productModel?.success
                                                       ?.items?[index].id ??
                                                   0,
+                                              isFavorite: productModel
+                                                      ?.success
+                                                      ?.items?[index]
+                                                      .is_favorite ??
+                                                  0,
                                             )),
                                   );
                                 },
@@ -577,30 +582,43 @@ class _MainPageState extends ConsumerState<MainPage> {
                                                               ?.items?[index]
                                                               .id ??
                                                           0,
-                                                      row_id: 0 ?? 0,
+                                                      row_id: 0,
+                                                      isFavorite:
+                                                          productByServiceModel
+                                                                  .success
+                                                                  ?.items?[
+                                                                      index]
+                                                                  .is_favorite ??
+                                                              1,
                                                     )),
                                           );
                                         },
                                         child: ServicesCard(
-                                          // productByServiceModel.Products.length ??
-                                          productByServiceModel.success
-                                                  ?.items?[index].image ??
-                                              'assets/images/sa1.jpeg',
-                                          productByServiceModel.success
-                                                  ?.items?[index].name ??
-                                              ' تظليل',
-                                          productByServiceModel.success
-                                                  ?.items?[index].description ??
-                                              'شركة جونسون اد جونسون.',
-                                          productByServiceModel.success
-                                                  ?.items?[index].price ??
-                                              '355',
-                                          '',
-                                          '',
-                                          productByServiceModel.success
-                                                  ?.items?[index].is_favorite ??
-                                              355,
-                                        ),
+                                            // productByServiceModel.Products.length ??
+                                            productByServiceModel.success
+                                                    ?.items?[index].image ??
+                                                'assets/images/sa1.jpeg',
+                                            productByServiceModel.success
+                                                    ?.items?[index].name ??
+                                                ' تظليل',
+                                            productByServiceModel
+                                                    .success
+                                                    ?.items?[index]
+                                                    .description ??
+                                                'شركة جونسون اد جونسون.',
+                                            productByServiceModel.success
+                                                    ?.items?[index].price ??
+                                                '355',
+                                            '',
+                                            '',
+                                            productByServiceModel
+                                                    .success
+                                                    ?.items?[index]
+                                                    .is_favorite ??
+                                                355,
+                                            productByServiceModel.success
+                                                    ?.items?[index].id ??
+                                                355),
                                       );
                                     }),
                               ),

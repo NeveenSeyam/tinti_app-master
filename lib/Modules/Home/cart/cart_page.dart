@@ -152,6 +152,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                               price: ordersModel?.orders?[index].price
                                       .toString() ??
                                   '460',
+                              isFavorite: 0,
                               id: ordersModel?.orders?[index].productId ?? 0,
                             ),
                           )
