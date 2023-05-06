@@ -312,7 +312,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                             EdgeInsetsDirectional.only(end: 15.w, top: 5.h),
                         child: Text('المزيد',
                             style: TextStyle(
-                              color: Colors.grey,
+                              color: Colors.orange,
                               fontSize: 11.sp,
                               fontFamily: 'DINNextLTArabic',
                             )),

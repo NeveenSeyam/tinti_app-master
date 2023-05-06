@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spincircle_bottom_bar/modals.dart';
 import 'package:tinti_app/Modules/Home/companys/company-profile.dart';
+import 'package:tinti_app/Modules/Home/more%20home%20screens/contact_us.dart';
+import 'package:tinti_app/Modules/Home/more%20home%20screens/how_we_are.dart';
 import 'package:tinti_app/Modules/Home/wish_list/wish_list.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:spincircle_bottom_bar/spincircle_bottom_bar.dart';
@@ -123,10 +125,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                       color: AppColors.orange,
                     ),
                     onPressed: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) => CompanyProfile(
-                      //           id: 0,
-                      //         )));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => HowWeAreScreen()));
                     }),
                 SCItem(
                     icon: const Icon(
@@ -145,6 +145,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const MyCarsScreen()));
+                    }),
+                SCItem(
+                    icon: const Icon(
+                      Icons.call,
+                      color: AppColors.orange,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ContactUsScreen()));
                     }),
               ],
               bnbHeight: 80 // Suggested Height 80

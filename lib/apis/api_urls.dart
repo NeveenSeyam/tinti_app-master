@@ -69,4 +69,15 @@ class ApiUrls {
 
   //api/notifications
   static String notificationsList = '${baseUrl}api/notifications';
+
+  //api/notifications
+  static String appData = '${baseUrl}api/page';
+  static String contactData = 'https://www.sayyarte.com/api/contact_info';
+  static String contactUsData({
+    required email,
+    required name,
+    required address,
+    required mcontent,
+  }) =>
+      '${baseUrl}api/contactUs?$email&$name&$address&$mcontent';
 }

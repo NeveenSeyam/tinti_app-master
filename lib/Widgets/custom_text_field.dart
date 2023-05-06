@@ -48,8 +48,8 @@ class _RoundedInputFieldState extends State<RoundedInputField> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: TextFieldContainer(
-        height: widget.height,
-        width: widget.width,
+        height: widget.height ?? 100.h,
+        width: widget.width ?? 370.w,
         color: widget.color,
         borderColor: widget.borderColor,
         circuler: 10.w,
