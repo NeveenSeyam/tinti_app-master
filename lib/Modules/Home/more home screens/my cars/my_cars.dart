@@ -1,9 +1,12 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/button_widget.dart';
 import 'package:tinti_app/Widgets/custom_appbar.dart';
@@ -26,6 +29,12 @@ class MyCarsScreen extends ConsumerStatefulWidget {
 
 class _MyCarsScreenState extends ConsumerState<MyCarsScreen> {
   // var AuthProvider = ref.read(accountProvider);
+//  File? img;
+//   Future _getImageData() async {
+//     final picker = ImagePicker();
+//     final pickedFile = await picker.getImage(source: ImageSource.gallery);
+//     img = File(pickedFile!.path);
+//   }
 
   Future _getContentData() async {
     final prov = ref.read(carProvider);

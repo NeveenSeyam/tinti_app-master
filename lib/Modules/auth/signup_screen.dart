@@ -833,7 +833,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           otpVerfied = true;
           // ref.read(accountProvider).getActivateModel;
           _activeFun(context, ref);
-          Navigator.pushNamed(context, '/navegaitor_screen');
+
+          Navigator.popAndPushNamed(context, '/navegaitor_screen');
           // activateFun();
         } else {
           Fluttertoast.showToast(

@@ -128,7 +128,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                           Center(
                             child: SizedBox(
                               width: 370.w,
-                              height: 40.h,
+                              height: 45.h,
                               child: ListView.builder(
                                   physics: const ClampingScrollPhysics(),
                                   shrinkWrap: true,

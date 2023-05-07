@@ -79,5 +79,6 @@ class ApiUrls {
     required address,
     required mcontent,
   }) =>
-      '${baseUrl}api/contactUs?$email&$name&$address&$mcontent';
+      '${baseUrl}api/contactUs?email=$email&name=$name&title=$address&mcontent=$mcontent';
 }
+// {{Base_URL}}api/contactUs?email=nevveev@test.com	&name=neveen&title=verfication my account&mcontent=it's not activate

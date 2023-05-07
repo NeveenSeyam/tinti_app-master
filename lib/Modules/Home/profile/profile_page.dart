@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Models/auth/profile_model.dart';
 import 'package:tinti_app/Util/constants/constants.dart';
@@ -15,13 +14,10 @@ import 'package:tinti_app/Widgets/custom_text.dart';
 import 'package:tinti_app/provider/account_provider.dart';
 
 import '../../../Helpers/failure.dart';
-import '../../../Util/constants/keys.dart';
 import '../../../Widgets/custom_appbar.dart';
 import '../../../Widgets/custom_text_field.dart';
 import '../../../Widgets/gradint_button.dart';
 import '../../../Widgets/loader_widget.dart';
-import '../../../Widgets/text_widget.dart';
-import '../../../provider/car_provider.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
@@ -253,120 +249,94 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       onTap: () async {
                                         showBottomSheet(
                                           context,
-                                          StatefulBuilder(builder: (BuildContext
-                                                  context,
-                                              StateSetter
-                                                  setState /*You can rename this!*/) {
-                                            return Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: <Widget>[
-                                                GestureDetector(
-                                                  onTap: () async {
-                                                    final picker =
-                                                        ImagePicker();
-                                                    final pickedFile =
-                                                        await picker.getImage(
-                                                            source: ImageSource
-                                                                .gallery);
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: <Widget>[
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  _getImageData();
+                                                  // final picker = ImagePicker();
+                                                  // final pickedFile =
+                                                  //     await picker.getImage(
+                                                  //         source: ImageSource
+                                                  //             .gallery);
 
-                                                    setState() {
-                                                      img = File(
-                                                          pickedFile!.path);
-                                                    }
-                                                  },
-                                                  child: img == null
-                                                      ? Padding(
+                                                  // setState() {
+                                                  //   img =
+                                                  //       File(pickedFile!.path);
+                                                  // }
+                                                },
+                                                child: img == null
+                                                    ? Padding(
+                                                        padding: EdgeInsets.all(
+                                                            20.w),
+                                                        child: Center(
+                                                          child: Container(
+                                                            color: AppColors
+                                                                .grey
+                                                                .withOpacity(
+                                                                    0.3),
+                                                            width: 350.w,
+                                                            height: 250.h,
+                                                            child: Icon(Icons
+                                                                .add_a_photo_outlined),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : Center(
+                                                        child: Padding(
                                                           padding:
                                                               EdgeInsets.all(
                                                                   20.w),
-                                                          child: Center(
-                                                            child: Container(
-                                                              color: AppColors
-                                                                  .grey
-                                                                  .withOpacity(
-                                                                      0.3),
-                                                              width: 350.w,
-                                                              height: 250.h,
-                                                              child: Icon(Icons
-                                                                  .add_a_photo_outlined),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : Center(
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    20.w),
-                                                            child: Container(
-                                                              height: 250.h,
-                                                              width: 350.w,
-                                                              child: Image.file(
-                                                                img ??
-                                                                    File(
-                                                                        'path'),
-                                                                fit:
-                                                                    BoxFit.fill,
-                                                              ),
+                                                          child: Container(
+                                                            height: 250.h,
+                                                            width: 350.w,
+                                                            child: Image.file(
+                                                              img ??
+                                                                  File('path'),
+                                                              fit: BoxFit.fill,
                                                             ),
                                                           ),
                                                         ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 16.h),
-                                                  child: ButtonWidget(
-                                                    onPressed: () async {
-                                                      await profileModel
-                                                          .editUserImageRequset(
-                                                              data: {},
-                                                              file: img);
-                                                      setState(() {
-                                                        _fetchedMyRequest =
-                                                            _getContentData();
-                                                      });
+                                                      ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 16.h),
+                                                child: ButtonWidget(
+                                                  onPressed: () async {
+                                                    await profileModel
+                                                        .editUserImageRequset(
+                                                            data: {},
+                                                            file: img);
+                                                    setState(() {
+                                                      _fetchedMyRequest =
+                                                          _getContentData();
+                                                    });
 
-                                                      Navigator.pop(context);
-                                                    },
-                                                    title: 'حفظ',
-                                                    backgroundColor:
-                                                        AppColors.scadryColor,
-                                                    textColor: AppColors.white,
-                                                    height: 45.h,
-                                                    verticalTextPadding: 0,
-                                                    horizontalTextPadding: 0,
-                                                  ),
+                                                    Navigator.pop(context);
+                                                  },
+                                                  title: 'حفظ',
+                                                  backgroundColor:
+                                                      AppColors.scadryColor,
+                                                  textColor: AppColors.white,
+                                                  height: 45.h,
+                                                  verticalTextPadding: 0,
+                                                  horizontalTextPadding: 0,
                                                 ),
-                                              ],
-                                            );
-                                          }),
+                                              ),
+                                            ],
+                                          ),
                                         );
-
-                                        // await _getImageData();
-                                        // final picker = ImagePicker();
-                                        // final pickedFile =
-                                        //     await picker.getImage(
-                                        //         source: ImageSource.gallery);
-                                        // img = File(pickedFile!.path);
-
-                                        // await profileModel.editUserImageRequset(
-                                        //     data: {},
-                                        //     file: img).then((value) async {
-                                        //   _fetchedMyRequest = _getContentData();
-                                        //   await _fetchedMyRequest;
-                                        // });
-
-                                        // _fetchedMyRequest = _getContentData();
-                                        // _fetchedMyRequest;
                                       },
                                       child: SizedBox(
                                         width: 85.w,
                                         height: 85.h,
                                         child: Image.network(
-                                          '${serviceModel.user?.img}' ??
-                                              'https://1fid.com/wp-content/uploads/2022/06/cool-profile-picture-2-720x720.jpg',
+                                          '${serviceModel.user?.img}',
                                           fit: BoxFit.fill,
                                           width: 85.w,
                                           height: 85.w,
@@ -517,66 +487,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                         ),
                                                       ),
                                                     ),
-                                                    // Container(
-                                                    //   width: double.infinity,
-                                                    //   child: GestureDetector(
-                                                    //       onTap: () {
-                                                    //         setState(() {
-                                                    //           _getImageData();
-
-                                                    //           _getImage();
-                                                    //         });
-                                                    //         // print('img $img');
-                                                    //       },
-                                                    //       child: img == null
-                                                    //           ? Center(
-                                                    //               child:
-                                                    //                   Container(
-                                                    //                 width:
-                                                    //                     350.w,
-                                                    //                 height:
-                                                    //                     120.h,
-                                                    //                 decoration:
-                                                    //                     BoxDecoration(
-                                                    //                   borderRadius:
-                                                    //                       BorderRadius.circular(
-                                                    //                           10.w),
-                                                    //                   color: AppColors
-                                                    //                       .scadryColor
-                                                    //                       .withOpacity(
-                                                    //                           0.3),
-                                                    //                 ),
-                                                    //                 child: Icon(
-                                                    //                   Icons
-                                                    //                       .add_to_photos_rounded,
-                                                    //                   color: AppColors
-                                                    //                       .orange,
-                                                    //                   size:
-                                                    //                       40.w,
-                                                    //                 ),
-                                                    //               ),
-                                                    //             )
-                                                    //           : Center(
-                                                    //               child:
-                                                    //                   Padding(
-                                                    //                 padding:
-                                                    //                     const EdgeInsets.all(
-                                                    //                         8.0),
-                                                    //                 child: Image
-                                                    //                     .file(
-                                                    //                   img ??
-                                                    //                       File(
-                                                    //                           'file.txt'),
-                                                    //                   width:
-                                                    //                       300.w,
-                                                    //                   height:
-                                                    //                       120.h,
-                                                    //                   fit: BoxFit
-                                                    //                       .cover,
-                                                    //                 ),
-                                                    //               ),
-                                                    //             )),
-                                                    // ),
                                                     Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
