@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Models/auth/profile_model.dart';
 import 'package:tinti_app/Models/statics/car_model.dart';
+import 'package:tinti_app/Models/statics/sizes.dart';
 import 'package:tinti_app/Util/constants/constants.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/button_widget.dart';
@@ -18,6 +19,7 @@ import 'package:tinti_app/provider/statics_provider.dart';
 
 import '../../../../Helpers/failure.dart';
 import '../../../../Models/user car/car_model.dart';
+import '../../../../Widgets/Custom_dropDown.dart';
 import '../../../../Widgets/custom_appbar.dart';
 import '../../../../Widgets/custom_text_field.dart';
 import '../../../../Widgets/gradint_button.dart';
@@ -45,7 +47,6 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
   TextEditingController _color = TextEditingController();
   TextEditingController _number = TextEditingController();
   int pageIndex = 0;
-  String selectedValue = 'Option 1';
 
   File? img;
 
@@ -55,7 +56,9 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
     img = File(pickedFile!.path);
   }
 
-  String dropdownValue = 'One';
+  String dropdownValue = '';
+  String sizedropdownValue = '';
+  String selectedNationality = 'One';
 
   Future _getContentData() async {
     final prov = ref.read(carProvider);
@@ -92,6 +95,7 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
 
     super.initState();
   }
+  // var selectedValue = 'Option 1';
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +201,7 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                               CarModel2();
                       var sizeModel =
                           ref.watch(staticsProvider).getSizessDataList ??
-                              CarModel2();
+                              SizesModel();
 
                       var changCarModel = ref.watch(carProvider);
                       print('lingth ${serviceModel.carModles?.length}');
@@ -329,23 +333,12 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                       SizedBox(
                                                         height: 5.h,
                                                       ),
+
                                                       Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .center,
                                                         children: [
-                                                          // DropdownButton(
-                                                          //   value:
-                                                          //       selectedValue,
-                                                          //   items: carModel.carModles.;
-                                                          //   onChanged: (value) {
-                                                          //     setState(() {
-                                                          //       selectedValue =
-                                                          //           value!;
-                                                          //     });
-                                                          //   },
-                                                          // )
-
                                                           RoundedInputField(
                                                             hintText: serviceModel
                                                                     ?.carModles?[
@@ -364,23 +357,93 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                           SizedBox(
                                                             width: 15.w,
                                                           ),
-                                                          RoundedInputField(
-                                                            hintText: serviceModel
-                                                                    ?.carModles?[
-                                                                        index]
-                                                                    .carModelName ??
-                                                                'الموديل',
-                                                            controller: _model,
-                                                            width: 160.w,
-                                                            seen: false,
-                                                            hintColor: AppColors
-                                                                .grey
-                                                                .withOpacity(
-                                                                    0.4),
-                                                            onChanged: (val) {},
+                                                          Container(
+                                                            width: 170.w,
+                                                            child:
+                                                                CustomDropDown(
+                                                              hintText:
+                                                                  "اختر نوع السيارة",
+                                                              title: "النوع",
+                                                              value:
+                                                                  dropdownValue,
+                                                              list: carModel
+                                                                  .carModles!
+                                                                  .map((e) => e
+                                                                      .name
+                                                                      .toString())
+                                                                  .toList(),
+                                                              onChange: (p0) {
+                                                                var selectedNationality = carModel
+                                                                    .carModles!
+                                                                    .firstWhere(
+                                                                        (element) =>
+                                                                            element.name ==
+                                                                            p0);
+                                                                dropdownValue =
+                                                                    selectedNationality
+                                                                            .name ??
+                                                                        "";
+                                                                _model.text =
+                                                                    dropdownValue;
+                                                                setState(() {});
+                                                              },
+                                                            ),
                                                           ),
                                                         ],
                                                       ),
+
+                                                      // Row(
+                                                      //   mainAxisAlignment:
+                                                      //       MainAxisAlignment
+                                                      //           .center,
+                                                      //   children: [
+                                                      //     // DropdownButton(
+                                                      //     //   value:
+                                                      //     //       selectedValue,
+                                                      //     //   items: carModel.carModles.;
+                                                      //     //   onChanged: (value) {
+                                                      //     //     setState(() {
+                                                      //     //       selectedValue =
+                                                      //     //           value!;
+                                                      //     //     });
+                                                      //     //   },
+                                                      //     // )
+
+                                                      // RoundedInputField(
+                                                      //   hintText: serviceModel
+                                                      //           ?.carModles?[
+                                                      //               index]
+                                                      //           .name ??
+                                                      //       'الاسم',
+                                                      //   width: 160.w,
+                                                      //   seen: false,
+                                                      //   controller: _name,
+                                                      //   hintColor: AppColors
+                                                      //       .grey
+                                                      //       .withOpacity(
+                                                      //           0.4),
+                                                      //   onChanged: (val) {},
+                                                      // ),
+                                                      // SizedBox(
+                                                      //   width: 15.w,
+                                                      // ),
+                                                      //     RoundedInputField(
+                                                      //       hintText: serviceModel
+                                                      //               ?.carModles?[
+                                                      //                   index]
+                                                      //               .carModelName ??
+                                                      //           'الموديل',
+                                                      //       controller: _model,
+                                                      //       width: 160.w,
+                                                      //       seen: false,
+                                                      //       hintColor: AppColors
+                                                      //           .grey
+                                                      //           .withOpacity(
+                                                      //               0.4),
+                                                      //       onChanged: (val) {},
+                                                      //     ),
+                                                      //   ],
+                                                      // ),
                                                       Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -404,21 +467,40 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                           SizedBox(
                                                             width: 15.h,
                                                           ),
-                                                          RoundedInputField(
-                                                              hintText: serviceModel
-                                                                      ?.carModles?[
-                                                                          index]
-                                                                      .carSizeName ??
-                                                                  'الحجم',
-                                                              controller: _size,
-                                                              seen: false,
-                                                              onChanged:
-                                                                  (val) {},
-                                                              hintColor: AppColors
-                                                                  .grey
-                                                                  .withOpacity(
-                                                                      0.4),
-                                                              width: 160.w),
+                                                          Container(
+                                                            width: 170.w,
+                                                            child:
+                                                                CustomDropDown(
+                                                              hintText:
+                                                                  "اختر حجم السيارة",
+                                                              title: "النوع",
+                                                              value:
+                                                                  sizedropdownValue,
+                                                              list: sizeModel
+                                                                  .carSizes!
+                                                                  .map((e) => e
+                                                                      .name
+                                                                      .toString())
+                                                                  .toList(),
+                                                              onChange: (p0) {
+                                                                var selectedSize = sizeModel
+                                                                    .carSizes!
+                                                                    .firstWhere(
+                                                                        (element) {
+                                                                  return element
+                                                                          .name ==
+                                                                      p0;
+                                                                });
+                                                                sizedropdownValue =
+                                                                    selectedSize
+                                                                            .name ??
+                                                                        "";
+                                                                _size.text =
+                                                                    sizedropdownValue;
+                                                                setState(() {});
+                                                              },
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                       RoundedInputField(
