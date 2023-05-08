@@ -340,9 +340,13 @@ class AccountProvider with ChangeNotifier {
       e.response?.data['message'] != 'Validation Error.'
           ? message = 'تم تغيير كلمة السر بنجاح'
           : message = ' كلمة مرور غير مناسبة';
-      UIHelper.showNotification(message);
-
-      log(' e.mmm  ${e.message} ${e.response?.data['message']}');
+      // UIHelper.showNotification(message);
+      log('eeeeeeeeeeeeeeeee ${e.response?.data['error'] ?? ''}');
+      log(' e.mmm  ${e.error} ${e.response?.data['message']}');
+      e.error == 'Http status error [404]'
+          ? UIHelper.showNotification('كلمة مرور خاطئة',
+              backgroundColor: AppColors.red)
+          : null;
       return Failure;
     }
   }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Models/auth/profile_model.dart';
+import 'package:tinti_app/Modules/Home/more%20home%20screens/contact_us.dart';
 import 'package:tinti_app/Util/constants/constants.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/button_widget.dart';
@@ -18,6 +20,7 @@ import '../../../Widgets/custom_appbar.dart';
 import '../../../Widgets/custom_text_field.dart';
 import '../../../Widgets/gradint_button.dart';
 import '../../../Widgets/loader_widget.dart';
+import '../../../helpers/ui_helper.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
@@ -68,6 +71,28 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     super.initState();
     _pageController = PageController();
   }
+
+  RegExp pass_valid = RegExp(r"(?=.*[a-z])(?=.*[A-Z])");
+
+  bool validatePassword(String pass) {
+    String _password = pass.trim();
+    if (pass_valid.hasMatch(_password) && pass.length > 6) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool validateConfirmPassword(String pass) {
+    String _password = pass.trim();
+    if (_confirmNewPassController.text == _newPasswordController.text) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  final _Key = GlobalKey<FormState>();
 
   String _value = 'العربية';
 
@@ -165,7 +190,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               borderRadius: BorderRadius.circular(20.w),
                               color: AppColors.white.withOpacity(0.9)),
                           width: 320.w,
-                          height: 500.h,
+                          height: 600.h,
                           child: Column(
                             children: [
                               Image.asset('assets/images/nullstate.png'),
@@ -173,7 +198,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 height: 20.h,
                               ),
                               Container(
-                                width: 300.w,
+                                width: 350.w,
                                 child: CustomText(
                                   '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
                                   color: AppColors.orange,
@@ -185,7 +210,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 ),
                               ),
                               SizedBox(
-                                height: 60.h,
+                                height: 40.h,
                               ),
                               RaisedGradientButton(
                                 text: 'تواصل معنا',
@@ -193,7 +218,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 height: 48.h,
                                 width: 320.w,
                                 circular: 10.w,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ContactUsScreen()),
+                                  );
+                                },
                               ),
                               SizedBox(
                                 height: 10.h,
@@ -619,121 +651,160 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     context,
                                     Directionality(
                                       textDirection: TextDirection.rtl,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        // crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            alignment: Alignment.centerRight,
-                                            padding: EdgeInsetsDirectional.only(
-                                                start: 20.w,
-                                                bottom: 12.h,
-                                                top: 20.h),
-                                            child: CustomText(
-                                              'إعادة تعيين كلمة المرور ',
-                                              color: AppColors.scadryColor,
-                                              fontWeight: FontWeight.w300,
-                                              fontFamily: 'DINNextLTArabic',
-                                              fontSize: 18.sp,
+                                      child: Form(
+                                        key: _Key,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          // crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              alignment: Alignment.centerRight,
+                                              padding:
+                                                  EdgeInsetsDirectional.only(
+                                                      start: 20.w,
+                                                      bottom: 12.h,
+                                                      top: 20.h),
+                                              child: CustomText(
+                                                'إعادة تعيين كلمة المرور ',
+                                                color: AppColors.scadryColor,
+                                                fontWeight: FontWeight.w300,
+                                                fontFamily: 'DINNextLTArabic',
+                                                fontSize: 18.sp,
+                                              ),
                                             ),
-                                          ),
-                                          Center(
-                                            child: RoundedInputField(
-                                              color: AppColors.grey
-                                                  .withOpacity(0.1),
-                                              hintText: 'كلمة المرور القديمة',
-                                              width: 355.w,
-                                              height: 48.h,
-                                              onChanged: (value) {},
-                                              seen: true,
-                                              icon: Icon(Icons.key),
-                                              hintColor: AppColors.grey
-                                                  .withOpacity(0.7),
-                                              controller: _oldPassController,
+                                            Center(
+                                              child: RoundedInputField(
+                                                color: AppColors.grey
+                                                    .withOpacity(0.1),
+                                                hintText: 'كلمة المرور القديمة',
+                                                width: 355.w,
+                                                height: 48.h,
+                                                onChanged: (value) {},
+                                                seen: true,
+                                                icon: Icon(Icons.key),
+                                                hintColor: AppColors.grey
+                                                    .withOpacity(0.7),
+                                                controller: _oldPassController,
+                                              ),
                                             ),
-                                          ),
-                                          Center(
-                                            child: RoundedInputField(
-                                              color: AppColors.grey
-                                                  .withOpacity(0.1),
-                                              hintText: 'كلمة المرور الجديدة',
-                                              width: 355.w,
-                                              height: 48.h,
-                                              onChanged: (value) {},
-                                              seen: true,
-                                              icon: Icon(Icons.key),
-                                              hintColor: AppColors.grey
-                                                  .withOpacity(0.7),
-                                              controller:
-                                                  _newPasswordController,
+                                            Center(
+                                              child: RoundedInputField(
+                                                color: AppColors.grey
+                                                    .withOpacity(0.1),
+                                                hintText: 'كلمة المرور الجديدة',
+                                                width: 355.w,
+                                                height: 48.h,
+                                                onChanged: (value) {},
+                                                seen: true,
+                                                icon: Icon(Icons.key),
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return "Please enter password";
+                                                  } else {
+                                                    //call function to check password
+                                                    bool result =
+                                                        validatePassword(value);
+                                                    if (result) {
+                                                      // create account event
+                                                      return null;
+                                                    } else {
+                                                      return " يجب ان تحتوي كلمة المرور على حروف كبيرة وحروف صغيرة وعلامات مميزة وارقام";
+                                                    }
+                                                  }
+                                                },
+                                                hintColor: AppColors.grey
+                                                    .withOpacity(0.7),
+                                                controller:
+                                                    _newPasswordController,
+                                              ),
                                             ),
-                                          ),
-                                          Center(
-                                            child: RoundedInputField(
-                                              color: AppColors.grey
-                                                  .withOpacity(0.1),
-                                              hintText:
-                                                  'تأكيد كلمة المرور الجديدة',
-                                              width: 355.w,
-                                              height: 48.h,
-                                              onChanged: (value) {},
-                                              seen: true,
-                                              icon: Icon(Icons.key),
-                                              controller:
-                                                  _confirmNewPassController,
-                                              hintColor: AppColors.grey
-                                                  .withOpacity(0.7),
+                                            Center(
+                                              child: RoundedInputField(
+                                                color: AppColors.grey
+                                                    .withOpacity(0.1),
+                                                hintText:
+                                                    'تأكيد كلمة المرور الجديدة',
+                                                width: 355.w,
+                                                height: 48.h,
+                                                onChanged: (value) {},
+                                                seen: true,
+                                                icon: Icon(Icons.key),
+                                                controller:
+                                                    _confirmNewPassController,
+                                                hintColor: AppColors.grey
+                                                    .withOpacity(0.7),
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return "Please enter password";
+                                                  } else {
+                                                    //call function to check password
+                                                    bool result =
+                                                        validatePassword(value);
+                                                    if (result) {
+                                                      // create account event
+                                                      return null;
+                                                    } else {
+                                                      return " لا تتطابق الكلمتين";
+                                                    }
+                                                  }
+                                                },
+                                              ),
                                             ),
-                                          ),
-                                          Container(
-                                            alignment: Alignment.centerRight,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 26.w),
-                                            child: CustomText(
-                                              'نسيت كلمة المرور؟',
-                                              color: AppColors.orange,
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.w300,
-                                              fontFamily: 'DINNextLTArabic',
+                                            Container(
+                                              alignment: Alignment.centerRight,
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 26.w),
+                                              child: CustomText(
+                                                'نسيت كلمة المرور؟',
+                                                color: AppColors.orange,
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w300,
+                                                fontFamily: 'DINNextLTArabic',
+                                              ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 16.h,
-                                                vertical: 12.h),
-                                            child: ButtonWidget(
-                                              onPressed: () async {
-                                                await profileModel
-                                                    .editProfilePasswordRequset(
-                                                  data: {
-                                                    "password":
-                                                        _newPasswordController
-                                                            .text,
-                                                    "c_password":
-                                                        _confirmNewPassController
-                                                            .text,
-                                                    "old_password":
-                                                        _oldPassController.text,
-                                                  },
-                                                );
-                                                setState(() {
-                                                  _fetchedMyRequest =
-                                                      _getContentData();
-                                                });
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 16.h,
+                                                  vertical: 12.h),
+                                              child: ButtonWidget(
+                                                onPressed: () async {
+                                                  if (_Key.currentState!
+                                                      .validate()) {
+                                                    _Key.currentState!.save();
+                                                    await profileModel
+                                                        .editProfilePasswordRequset(
+                                                      data: {
+                                                        "password":
+                                                            _newPasswordController
+                                                                .text,
+                                                        "c_password":
+                                                            _confirmNewPassController
+                                                                .text,
+                                                        "old_password":
+                                                            _oldPassController
+                                                                .text,
+                                                      },
+                                                    );
+                                                    setState(() {
+                                                      _fetchedMyRequest =
+                                                          _getContentData();
+                                                    });
 
-                                                Navigator.pop(context);
-                                              },
-                                              title: 'حفظ',
-                                              backgroundColor:
-                                                  AppColors.scadryColor,
-                                              textColor: AppColors.white,
-                                              height: 45.h,
-                                              verticalTextPadding: 0,
-                                              horizontalTextPadding: 0,
-                                            ),
-                                          )
-                                        ],
+                                                    Navigator.pop(context);
+                                                  }
+                                                },
+                                                title: 'حفظ',
+                                                backgroundColor:
+                                                    AppColors.scadryColor,
+                                                textColor: AppColors.white,
+                                                height: 45.h,
+                                                verticalTextPadding: 0,
+                                                horizontalTextPadding: 0,
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ));
                               }),

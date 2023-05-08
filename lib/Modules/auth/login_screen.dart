@@ -22,6 +22,7 @@ import '../../Widgets/gradint_button.dart';
 import '../../Widgets/loading_dialog.dart';
 import '../../helpers/ui_helper.dart';
 import '../../provider/account_provider.dart';
+import 'forgetPassword/first_forget_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -77,24 +78,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           await AuthProvider.getUserProfileRequset();
 
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/navegaitor_screen');
+          Navigator.popAndPushNamed(context, '/navegaitor_screen');
         } else {
           Navigator.pop(context); //134092
         }
-
-        // // final userProv = ref.read(userProvider);
-        // // userProv.setUser(LoginModel.fromJson(response));
-        // // prefs.setString(Keys.hasSaveUserData,
-        // log("value $value");
-        // //  var user = UserLogin.fromJson(value);
-        // // if (isRememberMe) {
-        // //   var userData =
-        // //       json.encoder.convert(UserLogin.fromJson(user.toJson()));
-        // //   SharedPreferences? prefs = await SharedPreferences.getInstance();
-        // //   prefs.setString(Keys.hasSaveUserData, userData);
-        // // }
-
-        // //    Constants.userTokent = user.data?.token ?? "";
       } else {
         Navigator.pop(context);
       }
@@ -201,7 +188,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.pushNamed(context, '/first_screen');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          FirstForgetScreen()),
+                                );
                               },
                               child: Container(
                                 padding: EdgeInsets.only(right: 10.w),

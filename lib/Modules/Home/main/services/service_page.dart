@@ -128,18 +128,22 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                           Center(
                             child: SizedBox(
                               width: 370.w,
-                              height: 45.h,
-                              child: ListView.builder(
-                                  physics: const ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: serviecesModel?.services?.length,
-                                  itemBuilder: (BuildContext context,
-                                          int index) =>
-                                      textButtonModel(
-                                          serviecesModel?.services?[index].name,
-                                          serviecesModel?.services?[index].id,
-                                          serviecesModel?.services?[index].id)),
+                              height: 48.h,
+                              child: Center(
+                                child: ListView.builder(
+                                    physics: const ClampingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: serviecesModel?.services?.length,
+                                    itemBuilder: (BuildContext context,
+                                            int index) =>
+                                        textButtonModel(
+                                            serviecesModel
+                                                ?.services?[index].name,
+                                            serviecesModel?.services?[index].id,
+                                            serviecesModel
+                                                ?.services?[index].id)),
+                              ),
                             ),
                           ),
                           Consumer(
@@ -175,12 +179,15 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                       ServiceProductModel();
                                   return Padding(
                                     padding: EdgeInsetsDirectional.only(
-                                        start: 15.w, end: 15.w, top: 5.h),
+                                        start: 15.w,
+                                        end: 15.w,
+                                        top: 5.h,
+                                        bottom: 20.h),
                                     child: SizedBox(
-                                      height: 780.0,
+                                      height: 620.h,
                                       child: GridView.builder(
-                                          physics: BouncingScrollPhysics(),
-                                          // shrinkWrap: true,
+                                          // physics: BouncingScrollPhysics(),
+                                          shrinkWrap: true,
                                           gridDelegate:
                                               const SliverGridDelegateWithMaxCrossAxisExtent(
                                                   maxCrossAxisExtent: 300,
@@ -265,6 +272,9 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                               },
                             ),
                           ),
+                          SizedBox(
+                            height: 20.h,
+                          )
                         ],
                       );
                     }

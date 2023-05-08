@@ -4,7 +4,6 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:regexpattern/regexpattern.dart';
 import 'package:tinti_app/Widgets/custom_appbar.dart';
 import 'package:tinti_app/provider/app_data_provider.dart';
@@ -178,7 +177,7 @@ class _HowWeAreScreenScreenState extends ConsumerState<HowWeAreScreen> {
                                           'assets/images/logol.png')),
                                   Container(
                                     width: double.infinity,
-                                    height: 580.h,
+                                    height: 550.h,
                                     child: ListView(
                                       children: [
                                         CustomText(

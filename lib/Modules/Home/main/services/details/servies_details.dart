@@ -108,7 +108,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                             // width: 350.w,
                             height: 200.h,
                             child: SizedBox(
-                              height: 250,
+                              height: 250.h,
                               child:
                                   //    PageView.builder(
                                   //     padEnds: false,

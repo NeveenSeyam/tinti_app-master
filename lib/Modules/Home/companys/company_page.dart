@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tinti_app/Models/companies/comany_model.dart';
+import 'package:tinti_app/Modules/Home/companys/company-profile.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/custom_appbar.dart';
 import 'package:tinti_app/Widgets/custom_text_field.dart';
@@ -12,6 +13,7 @@ import '../../../Helpers/failure.dart';
 import '../../../Widgets/custom_text.dart';
 import '../../../Widgets/loader_widget.dart';
 import '../../../Widgets/text_widget.dart';
+import '../main/services/service_page.dart';
 
 class CampanyPage extends ConsumerStatefulWidget {
   const CampanyPage({super.key});
@@ -118,60 +120,87 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                 itemCount: comanyModel.companies?.length ?? 0,
                                 itemBuilder: (BuildContext context,
                                         int index) =>
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 140.w,
-                                        height: 170.h,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.w),
-                                            color: AppColors.orange
-                                                .withOpacity(0.5)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.w),
-                                                  child: Image.network(
-                                                    comanyModel
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CompanyProfile(
+                                                    name: comanyModel
+                                                            .companies?[index]
+                                                            .name ??
+                                                        '',
+                                                    about: comanyModel
+                                                            .companies?[index]
+                                                            .about ??
+                                                        '',
+                                                    id: comanyModel
+                                                            .companies?[index]
+                                                            .id ??
+                                                        0,
+                                                    img: comanyModel
                                                             .companies?[index]
                                                             .image ??
-                                                        'assets/images/sa1.jpeg',
-                                                    width: 120.w,
-                                                    height: 70.h,
-                                                    fit: BoxFit.fill,
+                                                        '',
+                                                  )),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          width: 140.w,
+                                          height: 170.h,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.w),
+                                              color: AppColors.orange
+                                                  .withOpacity(0.5)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.w),
+                                                    child: Image.network(
+                                                      comanyModel
+                                                              .companies?[index]
+                                                              .image ??
+                                                          'assets/images/sa1.jpeg',
+                                                      width: 120.w,
+                                                      height: 70.h,
+                                                      fit: BoxFit.fill,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              CustomText(
-                                                comanyModel.companies?[index]
-                                                        .name ??
-                                                    'نانو سيراميك',
-                                                color: AppColors.scadryColor,
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: 'DINNextLTArabic',
-                                                fontSize: 10.sp,
-                                              ),
-                                              CustomText(
-                                                comanyModel.companies?[index]
-                                                        .about ??
-                                                    'نانو سيراميك',
-                                                color: AppColors.grey,
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'DINNextLTArabic',
-                                                maxLines: 2,
-                                                fontSize: 8.sp,
-                                              ),
-                                            ],
+                                                CustomText(
+                                                  comanyModel.companies?[index]
+                                                          .name ??
+                                                      'نانو سيراميك',
+                                                  color: AppColors.scadryColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: 'DINNextLTArabic',
+                                                  fontSize: 10.sp,
+                                                ),
+                                                CustomText(
+                                                  comanyModel.companies?[index]
+                                                          .about ??
+                                                      'نانو سيراميك',
+                                                  color: AppColors.grey,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'DINNextLTArabic',
+                                                  maxLines: 2,
+                                                  fontSize: 8.sp,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -234,12 +263,15 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 10),
                             itemCount:
-                                productsModel!.success?.items?.length ?? 0,
+                                productsModel.success?.items?.length ?? 0,
                             itemBuilder: (BuildContext ctx, index) {
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.popAndPushNamed(
-                                      context, '/company_profile');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ServicesScreen()),
+                                  );
                                 },
                                 child: Stack(
                                   children: [
@@ -264,14 +296,14 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                               borderRadius:
                                                   BorderRadius.circular(50.w),
                                               child: Image.network(
-                                                productsModel!.success
+                                                productsModel.success
                                                         ?.items?[index].image ??
                                                     'assets/images/j_and_j.png',
                                                 width: 50.w,
                                               ),
                                             ),
                                             CustomText(
-                                              productsModel!.success
+                                              productsModel.success
                                                       ?.items?[index].name ??
                                                   'جونسون اند جونسون ',
                                               color: AppColors.white,
@@ -280,7 +312,7 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                               fontSize: 10.sp,
                                             ),
                                             CustomText(
-                                              productsModel!.success
+                                              productsModel.success
                                                       ?.items?[index].price ??
                                                   'جدة ',
                                               color: AppColors.orange,

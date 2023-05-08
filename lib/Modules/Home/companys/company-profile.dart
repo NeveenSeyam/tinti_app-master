@@ -90,6 +90,8 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                           borderRadius: BorderRadius.circular(50.w),
                           child: Image.network(
                             widget.img,
+                            width: 80.w,
+                            height: 80.h,
                             fit: BoxFit.fill,
                           ),
                         )),
@@ -221,7 +223,7 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                                                   gridDelegate:
                                                       const SliverGridDelegateWithMaxCrossAxisExtent(
                                                           maxCrossAxisExtent:
-                                                              400,
+                                                              300,
                                                           childAspectRatio:
                                                               2 / 3,
                                                           crossAxisSpacing: 10,

@@ -13,6 +13,8 @@ import '../../../Widgets/latest_offers_card.dart';
 import '../../../Widgets/loader_widget.dart';
 import '../../../Widgets/text_widget.dart';
 import '../main/services/details/servies_details.dart';
+import '../main/services/service_page.dart';
+import '../more home screens/contact_us.dart';
 
 class WishListPage extends ConsumerStatefulWidget {
   const WishListPage({super.key});
@@ -118,7 +120,14 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                       height: 48.h,
                                       width: 320.w,
                                       circular: 10.w,
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ContactUsScreen()),
+                                        );
+                                      },
                                     ),
                                   ],
                                 )),
@@ -166,7 +175,14 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                         height: 48.h,
                                         width: 320.w,
                                         circular: 10.w,
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ServicesScreen()),
+                                          );
+                                        },
                                       ),
                                     ],
                                   )),
@@ -261,7 +277,14 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                             height: 48.h,
                                             width: 320.w,
                                             circular: 10.w,
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ServicesScreen()),
+                                              );
+                                            },
                                           ),
                                         ],
                                       )),

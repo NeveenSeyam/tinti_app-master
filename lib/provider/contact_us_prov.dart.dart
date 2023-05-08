@@ -45,7 +45,7 @@ class ContactUsProvider extends ChangeNotifier {
       e.response?.data['message'] != 'Validation Error.'
           ? message = 'تم تسجيل جديد بنجاح'
           : message = ' هناك مشكله  ';
-      UIHelper.showNotification(message);
+      UIHelper.showNotification(e.response!.data['message']);
 
       log(' e.mmm  ${e.message} ${e.response?.data['message']}');
       return Failure;

@@ -177,6 +177,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       FocusScope.of(context).unfocus();
       // ignore: use_build_context_synchronously
       showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (context) {
             // Future.delayed(

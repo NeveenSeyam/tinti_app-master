@@ -7,7 +7,7 @@ class AddUserCar extends BaseDioApi {
   String car_size_id;
   String color;
   String car_number;
-  String image;
+  dynamic image;
 
   AddUserCar({
     required this.name,
@@ -20,7 +20,14 @@ class AddUserCar extends BaseDioApi {
 
   @override
   body() {
-    return {};
+    return {
+      "name": name,
+      "car_model_id": car_model_id,
+      "car_size_id": car_size_id,
+      "color": color,
+      "image": image,
+      "car_number": car_number
+    };
   }
 
   Future fetch() async {

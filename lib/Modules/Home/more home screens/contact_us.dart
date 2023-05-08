@@ -3,10 +3,11 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:regexpattern/regexpattern.dart';
+import 'package:tinti_app/helpers/ui_helper.dart';
 import 'package:tinti_app/provider/app_data_provider.dart';
 import 'package:tinti_app/provider/contact_data_provider.dart';
+import 'package:tinti_app/provider/contact_us_prov.dart.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../Helpers/failure.dart';
 import '../../../Util/theme/app_colors.dart';
@@ -61,30 +62,6 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
     _fetchedContactRequest = _getContactsData();
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //     debugShowCheckedModeBanner: false,
-  //     home: WebviewScaffold(
-  //       url: 'https://sayyarte.com/web/contactUs',
-  //       // javascriptChannels: jsChannels,
-  //       mediaPlaybackRequiresUserGesture: false,
-  //       appBar: CustomAppBar(
-  //         'تواصل معنا',
-  //         isHome: true,
-  //       ),
-  //       withZoom: true,
-  //       withLocalStorage: true,
-  //       hidden: true,
-  //       initialChild: Container(
-  //         color: Colors.white,
-  //         child: const Center(
-  //           child: Text('.... جاري تحميل البيانات.'),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -167,6 +144,8 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
 
                           var appContactDataModel =
                               ref.watch(contactDataProvider).getContactDataList;
+                          var appContactUsDataModel =
+                              ref.watch(contactUsProvider);
 
                           return Container(
                               decoration: BoxDecoration(
@@ -261,11 +240,11 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                   horizontal: 8.w,
                                                   vertical: 20.h),
                                               child: Container(
-                                                height: 150.h,
+                                                height: 130.h,
                                                 child: Column(
                                                   children: [
                                                     const CustomText(
-                                                      ' يمكنك التواصل معنا عبر اي وسيلة تواصل لتفعيل حسابك او اجراء تعديلات على الحساب \n شكرا لتعاملك معنا \nفريق سيارتي',
+                                                      ' يمكنك التواصل معنا عبر اي وسيلة تواصل لتفعيل حسابك او اجراء تعديلات على الحساب \n شكرا لتعاملك معنا فريق سيارتي',
                                                       color: AppColors
                                                           .lightPrimaryColor,
                                                       textAlign:
@@ -350,7 +329,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                                     ),
                                                                     seen: false,
                                                                     controller:
-                                                                        _addriesController,
+                                                                        _nameController,
                                                                   ),
                                                                   RoundedInputField(
                                                                     hintText:
@@ -378,7 +357,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                                         _addriesController,
                                                                   ),
                                                                   RoundedInputField(
-                                                                    linght: 8,
+                                                                    linght: 5,
                                                                     hintText:
                                                                         'نص الرسالة',
                                                                     onChanged:
@@ -396,12 +375,34 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                                     controller:
                                                                         _textEditingController,
                                                                   ),
+                                                                  SizedBox(
+                                                                    height:
+                                                                        10.h,
+                                                                  ),
                                                                   ButtonWidget(
                                                                     backgroundColor:
                                                                         AppColors
                                                                             .scadryColor,
                                                                     onPressed:
-                                                                        () {},
+                                                                        () async {
+                                                                      await appContactUsDataModel.postCountact(
+                                                                          email: _emailController
+                                                                              .text,
+                                                                          name: _nameController
+                                                                              .text,
+                                                                          address: _addriesController
+                                                                              .text,
+                                                                          text:
+                                                                              _textEditingController.text);
+                                                                      UIHelper.showNotification(
+                                                                          'تم ارسال الرسالة',
+                                                                          backgroundColor:
+                                                                              Colors.green);
+
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
                                                                     title:
                                                                         'ارسال',
                                                                     textColor:
@@ -414,7 +415,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                       },
                                                       child: Container(
                                                         width: 280.w,
-                                                        height: 46.h,
+                                                        height: 40.h,
                                                         decoration: BoxDecoration(
                                                             color: AppColors
                                                                 .scadryColor
@@ -424,7 +425,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                                 BorderRadius
                                                                     .circular(
                                                                         10.w)),
-                                                        child: Center(
+                                                        child: const Center(
                                                           child: CustomText(
                                                             'تواصل معنا',
                                                             color:

@@ -2,7 +2,7 @@ import '../api_urls.dart';
 import '../base_dio_api.dart';
 
 class EditUserCar extends BaseDioApi {
-  int id;
+  dynamic id;
 
   EditUserCar({
     required this.id,

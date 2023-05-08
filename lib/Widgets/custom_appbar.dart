@@ -29,27 +29,30 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       child: Padding(
         padding: EdgeInsets.only(bottom: 30.w),
         child: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              isHome == true
-                  ? Navigator.of(context).pop()
-                  : isProfile == false
-                      ? Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ProfilePage()),
+          leading: Container(
+            width: 50.w,
+            child: GestureDetector(
+              onTap: () {
+                isHome == true
+                    ? Navigator.of(context).pop()
+                    : isProfile == false
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ProfilePage()),
+                          )
+                        : Container();
+              },
+              child: SizedBox(
+                  width: 50.w,
+                  height: 50.h,
+                  child: isHome == true
+                      ? const Icon(
+                          Icons.arrow_back_ios_rounded,
+                          textDirection: TextDirection.rtl,
                         )
-                      : Container();
-            },
-            child: SizedBox(
-                width: 50.w,
-                height: 50.h,
-                child: isHome == true
-                    ? const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        textDirection: TextDirection.rtl,
-                      )
-                    : Image.asset("assets/images/prof_photo.png")),
+                      : Image.asset("assets/images/prof_photo.png")),
+            ),
           ),
           actions: [
             isNotification == false

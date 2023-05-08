@@ -23,7 +23,7 @@ class ApiUrls {
 // user_car
   static const cars = '${baseUrl}api/cars';
   // static const editCars = '${baseUrl}api/cars';
-  static String editCars({required int id}) =>
+  static String editCars({required String id}) =>
       '${baseUrl}api/cars/${id.toString()}';
   static const addcars = '${baseUrl}api/cars';
   //
@@ -80,5 +80,12 @@ class ApiUrls {
     required mcontent,
   }) =>
       '${baseUrl}api/contactUs?email=$email&name=$name&title=$address&mcontent=$mcontent';
+
+// cars and size
+  static String car_models = '${baseUrl}api/car_models';
+  static String car_sizes = '${baseUrl}api/car_sizes';
+  static String regions = '${baseUrl}api/regions';
+  static String cities({required id}) =>
+      '${baseUrl}api/cities/${id.toString()}';
 }
 // {{Base_URL}}api/contactUs?email=nevveev@test.com	&name=neveen&title=verfication my account&mcontent=it's not activate

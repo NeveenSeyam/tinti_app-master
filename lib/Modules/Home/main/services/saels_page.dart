@@ -75,180 +75,176 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
             });
             return _fetchedProductRequest;
           },
-          child: ListView(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
-                child: RoundedInputField(
-                  hintText: 'بحث',
-                  hintColor: AppColors.scadryColor,
-                  seen: false,
-                  onChanged: (val) {},
-                  icon: const Icon(
-                    Icons.search,
-                    color: AppColors.scadryColor,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
+                  child: RoundedInputField(
+                    hintText: 'بحث',
+                    hintColor: AppColors.scadryColor,
+                    seen: false,
+                    onChanged: (val) {},
+                    icon: const Icon(
+                      Icons.search,
+                      color: AppColors.scadryColor,
+                    ),
                   ),
                 ),
-              ),
-              Consumer(
-                builder: (context, ref, child) => FutureBuilder(
-                  future: _fetchedMyRequest,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return SizedBox(
-                        height: 70.h,
-                        child: const Center(
-                          child: LoaderWidget(),
-                        ),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    }
-                    if (snapshot.hasData) {
-                      if (snapshot.data is Failure) {
-                        return Center(
-                            child: TextWidget(snapshot.data.toString()));
-                      }
-                      //
-                      //  print("snapshot data is ${snapshot.data}");
-
-                      var serviecesModel =
-                          ref.watch(servicesProvider).getDataList;
-
-                      return Column(
-                        children: [
-                          Consumer(
-                            builder: (context, ref, child) => FutureBuilder(
-                              future: _fetchedProductRequest,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return SizedBox(
-                                    height: 70.h,
-                                    child: const Center(
-                                      child: LoaderWidget(),
-                                    ),
-                                  );
-                                }
-                                if (snapshot.hasError) {
-                                  return Center(
-                                    child: Text('Error: ${snapshot.error}'),
-                                  );
-                                }
-                                if (snapshot.hasData) {
-                                  if (snapshot.data is Failure) {
-                                    return Center(
-                                        child: TextWidget(
-                                            snapshot.data.toString()));
-                                  }
-                                  //
-                                  //  print("snapshot data is ${snapshot.data}");
-
-                                  var productByServiceModel = ref
-                                      .watch(productsProvider)
-                                      .getProductsSellsDataList;
-                                  return Padding(
-                                    padding: EdgeInsetsDirectional.only(
-                                        start: 15.w, end: 15.w, top: 5.h),
-                                    child: SizedBox(
-                                      height: 780.0,
-                                      child: ListView.builder(
-                                          physics: BouncingScrollPhysics(),
-                                          // shrinkWrap: true,
-
-                                          itemCount: productByServiceModel
-                                                  ?.success?.items?.length ??
-                                              0,
-                                          itemBuilder:
-                                              (BuildContext ctx, index) {
-                                            return Container(
-                                              width: double.infinity,
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ServiceDetailsScreen(
-                                                              id: productByServiceModel
-                                                                      ?.success
-                                                                      ?.items?[
-                                                                          index]
-                                                                      .id ??
-                                                                  0,
-                                                              row_id: 0,
-                                                              isFavorite: productByServiceModel
-                                                                      ?.success
-                                                                      ?.items?[
-                                                                          index]
-                                                                      .is_favorite ??
-                                                                  1,
-                                                            )),
-                                                  );
-                                                },
-                                                child: SaelsScreenCardCard(
-                                                  details: productByServiceModel
-                                                          ?.success
-                                                          ?.items?[index]
-                                                          .description ??
-                                                      '',
-                                                  isFavorite:
-                                                      productByServiceModel
-                                                              ?.success
-                                                              ?.items?[index]
-                                                              .is_favorite ??
-                                                          0,
-                                                  image: productByServiceModel
-                                                          ?.success
-                                                          ?.items?[index]
-                                                          .image ??
-                                                      '',
-                                                  lastPrice:
-                                                      productByServiceModel
-                                                              ?.success
-                                                              ?.items?[index]
-                                                              .salePrice ??
-                                                          '',
-                                                  price: productByServiceModel
-                                                          ?.success
-                                                          ?.items?[index]
-                                                          .price ??
-                                                      '',
-                                                  title: productByServiceModel
-                                                          ?.success
-                                                          ?.items?[index]
-                                                          .name ??
-                                                      '',
-                                                  id: productByServiceModel
-                                                          ?.success
-                                                          ?.items?[index]
-                                                          .id ??
-                                                      0,
-                                                ),
-                                              ),
-                                            );
-                                          }),
-                                    ),
-                                  );
-                                }
-                                return Container();
-                              },
-                            ),
+                Consumer(
+                  builder: (context, ref, child) => FutureBuilder(
+                    future: _fetchedMyRequest,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return SizedBox(
+                          height: 70.h,
+                          child: const Center(
+                            child: LoaderWidget(),
                           ),
-                        ],
-                      );
-                    }
-                    return Container();
-                  },
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text('Error: ${snapshot.error}'),
+                        );
+                      }
+                      if (snapshot.hasData) {
+                        if (snapshot.data is Failure) {
+                          return Center(
+                              child: TextWidget(snapshot.data.toString()));
+                        }
+                        //
+                        //  print("snapshot data is ${snapshot.data}");
+
+                        var serviecesModel =
+                            ref.watch(servicesProvider).getDataList;
+
+                        return Consumer(
+                          builder: (context, ref, child) => FutureBuilder(
+                            future: _fetchedProductRequest,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return SizedBox(
+                                  height: 70.h,
+                                  child: const Center(
+                                    child: LoaderWidget(),
+                                  ),
+                                );
+                              }
+                              if (snapshot.hasError) {
+                                return Center(
+                                  child: Text('Error: ${snapshot.error}'),
+                                );
+                              }
+                              if (snapshot.hasData) {
+                                if (snapshot.data is Failure) {
+                                  return Center(
+                                      child:
+                                          TextWidget(snapshot.data.toString()));
+                                }
+                                //
+                                //  print("snapshot data is ${snapshot.data}");
+
+                                var productByServiceModel = ref
+                                    .watch(productsProvider)
+                                    .getProductsSellsDataList;
+                                return Padding(
+                                  padding: EdgeInsetsDirectional.only(
+                                      start: 15.w, end: 15.w, top: 5.h),
+                                  child: SizedBox(
+                                    height: 680.h,
+                                    child: ListView.builder(
+                                        // physics: BouncingScrollPhysics(),
+                                        shrinkWrap: false,
+                                        itemCount: productByServiceModel
+                                                ?.success?.items?.length ??
+                                            0,
+                                        itemBuilder: (BuildContext ctx, index) {
+                                          return Container(
+                                            width: double.infinity,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ServiceDetailsScreen(
+                                                            id: productByServiceModel
+                                                                    ?.success
+                                                                    ?.items?[
+                                                                        index]
+                                                                    .id ??
+                                                                0,
+                                                            row_id: 0,
+                                                            isFavorite: productByServiceModel
+                                                                    ?.success
+                                                                    ?.items?[
+                                                                        index]
+                                                                    .is_favorite ??
+                                                                1,
+                                                          )),
+                                                );
+                                              },
+                                              child: SaelsScreenCardCard(
+                                                details: productByServiceModel
+                                                        ?.success
+                                                        ?.items?[index]
+                                                        .description ??
+                                                    '',
+                                                isFavorite:
+                                                    productByServiceModel
+                                                            ?.success
+                                                            ?.items?[index]
+                                                            .is_favorite ??
+                                                        0,
+                                                image: productByServiceModel
+                                                        ?.success
+                                                        ?.items?[index]
+                                                        .image ??
+                                                    '',
+                                                lastPrice: productByServiceModel
+                                                        ?.success
+                                                        ?.items?[index]
+                                                        .salePrice ??
+                                                    '',
+                                                price: productByServiceModel
+                                                        ?.success
+                                                        ?.items?[index]
+                                                        .price ??
+                                                    '',
+                                                title: productByServiceModel
+                                                        ?.success
+                                                        ?.items?[index]
+                                                        .name ??
+                                                    '',
+                                                id: productByServiceModel
+                                                        ?.success
+                                                        ?.items?[index]
+                                                        .id ??
+                                                    0,
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                );
+                              }
+                              return Container();
+                            },
+                          ),
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 20.h,
-              )
-            ],
+                SizedBox(
+                  height: 20.h,
+                )
+              ],
+            ),
           ),
         ),
       ),

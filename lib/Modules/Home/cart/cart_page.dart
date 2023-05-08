@@ -12,6 +12,8 @@ import '../../../Widgets/gradint_button.dart';
 import '../../../Widgets/loader_widget.dart';
 import '../../../Widgets/order_list_card.dart';
 import '../../../Widgets/text_widget.dart';
+import '../main/services/service_page.dart';
+import '../more home screens/contact_us.dart';
 
 class CartPage extends ConsumerStatefulWidget {
   const CartPage({super.key});
@@ -114,7 +116,14 @@ class _CartPageState extends ConsumerState<CartPage> {
                                 height: 48.h,
                                 width: 320.w,
                                 circular: 10.w,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ContactUsScreen()),
+                                  );
+                                },
                               ),
                             ],
                           )),
@@ -194,7 +203,14 @@ class _CartPageState extends ConsumerState<CartPage> {
                                       height: 48.h,
                                       width: 320.w,
                                       circular: 10.w,
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ServicesScreen()),
+                                        );
+                                      },
                                     ),
                                   ],
                                 )),
