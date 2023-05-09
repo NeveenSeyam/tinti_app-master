@@ -279,89 +279,142 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   children: [
                                     GestureDetector(
                                       onTap: () async {
-                                        showBottomSheet(
-                                          context,
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: <Widget>[
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  _getImageData();
-                                                  // final picker = ImagePicker();
-                                                  // final pickedFile =
-                                                  //     await picker.getImage(
-                                                  //         source: ImageSource
-                                                  //             .gallery);
+                                        showModalBottomSheet<void>(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                                top: Radius.circular(25.w)),
+                                          ),
+                                          builder: (BuildContext context) {
+                                            return StatefulBuilder(builder:
+                                                (BuildContext context,
+                                                    StateSetter
+                                                        setState /*You can rename this!*/) {
+                                              return Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom:
+                                                        MediaQuery.of(context)
+                                                            .viewInsets
+                                                            .bottom),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius
+                                                        .only(
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    10.w),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    10.w)),
+                                                  ),
+                                                  height: 500.h,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
+                                                    children: <Widget>[
+                                                      GestureDetector(
+                                                        onTap: () async {
+                                                          await _getImageData();
+                                                          setState(() {});
+                                                          // final picker = ImagePicker();
+                                                          // final pickedFile =
+                                                          //     await picker.getImage(
+                                                          //         source: ImageSource
+                                                          //             .gallery);
 
-                                                  // setState() {
-                                                  //   img =
-                                                  //       File(pickedFile!.path);
-                                                  // }
-                                                },
-                                                child: img == null
-                                                    ? Padding(
-                                                        padding: EdgeInsets.all(
-                                                            20.w),
-                                                        child: Center(
-                                                          child: Container(
-                                                            color: AppColors
-                                                                .grey
-                                                                .withOpacity(
-                                                                    0.3),
-                                                            width: 350.w,
-                                                            height: 250.h,
-                                                            child: Icon(Icons
-                                                                .add_a_photo_outlined),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : Center(
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  20.w),
-                                                          child: Container(
-                                                            height: 250.h,
-                                                            width: 350.w,
-                                                            child: Image.file(
-                                                              img ??
-                                                                  File('path'),
-                                                              fit: BoxFit.fill,
-                                                            ),
-                                                          ),
+                                                          // setState() {
+                                                          //   img =
+                                                          //       File(pickedFile!.path);
+                                                          // }
+                                                        },
+                                                        child: img == null
+                                                            ? Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(20
+                                                                            .w),
+                                                                child: Center(
+                                                                  child:
+                                                                      Container(
+                                                                    color: AppColors
+                                                                        .grey
+                                                                        .withOpacity(
+                                                                            0.3),
+                                                                    width:
+                                                                        350.w,
+                                                                    height:
+                                                                        250.h,
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .add_a_photo_outlined),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            : Center(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(20
+                                                                              .w),
+                                                                  child:
+                                                                      Container(
+                                                                    height:
+                                                                        250.h,
+                                                                    width:
+                                                                        350.w,
+                                                                    child: Image
+                                                                        .file(
+                                                                      img ??
+                                                                          File(
+                                                                              'path'),
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    16.h),
+                                                        child: ButtonWidget(
+                                                          onPressed: () async {
+                                                            await profileModel
+                                                                .editUserImageRequset(
+                                                                    data: {},
+                                                                    file: img);
+                                                            setState(() {
+                                                              _fetchedMyRequest =
+                                                                  _getContentData();
+                                                            });
+
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          title: 'حفظ',
+                                                          backgroundColor:
+                                                              AppColors
+                                                                  .scadryColor,
+                                                          textColor:
+                                                              AppColors.white,
+                                                          height: 45.h,
+                                                          verticalTextPadding:
+                                                              0,
+                                                          horizontalTextPadding:
+                                                              0,
                                                         ),
                                                       ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 16.h),
-                                                child: ButtonWidget(
-                                                  onPressed: () async {
-                                                    await profileModel
-                                                        .editUserImageRequset(
-                                                            data: {},
-                                                            file: img);
-                                                    setState(() {
-                                                      _fetchedMyRequest =
-                                                          _getContentData();
-                                                    });
-
-                                                    Navigator.pop(context);
-                                                  },
-                                                  title: 'حفظ',
-                                                  backgroundColor:
-                                                      AppColors.scadryColor,
-                                                  textColor: AppColors.white,
-                                                  height: 45.h,
-                                                  verticalTextPadding: 0,
-                                                  horizontalTextPadding: 0,
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
+                                              );
+                                            });
+                                          },
                                         );
                                       },
                                       child: SizedBox(

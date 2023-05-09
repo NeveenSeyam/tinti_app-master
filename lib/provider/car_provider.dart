@@ -8,6 +8,7 @@ import 'package:tinti_app/Models/state_model.dart';
 import 'package:tinti_app/Modules/auth/activate.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/apis/auth/activate.dart';
+import 'package:tinti_app/apis/user_cars/edit_user_car_api%20copy.dart';
 import '../Apis/api_urls.dart';
 import '../Apis/auth/login_api.dart';
 import '../Helpers/failure.dart';
@@ -21,6 +22,7 @@ import '../apis/auth/add_user_api.dart';
 import '../apis/auth/change_password_api.dart';
 import '../apis/auth/forget_password.dart';
 import '../apis/user_cars/add_user_car_api.dart';
+import '../apis/user_cars/delete_user_car_api.dart';
 import '../apis/user_cars/get_user_cars_data_api.dart';
 import '../apis/user_profile/get_user_profile.dart';
 import '../helpers/ui_helper.dart';
@@ -76,8 +78,8 @@ class CarProvider extends ChangeNotifier {
     });
     try {
       Dio dio = new Dio();
-
-      var response = await dio.put(
+      log("editCars ${ApiUrls.editCars(id: id)}");
+      var response = await dio.post(
         ApiUrls.editCars(id: id),
         data: formData,
         options: Options(
@@ -144,6 +146,25 @@ class CarProvider extends ChangeNotifier {
 
       // log(e.message);
       return Failure;
+    }
+  }
+
+  Future removeCarRequset({
+    required id,
+  }) async //required String image
+  {
+    try {
+      final response = await DeleteUserCar(id: id).fetch();
+
+      log("FirstSteop $response");
+      // serviceProductModel = ServiceProductModel.fromJson(response);
+      // //! set the new data to the data object
+      // setDataSirvesList(serviceProductModel);
+      // setActiveOffers(storeOffers);
+      return response;
+    } on Failure catch (f) {
+      UIHelper.showNotification(f.message);
+      return false;
     }
   }
 }

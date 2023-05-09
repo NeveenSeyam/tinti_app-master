@@ -50,7 +50,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
                 Constants.token = _prefs.getString(Keys.hasSaveUserData);
                 await AuthProvider.getUserProfileRequset();
-                Navigator.pushNamed(context, '/navegaitor_screen');
+                Navigator.popAndPushNamed(context, '/navegaitor_screen');
               }
             }));
   }

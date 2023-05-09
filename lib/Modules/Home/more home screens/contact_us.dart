@@ -173,9 +173,14 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Center(
-                                        child: Image.asset(
-                                            'assets/images/logol.png')),
+                                    Container(
+                                      child: Center(
+                                          child: Image.asset(
+                                        'assets/images/logol.png',
+                                        width: 200.w,
+                                        height: 100.h,
+                                      )),
+                                    ),
                                     Container(
                                       width: double.infinity,
                                       height: 600.h,

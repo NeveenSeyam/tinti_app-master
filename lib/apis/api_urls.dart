@@ -23,9 +23,10 @@ class ApiUrls {
 // user_car
   static const cars = '${baseUrl}api/cars';
   // static const editCars = '${baseUrl}api/cars';
-  static String editCars({required String id}) =>
-      '${baseUrl}api/cars/${id.toString()}';
+  static String editCars({required id}) =>
+      '${baseUrl}api/cars/update_car/${id.toString()}';
   static const addcars = '${baseUrl}api/cars';
+  static removeCar({required id}) => '${baseUrl}api/cars/${id.toString()}';
   //
 
   //profile

@@ -174,7 +174,10 @@ class _HowWeAreScreenScreenState extends ConsumerState<HowWeAreScreen> {
                                 children: [
                                   Center(
                                       child: Image.asset(
-                                          'assets/images/logol.png')),
+                                    'assets/images/logol.png',
+                                    width: 200.w,
+                                    height: 100.h,
+                                  )),
                                   Container(
                                     width: double.infinity,
                                     height: 550.h,
