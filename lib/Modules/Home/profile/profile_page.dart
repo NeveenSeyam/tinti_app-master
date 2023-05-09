@@ -20,6 +20,7 @@ import '../../../Widgets/custom_appbar.dart';
 import '../../../Widgets/custom_text_field.dart';
 import '../../../Widgets/gradint_button.dart';
 import '../../../Widgets/loader_widget.dart';
+import '../../../Widgets/loading_dialog.dart';
 import '../../../helpers/ui_helper.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -249,6 +250,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           )),
                     );
                   }
+
                   var serviceModel =
                       ref.watch(accountProvider).getProfileModel ??
                           ProfileModel();
@@ -384,15 +386,30 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                     16.h),
                                                         child: ButtonWidget(
                                                           onPressed: () async {
+                                                            loadingDialog(
+                                                                context);
+
                                                             await profileModel
                                                                 .editUserImageRequset(
                                                                     data: {},
-                                                                    file: img);
-                                                            setState(() {
-                                                              _fetchedMyRequest =
-                                                                  _getContentData();
+                                                                    file:
+                                                                        img).onError(
+                                                                    (error,
+                                                                        stackTrace) {
+                                                              Navigator.of(
+                                                                      context,
+                                                                      rootNavigator:
+                                                                          true)
+                                                                  .pop();
                                                             });
-
+                                                            await _getContentData();
+                                                            this.setState(
+                                                                () {});
+                                                            Navigator.of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true)
+                                                                .pop();
                                                             Navigator.pop(
                                                                 context);
                                                           },

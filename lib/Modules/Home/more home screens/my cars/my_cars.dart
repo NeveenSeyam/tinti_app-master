@@ -25,6 +25,7 @@ import '../../../../Widgets/custom_appbar.dart';
 import '../../../../Widgets/custom_text_field.dart';
 import '../../../../Widgets/gradint_button.dart';
 import '../../../../Widgets/loader_widget.dart';
+import '../../../../Widgets/loading_dialog.dart';
 import '../../../../Widgets/text_widget.dart';
 import '../../../../provider/car_provider.dart';
 import '../contact_us.dart';
@@ -302,11 +303,31 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () {
-                                                      _color.text = '';
-                                                      _model.text = '';
-                                                      _name.text = '';
-                                                      _number.text = '';
-                                                      selectedNationality = '';
+                                                      _color.text = serviceModel
+                                                              ?.carModles?[
+                                                                  index]
+                                                              .color ??
+                                                          '';
+
+                                                      _model.text = serviceModel
+                                                              ?.carModles?[
+                                                                  index]
+                                                              .carModelName ??
+                                                          '';
+                                                      _name.text = serviceModel
+                                                              ?.carModles?[
+                                                                  index]
+                                                              .name ??
+                                                          '';
+                                                      _number.text =
+                                                          serviceModel
+                                                                  ?.carModles?[
+                                                                      index]
+                                                                  .carNumber ??
+                                                              '';
+                                                      selectedNationality =
+                                                          null;
+                                                      dropdownValue = "";
                                                       sizedropdownValue = '';
                                                       // _image2 = null;
                                                       _size.text = '';
@@ -555,6 +576,9 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                                           10.w,
                                                                       onPressed:
                                                                           () async {
+                                                                        loadingDialog(
+                                                                            context);
+
                                                                         if (selectedNationality?.isEmpty ??
                                                                             true) {
                                                                           UIHelper.showNotification(
@@ -570,11 +594,11 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                                         log("img ${img?.path ?? ""}");
                                                                         await changCarModel.editCarRequset(
                                                                             data: {
-                                                                              "name": _name.text == null ?? serviceModel?.carModles?[index].name,
-                                                                              "color": _color.text == null ?? serviceModel?.carModles?[index].color,
-                                                                              "car_number": _number.text == null ?? serviceModel?.carModles?[index].carNumber,
-                                                                              "car_model_id": selectedNationality == null ?? serviceModel?.carModles?[index].carModelName,
-                                                                              "car_size_id": sizedropdownValue == null ?? serviceModel?.carModles?[index].carSizeName
+                                                                              "name": _name.text ?? serviceModel?.carModles?[index].name,
+                                                                              "color": _color.text ?? serviceModel?.carModles?[index].color,
+                                                                              "car_number": _number.text ?? serviceModel?.carModles?[index].carNumber,
+                                                                              "car_model_id": selectedNationality ?? serviceModel?.carModles?[index].carModelName,
+                                                                              "car_size_id": sizedropdownValue ?? serviceModel?.carModles?[index].carSizeName
                                                                             },
                                                                             id: serviceModel.carModles?[index].id.toString() ??
                                                                                 '',
@@ -600,8 +624,12 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                                           // _image2 = null;
                                                                           _size.text =
                                                                               '';
+                                                                          dropdownValue =
+                                                                              '';
                                                                         });
 
+                                                                        Navigator.pop(
+                                                                            context);
                                                                         Navigator.pop(
                                                                             context);
                                                                       },
@@ -623,6 +651,8 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () async {
+                                                      loadingDialog(context);
+
                                                       await changCarModel
                                                           .removeCarRequset(
                                                               id: serviceModel
@@ -639,6 +669,8 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                           'تم الحذف بنجاح ',
                                                           backgroundColor:
                                                               AppColors.green);
+                                                      Navigator.of(context)
+                                                          .pop();
                                                     },
                                                     child: Container(
                                                       alignment:
@@ -798,6 +830,7 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                       _number.text = '';
                       selectedNationality = '';
                       sizedropdownValue = '';
+                      dropdownValue = '';
                       // _image2 = null;
                       _size.text = '';
                       img = null;
@@ -981,6 +1014,8 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                       width: 340.w,
                                       circular: 10.w,
                                       onPressed: () async {
+                                        loadingDialog(context);
+
                                         if (selectedNationality?.isEmpty ??
                                             true) {
                                           UIHelper.showNotification("aaaa");
@@ -1008,7 +1043,9 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                           // _image2 = null;
                                           _size.text = '';
                                         });
-
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
                                         Navigator.pop(context);
                                       },
                                     ),
