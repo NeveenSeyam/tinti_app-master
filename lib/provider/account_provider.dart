@@ -142,6 +142,7 @@ class AccountProvider with ChangeNotifier {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization': "Bearer ${Constants.token}",
+            'Accept-Language': '${Constants.lang}',
           },
         ),
       );
@@ -218,6 +219,7 @@ class AccountProvider with ChangeNotifier {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization': "Bearer ${Constants.token}",
+            'Accept-Language': '${Constants.lang}',
           },
         ),
       );
@@ -258,6 +260,7 @@ class AccountProvider with ChangeNotifier {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization': "Bearer ${Constants.token}",
+            'Accept-Language': '${Constants.lang}',
           },
         ),
       );
@@ -288,6 +291,7 @@ class AccountProvider with ChangeNotifier {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization': "Bearer ${Constants.token}",
+            'Accept-Language': '${Constants.lang}',
           },
         ),
       );
@@ -323,6 +327,7 @@ class AccountProvider with ChangeNotifier {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization': "Bearer ${Constants.token}",
+            'Accept-Language': '${Constants.lang}',
           },
         ),
       );
@@ -412,6 +417,7 @@ class AccountProvider with ChangeNotifier {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization': "Bearer ${Constants.token}",
+            'Accept-Language': '${Constants.lang}',
           },
         ),
       );

@@ -70,140 +70,135 @@ class _HowWeAreScreenScreenState extends ConsumerState<HowWeAreScreen> {
 
         Scaffold(
       backgroundColor: AppColors.scadryColor,
-      body: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Container(
-          width: double.infinity,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(20.h),
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    width: double.infinity,
-                    height: 80.h,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            child: Center(
-                                child: Icon(
-                              Icons.arrow_back_ios_rounded,
-                              color: AppColors.white,
-                            )),
-                          ),
-                        ),
-                        Center(
-                          child: CustomText(
-                            ' من نحن ',
-                            textAlign: TextAlign.start,
-                            fontSize: 18.sp,
-                            fontFamily: 'DINNEXTLTARABIC',
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.white,
-                          ),
-                        ),
-                        Container(
+      body: Container(
+        width: double.infinity,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(20.h),
+                child: Container(
+                  alignment: Alignment.topCenter,
+                  width: double.infinity,
+                  height: 80.h,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
                           alignment: Alignment.centerLeft,
-                          child: Center(),
+                          child: Center(
+                              child: Icon(
+                            Icons.arrow_back_ios_rounded,
+                            color: AppColors.white,
+                          )),
                         ),
-                      ],
-                    ),
+                      ),
+                      Center(
+                        child: CustomText(
+                          ' من نحن ',
+                          textAlign: TextAlign.start,
+                          fontSize: 18.sp,
+                          fontFamily: 'DINNEXTLTARABIC',
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.white,
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Center(),
+                      ),
+                    ],
                   ),
                 ),
-                Consumer(
-                  builder: (context, ref, child) => FutureBuilder(
-                    future: _fetchedIntroRequest,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return SizedBox(
-                          height: 70.h,
-                          child: const Center(
-                            child: LoaderWidget(),
-                          ),
-                        );
-                      }
-                      if (snapshot.hasError) {
+              ),
+              Consumer(
+                builder: (context, ref, child) => FutureBuilder(
+                  future: _fetchedIntroRequest,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return SizedBox(
+                        height: 70.h,
+                        child: const Center(
+                          child: LoaderWidget(),
+                        ),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      if (snapshot.data is Failure) {
                         return Center(
-                          child: Text('Error: ${snapshot.error}'),
-                        );
+                            child: TextWidget(snapshot.data.toString()));
                       }
-                      if (snapshot.hasData) {
-                        if (snapshot.data is Failure) {
-                          return Center(
-                              child: TextWidget(snapshot.data.toString()));
-                        }
-                        //
-                        //  print("snapshot data is ${snapshot.data}");
+                      //
+                      //  print("snapshot data is ${snapshot.data}");
 
-                        var appDataModel =
-                            ref.watch(appDataProvider).getDataList;
+                      var appDataModel = ref.watch(appDataProvider).getDataList;
 
-                        return Container(
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color.fromARGB(255, 47, 47, 47)
-                                        .withOpacity(0.5),
-                                    spreadRadius: 4,
-                                    blurRadius: 10,
-                                    offset: const Offset(
-                                        0, 1), // changes position of shadow
-                                  ),
-                                ],
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(35.w),
-                                  topRight: Radius.circular(35.w),
+                      return Container(
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromARGB(255, 47, 47, 47)
+                                      .withOpacity(0.5),
+                                  spreadRadius: 4,
+                                  blurRadius: 10,
+                                  offset: const Offset(
+                                      0, 1), // changes position of shadow
+                                ),
+                              ],
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(35.w),
+                                topRight: Radius.circular(35.w),
+                              )),
+                          height: 730.h,
+                          width: double.infinity,
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: EdgeInsets.all(20.w),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Center(
+                                    child: Image.asset(
+                                  'assets/images/logol.png',
+                                  width: 200.w,
+                                  height: 100.h,
                                 )),
-                            height: 730.h,
-                            width: double.infinity,
-                            alignment: Alignment.bottomCenter,
-                            child: Padding(
-                              padding: EdgeInsets.all(20.w),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Center(
-                                      child: Image.asset(
-                                    'assets/images/logol.png',
-                                    width: 200.w,
-                                    height: 100.h,
-                                  )),
-                                  Container(
-                                    width: double.infinity,
-                                    height: 550.h,
-                                    child: ListView(
-                                      children: [
-                                        CustomText(
-                                          appDataModel
-                                                  ?.intros?[1].description ??
-                                              'من نحن',
-                                          textAlign: TextAlign.start,
-                                          fontFamily: 'DINNEXTLTARABIC',
-                                          color: AppColors.grey,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ));
-                      }
-                      return Container();
-                    },
-                  ),
+                                Container(
+                                  width: double.infinity,
+                                  height: 550.h,
+                                  child: ListView(
+                                    children: [
+                                      CustomText(
+                                        appDataModel?.intros?[1].description ??
+                                            'من نحن',
+                                        textAlign: TextAlign.start,
+                                        fontFamily: 'DINNEXTLTARABIC',
+                                        color: AppColors.grey,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ));
+                    }
+                    return Container();
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

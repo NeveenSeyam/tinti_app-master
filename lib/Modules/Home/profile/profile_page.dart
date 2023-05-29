@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,7 @@ import '../../../Widgets/gradint_button.dart';
 import '../../../Widgets/loader_widget.dart';
 import '../../../Widgets/loading_dialog.dart';
 import '../../../helpers/ui_helper.dart';
+import '../../auth/login_screen.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
@@ -95,591 +97,1014 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   final _Key = GlobalKey<FormState>();
 
-  String _value = 'العربية';
+  String _value = Constants.lang == 'en' ? 'الإنجليزية' : 'العربية';
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: CustomAppBar(
-          isProfile: false,
-          'حسابي',
-          isHome: true,
-          isNotification: true,
-        ),
-        body: Container(
-          width: double.infinity,
-          child: Consumer(
-            builder: (context, ref, child) => FutureBuilder(
-              future: _fetchedMyRequest,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return SizedBox(
-                    height: 70.h,
-                    child: const Center(
-                      child: LoaderWidget(),
-                    ),
-                  );
-                }
-                if (snapshot.hasError) {
-                  return Padding(
-                    padding: EdgeInsets.all(20.w),
-                    child: Container(
+    return Scaffold(
+      appBar: CustomAppBar(
+        isProfile: false,
+        'Profile'.tr(),
+        isHome: true,
+        isNotification: true,
+      ),
+      body: Container(
+        width: double.infinity,
+        child: Constants.isQuest == false
+            ? Consumer(
+                builder: (context, ref, child) => FutureBuilder(
+                  future: _fetchedMyRequest,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return SizedBox(
+                        height: 70.h,
+                        child: const Center(
+                          child: LoaderWidget(),
+                        ),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Padding(
                         padding: EdgeInsets.all(20.w),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                offset: Offset(0, 7),
-                                blurRadius: 10,
-                              ),
-                            ],
-                            borderRadius: BorderRadius.circular(20.w),
-                            color: AppColors.white.withOpacity(0.9)),
-                        width: 320.w,
-                        height: 500.h,
-                        child: Column(
-                          children: [
-                            Image.asset('assets/images/nullstate.png'),
-                            SizedBox(
-                              height: 20.h,
-                            ),
-                            Container(
-                              width: 300.w,
-                              child: CustomText(
-                                '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
-                                color: AppColors.orange,
-                                // fontWeight: FontWeight.bold,
-                                fontFamily: 'DINNEXTLTARABIC',
+                        child: Container(
+                            padding: EdgeInsets.all(20.w),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    offset: Offset(0, 7),
+                                    blurRadius: 10,
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(20.w),
+                                color: AppColors.white.withOpacity(0.9)),
+                            width: 320.w,
+                            height: 500.h,
+                            child: Column(
+                              children: [
+                                Image.asset('assets/images/nullstate.png'),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Container(
+                                  width: 300.w,
+                                  child: CustomText(
+                                    '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                    color: AppColors.orange,
+                                    // fontWeight: FontWeight.bold,
+                                    fontFamily: 'DINNEXTLTARABIC',
 
-                                textAlign: TextAlign.center,
-                                fontSize: 18.sp,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 60.h,
-                            ),
-                            RaisedGradientButton(
-                              text: 'تواصل معنا',
-                              color: AppColors.scadryColor,
-                              height: 48.h,
-                              width: 320.w,
-                              circular: 10.w,
-                              onPressed: () {},
-                            ),
-                          ],
-                        )),
-                  );
-                }
-                if (snapshot.hasData) {
-                  if (snapshot.data is Failure) {
-                    return Padding(
-                      padding: EdgeInsets.all(20.w),
-                      child: Container(
-                          padding: EdgeInsets.all(20.w),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  offset: Offset(0, 7),
-                                  blurRadius: 10,
+                                    textAlign: TextAlign.center,
+                                    fontSize: 18.sp,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 60.h,
+                                ),
+                                RaisedGradientButton(
+                                  text: 'تواصل معنا',
+                                  color: AppColors.scadryColor,
+                                  height: 48.h,
+                                  width: 320.w,
+                                  circular: 10.w,
+                                  onPressed: () {},
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                RaisedGradientButton(
+                                  text: ' تسجيل دخول',
+                                  color: AppColors.scadryColor,
+                                  width: 340.w,
+                                  height: 48.h,
+                                  circular: 10.w,
+                                  onPressed: () async {
+                                    Constants.token = null;
+                                    SharedPreferences? _prefs =
+                                        await SharedPreferences.getInstance();
+                                    _prefs.clear();
+                                    Navigator.popAndPushNamed(
+                                        context, '/login_screen');
+                                  },
                                 ),
                               ],
-                              borderRadius: BorderRadius.circular(20.w),
-                              color: AppColors.white.withOpacity(0.9)),
-                          width: 320.w,
-                          height: 600.h,
-                          child: Column(
-                            children: [
-                              Image.asset('assets/images/nullstate.png'),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              Container(
-                                width: 350.w,
-                                child: CustomText(
-                                  '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
-                                  color: AppColors.orange,
-                                  // fontWeight: FontWeight.bold,
-                                  fontFamily: 'DINNEXTLTARABIC',
-
-                                  textAlign: TextAlign.center,
-                                  fontSize: 18.sp,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 40.h,
-                              ),
-                              RaisedGradientButton(
-                                text: 'تواصل معنا',
-                                color: AppColors.scadryColor,
-                                height: 48.h,
-                                width: 320.w,
-                                circular: 10.w,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ContactUsScreen()),
-                                  );
-                                },
-                              ),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              RaisedGradientButton(
-                                text: ' تسجيل خروج',
-                                color: AppColors.scadryColor,
-                                width: 340.w,
-                                height: 48.h,
-                                circular: 10.w,
-                                onPressed: () async {
-                                  Constants.token = null;
-                                  SharedPreferences? _prefs =
-                                      await SharedPreferences.getInstance();
-                                  _prefs.clear();
-                                  Navigator.popAndPushNamed(
-                                      context, '/login_screen');
-                                },
-                              ),
-                            ],
-                          )),
-                    );
-                  }
-
-                  var serviceModel =
-                      ref.watch(accountProvider).getProfileModel ??
-                          ProfileModel();
-                  _addressController.text = serviceModel.user?.address ?? '';
-                  _lnameController.text = serviceModel.user?.lname ?? '';
-                  _fnameController.text = serviceModel.user?.fname ?? '';
-                  _emailController.text = serviceModel.user?.email ?? '';
-                  _numberController.text = serviceModel.user?.mobile ?? '';
-
-                  var profileModel = ref.watch(accountProvider);
-                  var changPassModel = ref.watch(accountProvider);
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.w)),
-                          padding: EdgeInsets.all(10.w),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 350.w,
-                                height: 150.h,
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () async {
-                                        showModalBottomSheet<void>(
-                                          context: context,
-                                          isScrollControlled: true,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(
-                                                top: Radius.circular(25.w)),
-                                          ),
-                                          builder: (BuildContext context) {
-                                            return StatefulBuilder(builder:
-                                                (BuildContext context,
-                                                    StateSetter
-                                                        setState /*You can rename this!*/) {
-                                              return Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom:
-                                                        MediaQuery.of(context)
-                                                            .viewInsets
-                                                            .bottom),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius
-                                                        .only(
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    10.w),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    10.w)),
-                                                  ),
-                                                  height: 500.h,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    children: <Widget>[
-                                                      GestureDetector(
-                                                        onTap: () async {
-                                                          await _getImageData();
-                                                          setState(() {});
-                                                          // final picker = ImagePicker();
-                                                          // final pickedFile =
-                                                          //     await picker.getImage(
-                                                          //         source: ImageSource
-                                                          //             .gallery);
-
-                                                          // setState() {
-                                                          //   img =
-                                                          //       File(pickedFile!.path);
-                                                          // }
-                                                        },
-                                                        child: img == null
-                                                            ? Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(20
-                                                                            .w),
-                                                                child: Center(
-                                                                  child:
-                                                                      Container(
-                                                                    color: AppColors
-                                                                        .grey
-                                                                        .withOpacity(
-                                                                            0.3),
-                                                                    width:
-                                                                        350.w,
-                                                                    height:
-                                                                        250.h,
-                                                                    child: Icon(
-                                                                        Icons
-                                                                            .add_a_photo_outlined),
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            : Center(
-                                                                child: Padding(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .all(20
-                                                                              .w),
-                                                                  child:
-                                                                      Container(
-                                                                    height:
-                                                                        250.h,
-                                                                    width:
-                                                                        350.w,
-                                                                    child: Image
-                                                                        .file(
-                                                                      img ??
-                                                                          File(
-                                                                              'path'),
-                                                                      fit: BoxFit
-                                                                          .fill,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                      ),
-                                                      Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    16.h),
-                                                        child: ButtonWidget(
-                                                          onPressed: () async {
-                                                            loadingDialog(
-                                                                context);
-
-                                                            await profileModel
-                                                                .editUserImageRequset(
-                                                                    data: {},
-                                                                    file:
-                                                                        img).onError(
-                                                                    (error,
-                                                                        stackTrace) {
-                                                              Navigator.of(
-                                                                      context,
-                                                                      rootNavigator:
-                                                                          true)
-                                                                  .pop();
-                                                            });
-                                                            await _getContentData();
-                                                            this.setState(
-                                                                () {});
-                                                            Navigator.of(
-                                                                    context,
-                                                                    rootNavigator:
-                                                                        true)
-                                                                .pop();
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          title: 'حفظ',
-                                                          backgroundColor:
-                                                              AppColors
-                                                                  .scadryColor,
-                                                          textColor:
-                                                              AppColors.white,
-                                                          height: 45.h,
-                                                          verticalTextPadding:
-                                                              0,
-                                                          horizontalTextPadding:
-                                                              0,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              );
-                                            });
-                                          },
-                                        );
-                                      },
-                                      child: SizedBox(
-                                        width: 85.w,
-                                        height: 85.h,
-                                        child: Image.network(
-                                          '${serviceModel.user?.img}',
-                                          fit: BoxFit.fill,
-                                          width: 85.w,
-                                          height: 85.w,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(3.h),
-                                      child: CustomText(
-                                        '  ${serviceModel.user?.fname} ${serviceModel.user?.lname} ' ??
-                                            'ناجي البلتاجي',
-                                        fontFamily: 'DINNextLTArabic',
-                                        color: AppColors.scadryColor,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 20.sp,
-                                      ),
-                                    ),
-                                    CustomText(
-                                      serviceModel.user?.email ??
-                                          'naji@gmail.com',
-                                      fontWeight: FontWeight.w300,
-                                      fontFamily: 'DINNextLTArabic',
-                                      color: AppColors.scadryColor,
-                                      fontSize: 10.sp,
+                            )),
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      if (snapshot.data is Failure) {
+                        return Padding(
+                          padding: EdgeInsets.all(20.w),
+                          child: Container(
+                              padding: EdgeInsets.all(20.w),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      offset: Offset(0, 7),
+                                      blurRadius: 10,
                                     ),
                                   ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 15.w, vertical: 10.h),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.w)),
-                          padding: EdgeInsets.all(10.w),
-                          child: Column(
-                            children: [
-                              profCard('البيانات الشخصية', () {
-                                showBottomSheet(
-                                  context,
-                                  Center(
+                                  borderRadius: BorderRadius.circular(20.w),
+                                  color: AppColors.white.withOpacity(0.9)),
+                              width: 320.w,
+                              height: 600.h,
+                              child: Column(
+                                children: [
+                                  Image.asset('assets/images/nullstate.png'),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                  Container(
+                                    width: 350.w,
+                                    child: CustomText(
+                                      '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                      color: AppColors.orange,
+                                      // fontWeight: FontWeight.bold,
+                                      fontFamily: 'DINNEXTLTARABIC',
+
+                                      textAlign: TextAlign.center,
+                                      fontSize: 18.sp,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 40.h,
+                                  ),
+                                  RaisedGradientButton(
+                                    text: 'تواصل معنا',
+                                    color: AppColors.scadryColor,
+                                    height: 48.h,
+                                    width: 320.w,
+                                    circular: 10.w,
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ContactUsScreen()),
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  RaisedGradientButton(
+                                    text: ' تسجيل خروج',
+                                    color: AppColors.scadryColor,
+                                    width: 340.w,
+                                    height: 48.h,
+                                    circular: 10.w,
+                                    onPressed: () async {
+                                      Constants.token = null;
+                                      SharedPreferences? _prefs =
+                                          await SharedPreferences.getInstance();
+                                      _prefs.clear();
+                                      Navigator.popAndPushNamed(
+                                          context, '/login_screen');
+                                    },
+                                  ),
+                                ],
+                              )),
+                        );
+                      }
+
+                      var serviceModel =
+                          ref.watch(accountProvider).getProfileModel ??
+                              ProfileModel();
+                      _addressController.text =
+                          serviceModel.user?.address ?? '';
+                      _lnameController.text = serviceModel.user?.lname ?? '';
+                      _fnameController.text = serviceModel.user?.fname ?? '';
+                      _emailController.text = serviceModel.user?.email ?? '';
+                      _numberController.text = serviceModel.user?.mobile ?? '';
+
+                      var profileModel = ref.watch(accountProvider);
+                      var changPassModel = ref.watch(accountProvider);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15.w),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10.w)),
+                              padding: EdgeInsets.all(10.w),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    width: 350.w,
+                                    height: 150.h,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsetsDirectional.only(
-                                              end: 16.w,
-                                              bottom: 12.h,
-                                              top: 20.h),
-                                          child: CustomText(
-                                            'البيانات الشخصية',
-                                            color: AppColors.scadryColor,
-                                            fontWeight: FontWeight.w300,
-                                            fontFamily: 'DINNextLTArabic',
-                                            fontSize: 18.sp,
-                                          ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            dataContainer(
-                                                170.w,
-                                                serviceModel.user?.lname ??
-                                                    'البلتاجي'),
-                                            SizedBox(
-                                              width: 15.w,
-                                            ),
-                                            dataContainer(
-                                                170.w,
-                                                serviceModel.user?.fname ??
-                                                    'ناجي'),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 12.h,
-                                        ),
-                                        Center(
-                                          child: dataContainer(
-                                              355.w,
-                                              serviceModel.user?.email ??
-                                                  'Naji@gmail.com'),
-                                        ),
-                                        SizedBox(
-                                          height: 12.h,
-                                        ),
-                                        Center(
-                                          child: dataContainer(
-                                              355.w,
-                                              serviceModel.user?.mobile ??
-                                                  '+972597031739'),
-                                        ),
-                                        SizedBox(
-                                          height: 12.h,
-                                        ),
-                                        Center(
-                                          child: dataContainer(
-                                              355.w,
-                                              serviceModel.user?.address ??
-                                                  'جدة'),
-                                        ),
-                                        SizedBox(
-                                          height: 12.h,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 16.h),
-                                          child: ButtonWidget(
-                                            onPressed: () {
-                                              showBottomSheet(
-                                                context,
-                                                Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                  children: <Widget>[
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          bottom: MediaQuery.of(
-                                                                  context)
-                                                              .viewInsets
-                                                              .bottom),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .only(
-                                                                    end: 20.w,
-                                                                    bottom:
-                                                                        12.h,
-                                                                    top: 20.h),
-                                                        child: CustomText(
-                                                          'تعديل البيانات الشخصية',
-                                                          color: AppColors
-                                                              .scadryColor,
-                                                          fontWeight:
-                                                              FontWeight.w300,
-                                                          fontFamily:
-                                                              'DINNextLTArabic',
-                                                          fontSize: 18.sp,
-                                                        ),
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () async {
+                                            showModalBottomSheet<void>(
+                                              context: context,
+                                              isScrollControlled: true,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                        top: Radius.circular(
+                                                            25.w)),
+                                              ),
+                                              builder: (BuildContext context) {
+                                                return StatefulBuilder(builder:
+                                                    (BuildContext context,
+                                                        StateSetter
+                                                            setState /*You can rename this!*/) {
+                                                  return Padding(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: MediaQuery.of(
+                                                                context)
+                                                            .viewInsets
+                                                            .bottom),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        10.w),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        10.w)),
+                                                      ),
+                                                      height: 500.h,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: <Widget>[
+                                                          GestureDetector(
+                                                            onTap: () async {
+                                                              await _getImageData();
+                                                              setState(() {});
+                                                              // final picker = ImagePicker();
+                                                              // final pickedFile =
+                                                              //     await picker.getImage(
+                                                              //         source: ImageSource
+                                                              //             .gallery);
+
+                                                              // setState() {
+                                                              //   img =
+                                                              //       File(pickedFile!.path);
+                                                              // }
+                                                            },
+                                                            child: img == null
+                                                                ? Padding(
+                                                                    padding: EdgeInsets
+                                                                        .all(20
+                                                                            .w),
+                                                                    child:
+                                                                        Center(
+                                                                      child:
+                                                                          Container(
+                                                                        color: AppColors
+                                                                            .grey
+                                                                            .withOpacity(0.3),
+                                                                        width:
+                                                                            350.w,
+                                                                        height:
+                                                                            250.h,
+                                                                        child: Icon(
+                                                                            Icons.add_a_photo_outlined),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : Center(
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsets
+                                                                          .all(20
+                                                                              .w),
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            250.h,
+                                                                        width:
+                                                                            350.w,
+                                                                        child: Image
+                                                                            .file(
+                                                                          img ??
+                                                                              File('path'),
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                          ),
+                                                          Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        16.h),
+                                                            child: ButtonWidget(
+                                                              onPressed:
+                                                                  () async {
+                                                                loadingDialog(
+                                                                    context);
+
+                                                                await profileModel
+                                                                    .editUserImageRequset(
+                                                                        data: {},
+                                                                        file:
+                                                                            img).onError(
+                                                                        (error,
+                                                                            stackTrace) {
+                                                                  Navigator.of(
+                                                                          context,
+                                                                          rootNavigator:
+                                                                              true)
+                                                                      .pop();
+                                                                });
+                                                                await _getContentData();
+                                                                this.setState(
+                                                                    () {});
+                                                                Navigator.of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .pop();
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              title: 'حفظ',
+                                                              backgroundColor:
+                                                                  AppColors
+                                                                      .scadryColor,
+                                                              textColor:
+                                                                  AppColors
+                                                                      .white,
+                                                              height: 45.h,
+                                                              verticalTextPadding:
+                                                                  0,
+                                                              horizontalTextPadding:
+                                                                  0,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
-                                                    Row(
+                                                  );
+                                                });
+                                              },
+                                            );
+                                          },
+                                          child: SizedBox(
+                                            width: 85.w,
+                                            height: 85.h,
+                                            child: Image.network(
+                                              '${serviceModel.user?.img}',
+                                              fit: BoxFit.fill,
+                                              width: 85.w,
+                                              height: 85.w,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(3.h),
+                                          child: CustomText(
+                                            '  ${serviceModel.user?.fname} ${serviceModel.user?.lname} ' ??
+                                                'ناجي البلتاجي',
+                                            fontFamily: 'DINNextLTArabic',
+                                            color: AppColors.scadryColor,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 20.sp,
+                                          ),
+                                        ),
+                                        CustomText(
+                                          serviceModel.user?.email ??
+                                              'naji@gmail.com',
+                                          fontWeight: FontWeight.w300,
+                                          fontFamily: 'DINNextLTArabic',
+                                          color: AppColors.scadryColor,
+                                          fontSize: 10.sp,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15.w, vertical: 10.h),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.w)),
+                              padding: EdgeInsets.all(10.w),
+                              child: Column(
+                                children: [
+                                  profCard('البيانات الشخصية', () {
+                                    showBottomSheet(
+                                      context,
+                                      Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  EdgeInsetsDirectional.only(
+                                                      end: 16.w,
+                                                      bottom: 12.h,
+                                                      top: 20.h),
+                                              child: CustomText(
+                                                'البيانات الشخصية',
+                                                color: AppColors.scadryColor,
+                                                fontWeight: FontWeight.w300,
+                                                fontFamily: 'DINNextLTArabic',
+                                                fontSize: 18.sp,
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                dataContainer(
+                                                    170.w,
+                                                    serviceModel.user?.lname ??
+                                                        'البلتاجي'),
+                                                SizedBox(
+                                                  width: 15.w,
+                                                ),
+                                                dataContainer(
+                                                    170.w,
+                                                    serviceModel.user?.fname ??
+                                                        'ناجي'),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 12.h,
+                                            ),
+                                            Center(
+                                              child: dataContainer(
+                                                  355.w,
+                                                  serviceModel.user?.email ??
+                                                      'Naji@gmail.com'),
+                                            ),
+                                            SizedBox(
+                                              height: 12.h,
+                                            ),
+                                            Center(
+                                              child: dataContainer(
+                                                  355.w,
+                                                  serviceModel.user?.mobile ??
+                                                      '+972597031739'),
+                                            ),
+                                            SizedBox(
+                                              height: 12.h,
+                                            ),
+                                            Center(
+                                              child: dataContainer(
+                                                  355.w,
+                                                  serviceModel.user?.address ??
+                                                      'جدة'),
+                                            ),
+                                            SizedBox(
+                                              height: 12.h,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 16.h),
+                                              child: ButtonWidget(
+                                                onPressed: () {
+                                                  showBottomSheet(
+                                                    context,
+                                                    Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        editDataContainer(
-                                                            170.w,
-                                                            serviceModel.user
-                                                                    ?.lname ??
-                                                                'البلتاجي',
-                                                            _lnameController),
-                                                        SizedBox(
-                                                          width: 15.w,
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding: EdgeInsets.only(
+                                                              bottom: MediaQuery
+                                                                      .of(context)
+                                                                  .viewInsets
+                                                                  .bottom),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .only(
+                                                                        end: 20
+                                                                            .w,
+                                                                        bottom: 12
+                                                                            .h,
+                                                                        top: 20
+                                                                            .h),
+                                                            child: CustomText(
+                                                              'تعديل البيانات الشخصية',
+                                                              color: AppColors
+                                                                  .scadryColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                              fontFamily:
+                                                                  'DINNextLTArabic',
+                                                              fontSize: 18.sp,
+                                                            ),
+                                                          ),
                                                         ),
-                                                        editDataContainer(
-                                                            170.w,
-                                                            serviceModel.user
-                                                                    ?.fname ??
-                                                                'ناجي',
-                                                            _fnameController),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            editDataContainer(
+                                                                170.w,
+                                                                serviceModel
+                                                                        .user
+                                                                        ?.lname ??
+                                                                    'البلتاجي',
+                                                                _lnameController),
+                                                            SizedBox(
+                                                              width: 15.w,
+                                                            ),
+                                                            editDataContainer(
+                                                                170.w,
+                                                                serviceModel
+                                                                        .user
+                                                                        ?.fname ??
+                                                                    'ناجي',
+                                                                _fnameController),
+                                                          ],
+                                                        ),
+                                                        Center(
+                                                          child: editDataContainer(
+                                                              355.w,
+                                                              serviceModel.user
+                                                                      ?.email ??
+                                                                  'example@gmail.com',
+                                                              _emailController),
+                                                        ),
+                                                        Center(
+                                                          child: editDataContainer(
+                                                              355.w,
+                                                              serviceModel.user
+                                                                      ?.mobile ??
+                                                                  '+972597031739',
+                                                              _numberController),
+                                                        ),
+                                                        Center(
+                                                          child: editDataContainer(
+                                                              355.w,
+                                                              serviceModel.user
+                                                                      ?.address ??
+                                                                  'جدة',
+                                                              _addressController),
+                                                        ),
+                                                        Padding(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  horizontal:
+                                                                      16.h),
+                                                          child: ButtonWidget(
+                                                            onPressed:
+                                                                () async {
+                                                              await changPassModel
+                                                                  .editUserRequset(
+                                                                data: {
+                                                                  "fname":
+                                                                      _fnameController
+                                                                          .text,
+                                                                  "lname":
+                                                                      _lnameController
+                                                                          .text,
+                                                                  "email":
+                                                                      _emailController
+                                                                          .text,
+                                                                  "phoneNumber":
+                                                                      _numberController
+                                                                          .text,
+                                                                  "address":
+                                                                      _addressController
+                                                                          .text
+                                                                },
+                                                              );
+                                                              setState(() {
+                                                                _fetchedMyRequest =
+                                                                    _getContentData();
+
+                                                                _addressController
+                                                                    .text = '';
+                                                                _emailController
+                                                                    .text = '';
+                                                                _fnameController
+                                                                    .text = '';
+                                                                _lnameController
+                                                                    .text = '';
+                                                                // _image2 = null;
+                                                                _numberController
+                                                                    .text = '';
+                                                              });
+
+                                                              Navigator.pop(
+                                                                  context);
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            title: 'حفظ',
+                                                            backgroundColor:
+                                                                AppColors
+                                                                    .scadryColor,
+                                                            textColor:
+                                                                AppColors.white,
+                                                            height: 45.h,
+                                                            verticalTextPadding:
+                                                                0,
+                                                            horizontalTextPadding:
+                                                                0,
+                                                          ),
+                                                        ),
                                                       ],
                                                     ),
-                                                    Center(
-                                                      child: editDataContainer(
-                                                          355.w,
-                                                          serviceModel.user
-                                                                  ?.email ??
-                                                              'example@gmail.com',
-                                                          _emailController),
-                                                    ),
-                                                    Center(
-                                                      child: editDataContainer(
-                                                          355.w,
-                                                          serviceModel.user
-                                                                  ?.mobile ??
-                                                              '+972597031739',
-                                                          _numberController),
-                                                    ),
-                                                    Center(
-                                                      child: editDataContainer(
-                                                          355.w,
-                                                          serviceModel.user
-                                                                  ?.address ??
-                                                              'جدة',
-                                                          _addressController),
+                                                  );
+                                                },
+                                                title: 'تعديل البيانات ',
+                                                backgroundColor:
+                                                    AppColors.scadryColor,
+                                                textColor: AppColors.white,
+                                                height: 45.h,
+                                                verticalTextPadding: 0,
+                                                horizontalTextPadding: 0,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  profCard('إعادة تعيين كلمة المرور ', () {
+                                    showBottomSheet(
+                                        context,
+                                        Form(
+                                          key: _Key,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            // crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                padding:
+                                                    EdgeInsetsDirectional.only(
+                                                        start: 20.w,
+                                                        bottom: 12.h,
+                                                        top: 20.h),
+                                                child: CustomText(
+                                                  'إعادة تعيين كلمة المرور ',
+                                                  color: AppColors.scadryColor,
+                                                  fontWeight: FontWeight.w300,
+                                                  fontFamily: 'DINNextLTArabic',
+                                                  fontSize: 18.sp,
+                                                ),
+                                              ),
+                                              Center(
+                                                child: RoundedInputField(
+                                                  color: AppColors.grey
+                                                      .withOpacity(0.1),
+                                                  hintText:
+                                                      'كلمة المرور القديمة',
+                                                  width: 355.w,
+                                                  height: 48.h,
+                                                  onChanged: (value) {},
+                                                  seen: true,
+                                                  icon: Icon(Icons.key),
+                                                  hintColor: AppColors.grey
+                                                      .withOpacity(0.7),
+                                                  controller:
+                                                      _oldPassController,
+                                                ),
+                                              ),
+                                              Center(
+                                                child: RoundedInputField(
+                                                  color: AppColors.grey
+                                                      .withOpacity(0.1),
+                                                  hintText:
+                                                      'كلمة المرور الجديدة',
+                                                  width: 355.w,
+                                                  height: 48.h,
+                                                  onChanged: (value) {},
+                                                  seen: true,
+                                                  icon: Icon(Icons.key),
+                                                  validator: (value) {
+                                                    if (value!.isEmpty) {
+                                                      return "Please enter password";
+                                                    } else {
+                                                      //call function to check password
+                                                      bool result =
+                                                          validatePassword(
+                                                              value);
+                                                      if (result) {
+                                                        // create account event
+                                                        return null;
+                                                      } else {
+                                                        return " يجب ان تحتوي كلمة المرور على حروف كبيرة وحروف صغيرة وعلامات مميزة وارقام";
+                                                      }
+                                                    }
+                                                  },
+                                                  hintColor: AppColors.grey
+                                                      .withOpacity(0.7),
+                                                  controller:
+                                                      _newPasswordController,
+                                                ),
+                                              ),
+                                              Center(
+                                                child: RoundedInputField(
+                                                  color: AppColors.grey
+                                                      .withOpacity(0.1),
+                                                  hintText:
+                                                      'تأكيد كلمة المرور الجديدة',
+                                                  width: 355.w,
+                                                  height: 48.h,
+                                                  onChanged: (value) {},
+                                                  seen: true,
+                                                  icon: Icon(Icons.key),
+                                                  controller:
+                                                      _confirmNewPassController,
+                                                  hintColor: AppColors.grey
+                                                      .withOpacity(0.7),
+                                                  validator: (value) {
+                                                    if (value!.isEmpty) {
+                                                      return "Please enter password";
+                                                    } else {
+                                                      //call function to check password
+                                                      bool result =
+                                                          validatePassword(
+                                                              value);
+                                                      if (result) {
+                                                        // create account event
+                                                        return null;
+                                                      } else {
+                                                        return " لا تتطابق الكلمتين";
+                                                      }
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                              Container(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 26.w),
+                                                child: CustomText(
+                                                  'نسيت كلمة المرور؟',
+                                                  color: AppColors.orange,
+                                                  fontSize: 16.sp,
+                                                  fontWeight: FontWeight.w300,
+                                                  fontFamily: 'DINNextLTArabic',
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 16.h,
+                                                    vertical: 12.h),
+                                                child: ButtonWidget(
+                                                  onPressed: () async {
+                                                    if (_Key.currentState!
+                                                        .validate()) {
+                                                      _Key.currentState!.save();
+                                                      await profileModel
+                                                          .editProfilePasswordRequset(
+                                                        data: {
+                                                          "password":
+                                                              _newPasswordController
+                                                                  .text,
+                                                          "c_password":
+                                                              _confirmNewPassController
+                                                                  .text,
+                                                          "old_password":
+                                                              _oldPassController
+                                                                  .text,
+                                                        },
+                                                      );
+                                                      setState(() {
+                                                        _fetchedMyRequest =
+                                                            _getContentData();
+                                                      });
+
+                                                      Navigator.pop(context);
+                                                    }
+                                                  },
+                                                  title: 'حفظ',
+                                                  backgroundColor:
+                                                      AppColors.scadryColor,
+                                                  textColor: AppColors.white,
+                                                  height: 45.h,
+                                                  verticalTextPadding: 0,
+                                                  horizontalTextPadding: 0,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ));
+                                  }),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  profCard('اللغة ', () {
+                                    showModalBottomSheet<void>(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(25.w)),
+                                      ),
+                                      builder: (BuildContext context) {
+                                        return StatefulBuilder(builder:
+                                            (BuildContext context,
+                                                StateSetter
+                                                    setState /*You can rename this!*/) {
+                                          return Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom: MediaQuery.of(context)
+                                                    .viewInsets
+                                                    .bottom),
+                                            child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10.w),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  10.w)),
+                                                ),
+                                                height: 500.h,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.centerRight,
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .only(
+                                                                  start: 18.w,
+                                                                  bottom: 12.h,
+                                                                  top: 20.h),
+                                                      child: CustomText(
+                                                        'حدد اللغة التي تريدها',
+                                                        color: AppColors
+                                                            .scadryColor,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontFamily:
+                                                            'DINNextLTArabic',
+                                                        fontSize: 18.sp,
+                                                      ),
                                                     ),
                                                     Padding(
                                                       padding:
                                                           EdgeInsets.symmetric(
+                                                              vertical: 10.w,
                                                               horizontal: 16.h),
+                                                      child: Container(
+                                                        height: 48.h,
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: AppColors.grey
+                                                              .withOpacity(0.2),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.w),
+                                                          border: Border.all(
+                                                              color: Colors.grey
+                                                                  .withOpacity(
+                                                                      .3)),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Radio(
+                                                                activeColor:
+                                                                    AppColors
+                                                                        .orange,
+                                                                value:
+                                                                    "العربية",
+                                                                groupValue:
+                                                                    _value,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  setState(() {
+                                                                    _value =
+                                                                        value!;
+                                                                    Constants
+                                                                            .lang =
+                                                                        'ar';
+                                                                  }); //selected value
+                                                                }),
+                                                            CustomText(
+                                                              'العربية',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                              fontFamily:
+                                                                  'DINNextLTArabic',
+                                                              fontSize: 16.sp,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 10.w,
+                                                              horizontal: 16.h),
+                                                      child: Container(
+                                                        height: 48.h,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: AppColors.grey
+                                                              .withOpacity(0.2),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.w),
+                                                          border: Border.all(
+                                                              color: Colors.grey
+                                                                  .withOpacity(
+                                                                      0.3)),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Radio(
+                                                                activeColor:
+                                                                    AppColors
+                                                                        .orange,
+                                                                value:
+                                                                    "الإنجليزية",
+                                                                groupValue:
+                                                                    _value,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  setState(() {
+                                                                    _value =
+                                                                        value!;
+                                                                    Constants
+                                                                            .lang =
+                                                                        'en';
+                                                                  }); //selected value
+                                                                }),
+                                                            CustomText(
+                                                              'الإنجليزية',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
+                                                              fontFamily:
+                                                                  'DINNextLTArabic',
+                                                              fontSize: 16.sp,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 16.h,
+                                                              vertical: 12.h),
                                                       child: ButtonWidget(
-                                                        onPressed: () async {
-                                                          await changPassModel
-                                                              .editUserRequset(
-                                                            data: {
-                                                              "fname":
-                                                                  _fnameController
-                                                                      .text,
-                                                              "lname":
-                                                                  _lnameController
-                                                                      .text,
-                                                              "email":
-                                                                  _emailController
-                                                                      .text,
-                                                              "phoneNumber":
-                                                                  _numberController
-                                                                      .text,
-                                                              "address":
-                                                                  _addressController
-                                                                      .text
-                                                            },
-                                                          );
-                                                          setState(() {
-                                                            _fetchedMyRequest =
-                                                                _getContentData();
+                                                        onPressed: () {
+                                                          _value =
+                                                              Constants.lang ==
+                                                                      'en'
+                                                                  ? 'الإنجليزية'
+                                                                  : 'العربية';
+                                                          Constants.lang == 'en'
+                                                              ? context
+                                                                  .setLocale(
+                                                                      Locale(
+                                                                          'en',
+                                                                          'US'))
+                                                              : context
+                                                                  .setLocale(
+                                                                      Locale(
+                                                                          'ar',
+                                                                          'DZ'));
 
-                                                            _addressController
-                                                                .text = '';
-                                                            _emailController
-                                                                .text = '';
-                                                            _fnameController
-                                                                .text = '';
-                                                            _lnameController
-                                                                .text = '';
-                                                            // _image2 = null;
-                                                            _numberController
-                                                                .text = '';
-                                                          });
-
-                                                          Navigator.pop(
-                                                              context);
                                                           Navigator.pop(
                                                               context);
                                                         },
@@ -694,344 +1119,228 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                         horizontalTextPadding:
                                                             0,
                                                       ),
-                                                    ),
+                                                    )
                                                   ],
-                                                ),
-                                              );
-                                            },
-                                            title: 'تعديل البيانات ',
-                                            backgroundColor:
-                                                AppColors.scadryColor,
-                                            textColor: AppColors.white,
-                                            height: 45.h,
-                                            verticalTextPadding: 0,
-                                            horizontalTextPadding: 0,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              profCard('إعادة تعيين كلمة المرور ', () {
-                                showBottomSheet(
-                                    context,
-                                    Directionality(
-                                      textDirection: TextDirection.rtl,
-                                      child: Form(
-                                        key: _Key,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          // crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              alignment: Alignment.centerRight,
-                                              padding:
-                                                  EdgeInsetsDirectional.only(
-                                                      start: 20.w,
-                                                      bottom: 12.h,
-                                                      top: 20.h),
-                                              child: CustomText(
-                                                'إعادة تعيين كلمة المرور ',
-                                                color: AppColors.scadryColor,
-                                                fontWeight: FontWeight.w300,
-                                                fontFamily: 'DINNextLTArabic',
-                                                fontSize: 18.sp,
-                                              ),
-                                            ),
-                                            Center(
-                                              child: RoundedInputField(
-                                                color: AppColors.grey
-                                                    .withOpacity(0.1),
-                                                hintText: 'كلمة المرور القديمة',
-                                                width: 355.w,
-                                                height: 48.h,
-                                                onChanged: (value) {},
-                                                seen: true,
-                                                icon: Icon(Icons.key),
-                                                hintColor: AppColors.grey
-                                                    .withOpacity(0.7),
-                                                controller: _oldPassController,
-                                              ),
-                                            ),
-                                            Center(
-                                              child: RoundedInputField(
-                                                color: AppColors.grey
-                                                    .withOpacity(0.1),
-                                                hintText: 'كلمة المرور الجديدة',
-                                                width: 355.w,
-                                                height: 48.h,
-                                                onChanged: (value) {},
-                                                seen: true,
-                                                icon: Icon(Icons.key),
-                                                validator: (value) {
-                                                  if (value!.isEmpty) {
-                                                    return "Please enter password";
-                                                  } else {
-                                                    //call function to check password
-                                                    bool result =
-                                                        validatePassword(value);
-                                                    if (result) {
-                                                      // create account event
-                                                      return null;
-                                                    } else {
-                                                      return " يجب ان تحتوي كلمة المرور على حروف كبيرة وحروف صغيرة وعلامات مميزة وارقام";
-                                                    }
-                                                  }
-                                                },
-                                                hintColor: AppColors.grey
-                                                    .withOpacity(0.7),
-                                                controller:
-                                                    _newPasswordController,
-                                              ),
-                                            ),
-                                            Center(
-                                              child: RoundedInputField(
-                                                color: AppColors.grey
-                                                    .withOpacity(0.1),
-                                                hintText:
-                                                    'تأكيد كلمة المرور الجديدة',
-                                                width: 355.w,
-                                                height: 48.h,
-                                                onChanged: (value) {},
-                                                seen: true,
-                                                icon: Icon(Icons.key),
-                                                controller:
-                                                    _confirmNewPassController,
-                                                hintColor: AppColors.grey
-                                                    .withOpacity(0.7),
-                                                validator: (value) {
-                                                  if (value!.isEmpty) {
-                                                    return "Please enter password";
-                                                  } else {
-                                                    //call function to check password
-                                                    bool result =
-                                                        validatePassword(value);
-                                                    if (result) {
-                                                      // create account event
-                                                      return null;
-                                                    } else {
-                                                      return " لا تتطابق الكلمتين";
-                                                    }
-                                                  }
-                                                },
-                                              ),
-                                            ),
-                                            Container(
-                                              alignment: Alignment.centerRight,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 26.w),
-                                              child: CustomText(
-                                                'نسيت كلمة المرور؟',
-                                                color: AppColors.orange,
-                                                fontSize: 16.sp,
-                                                fontWeight: FontWeight.w300,
-                                                fontFamily: 'DINNextLTArabic',
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 16.h,
-                                                  vertical: 12.h),
-                                              child: ButtonWidget(
-                                                onPressed: () async {
-                                                  if (_Key.currentState!
-                                                      .validate()) {
-                                                    _Key.currentState!.save();
-                                                    await profileModel
-                                                        .editProfilePasswordRequset(
-                                                      data: {
-                                                        "password":
-                                                            _newPasswordController
-                                                                .text,
-                                                        "c_password":
-                                                            _confirmNewPassController
-                                                                .text,
-                                                        "old_password":
-                                                            _oldPassController
-                                                                .text,
-                                                      },
-                                                    );
-                                                    setState(() {
-                                                      _fetchedMyRequest =
-                                                          _getContentData();
-                                                    });
+                                                )),
+                                          );
+                                        });
+                                      },
+                                    );
 
-                                                    Navigator.pop(context);
-                                                  }
-                                                },
-                                                title: 'حفظ',
-                                                backgroundColor:
-                                                    AppColors.scadryColor,
-                                                textColor: AppColors.white,
-                                                height: 45.h,
-                                                verticalTextPadding: 0,
-                                                horizontalTextPadding: 0,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ));
-                              }),
-                              SizedBox(
-                                height: 10.h,
+                                    // showBottomSheet(
+                                    //     context,
+                                    //     Directionality(
+                                    //       textDirection: TextDirection.rtl,
+                                    //       child: Column(
+                                    //         mainAxisAlignment:
+                                    //             MainAxisAlignment.start,
+                                    //         children: [
+                                    //           Container(
+                                    //             alignment:
+                                    //                 Alignment.centerRight,
+                                    //             padding: EdgeInsetsDirectional
+                                    //                 .only(
+                                    //                     start: 18.w,
+                                    //                     bottom: 12.h,
+                                    //                     top: 20.h),
+                                    //             child: CustomText(
+                                    //               'حدد اللغة التي تريدها',
+                                    //               color:
+                                    //                   AppColors.scadryColor,
+                                    //               fontWeight: FontWeight.w400,
+                                    //               fontFamily:
+                                    //                   'DINNextLTArabic',
+                                    //               fontSize: 18.sp,
+                                    //             ),
+                                    //           ),
+                                    //           Padding(
+                                    //             padding: EdgeInsets.symmetric(
+                                    //                 vertical: 10.w,
+                                    //                 horizontal: 16.h),
+                                    //             child: Container(
+                                    //               height: 48.h,
+                                    //               alignment:
+                                    //                   Alignment.centerRight,
+                                    //               decoration: BoxDecoration(
+                                    //                 color: AppColors.grey
+                                    //                     .withOpacity(0.2),
+                                    //                 borderRadius:
+                                    //                     BorderRadius.circular(
+                                    //                         10.w),
+                                    //                 border: Border.all(
+                                    //                     color: Colors.grey
+                                    //                         .withOpacity(.3)),
+                                    //               ),
+                                    //               child: Row(
+                                    //                 children: [
+                                    //                   Radio(
+                                    //                       activeColor:
+                                    //                           AppColors
+                                    //                               .orange,
+                                    //                       value: "العربية",
+                                    //                       groupValue: _value,
+                                    //                       onChanged: (value) {
+                                    //                         setState(() {
+                                    //                           _value = value!;
+                                    //                         }); //selected value
+                                    //                       }),
+                                    //                   CustomText(
+                                    //                     'العربية',
+                                    //                     fontWeight:
+                                    //                         FontWeight.w300,
+                                    //                     fontFamily:
+                                    //                         'DINNextLTArabic',
+                                    //                     fontSize: 16.sp,
+                                    //                   ),
+                                    //                 ],
+                                    //               ),
+                                    //             ),
+                                    //           ),
+                                    //           Padding(
+                                    //             padding: EdgeInsets.symmetric(
+                                    //                 vertical: 10.w,
+                                    //                 horizontal: 16.h),
+                                    //             child: Container(
+                                    //               height: 48.h,
+                                    //               decoration: BoxDecoration(
+                                    //                 color: AppColors.grey
+                                    //                     .withOpacity(0.2),
+                                    //                 borderRadius:
+                                    //                     BorderRadius.circular(
+                                    //                         10.w),
+                                    //                 border: Border.all(
+                                    //                     color: Colors.grey
+                                    //                         .withOpacity(
+                                    //                             0.3)),
+                                    //               ),
+                                    //               child: Row(
+                                    //                 children: [
+                                    //                   Radio(
+                                    //                       activeColor:
+                                    //                           AppColors
+                                    //                               .orange,
+                                    //                       value: "الإنجليزية",
+                                    //                       groupValue: _value,
+                                    //                       onChanged: (value) {
+                                    //                         setState(() {
+                                    //                           _value = value!;
+                                    //                         }); //selected value
+                                    //                       }),
+                                    //                   CustomText(
+                                    //                     'الإنجليزية',
+                                    //                     fontWeight:
+                                    //                         FontWeight.w300,
+                                    //                     fontFamily:
+                                    //                         'DINNextLTArabic',
+                                    //                     fontSize: 16.sp,
+                                    //                   ),
+                                    //                 ],
+                                    //               ),
+                                    //             ),
+                                    //           ),
+                                    //           Padding(
+                                    //             padding: EdgeInsets.symmetric(
+                                    //                 horizontal: 16.h,
+                                    //                 vertical: 12.h),
+                                    //             child: ButtonWidget(
+                                    //               onPressed: () {
+                                    //                 Navigator.pop(context);
+                                    //               },
+                                    //               title: 'حفظ',
+                                    //               backgroundColor:
+                                    //                   AppColors.scadryColor,
+                                    //               textColor: AppColors.white,
+                                    //               height: 45.h,
+                                    //               verticalTextPadding: 0,
+                                    //               horizontalTextPadding: 0,
+                                    //             ),
+                                    //           )
+                                    //         ],
+                                    //       ),
+                                    //     ));
+                                  }),
+                                  SizedBox(
+                                    height: 150.h,
+                                  ),
+                                  RaisedGradientButton(
+                                    text: ' تسجيل خروج',
+                                    color: AppColors.scadryColor,
+                                    width: 340.w,
+                                    height: 48.h,
+                                    circular: 10.w,
+                                    onPressed: () async {
+                                      Constants.token = null;
+                                      Constants.isQuest = true;
+                                      SharedPreferences? _prefs =
+                                          await SharedPreferences.getInstance();
+                                      _prefs.clear();
+                                      Navigator.popAndPushNamed(
+                                          context, '/login_screen');
+                                    },
+                                  ),
+                                ],
                               ),
-                              profCard('اللغة ', () {
-                                showBottomSheet(
-                                    context,
-                                    Directionality(
-                                      textDirection: TextDirection.rtl,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            alignment: Alignment.centerRight,
-                                            padding: EdgeInsetsDirectional.only(
-                                                start: 18.w,
-                                                bottom: 12.h,
-                                                top: 20.h),
-                                            child: CustomText(
-                                              'حدد اللغة التي تريدها',
-                                              color: AppColors.scadryColor,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'DINNextLTArabic',
-                                              fontSize: 18.sp,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 10.w,
-                                                horizontal: 16.h),
-                                            child: Container(
-                                              height: 48.h,
-                                              alignment: Alignment.centerRight,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.grey
-                                                    .withOpacity(0.2),
-                                                borderRadius:
-                                                    BorderRadius.circular(10.w),
-                                                border: Border.all(
-                                                    color: Colors.grey
-                                                        .withOpacity(.3)),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Radio(
-                                                      activeColor:
-                                                          AppColors.orange,
-                                                      value: "العربية",
-                                                      groupValue: _value,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _value = value!;
-                                                        }); //selected value
-                                                      }),
-                                                  CustomText(
-                                                    'العربية',
-                                                    fontWeight: FontWeight.w300,
-                                                    fontFamily:
-                                                        'DINNextLTArabic',
-                                                    fontSize: 16.sp,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 10.w,
-                                                horizontal: 16.h),
-                                            child: Container(
-                                              height: 48.h,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.grey
-                                                    .withOpacity(0.2),
-                                                borderRadius:
-                                                    BorderRadius.circular(10.w),
-                                                border: Border.all(
-                                                    color: Colors.grey
-                                                        .withOpacity(0.3)),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Radio(
-                                                      activeColor:
-                                                          AppColors.orange,
-                                                      value: "الإنجليزية",
-                                                      groupValue: _value,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _value = value!;
-                                                        }); //selected value
-                                                      }),
-                                                  CustomText(
-                                                    'الإنجليزية',
-                                                    fontWeight: FontWeight.w300,
-                                                    fontFamily:
-                                                        'DINNextLTArabic',
-                                                    fontSize: 16.sp,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 16.h,
-                                                vertical: 12.h),
-                                            child: ButtonWidget(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              title: 'حفظ',
-                                              backgroundColor:
-                                                  AppColors.scadryColor,
-                                              textColor: AppColors.white,
-                                              height: 45.h,
-                                              verticalTextPadding: 0,
-                                              horizontalTextPadding: 0,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ));
-                              }),
-                              SizedBox(
-                                height: 150.h,
-                              ),
-                              RaisedGradientButton(
-                                text: ' تسجيل خروج',
-                                color: AppColors.scadryColor,
-                                width: 340.w,
-                                height: 48.h,
-                                circular: 10.w,
-                                onPressed: () async {
-                                  Constants.token = null;
-                                  SharedPreferences? _prefs =
-                                      await SharedPreferences.getInstance();
-                                  _prefs.clear();
-                                  Navigator.popAndPushNamed(
-                                      context, '/login_screen');
-                                },
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
+                      );
+                    }
+                    return Container();
+                  },
+                ),
+              )
+            : Container(
+                padding: EdgeInsets.all(20.w),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        offset: Offset(0, 7),
+                        blurRadius: 10,
                       ),
                     ],
-                  );
-                }
-                return Container();
-              },
-            ),
-          ),
-        ),
+                    borderRadius: BorderRadius.circular(20.w),
+                    color: AppColors.white.withOpacity(0.9)),
+                width: 320.w,
+                height: 500.h,
+                child: Column(
+                  children: [
+                    Image.asset('assets/images/nullstate.png'),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Container(
+                      width: 300.w,
+                      child: CustomText(
+                        '       يجب عليك تسجيل الدخول لعرض البيانات والاستمتاع بكل مميزات التطبيق ورؤية بياناتك    ',
+                        color: AppColors.orange,
+                        // fontWeight: FontWeight.bold,
+                        fontFamily: 'DINNEXTLTARABIC',
+
+                        textAlign: TextAlign.center,
+                        fontSize: 18.sp,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 60.h,
+                    ),
+                    RaisedGradientButton(
+                      text: ' تسجيل الدخول',
+                      color: AppColors.scadryColor,
+                      height: 48.h,
+                      width: 320.w,
+                      circular: 10.w,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                        );
+                      },
+                    ),
+                  ],
+                )),
       ),
     );
   }

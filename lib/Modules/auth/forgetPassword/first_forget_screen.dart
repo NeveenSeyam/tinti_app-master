@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -100,243 +101,243 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: SafeArea(
-          child: Scaffold(
-        backgroundColor: AppColors.scadryColor,
-        body: Consumer(
-          builder: (context, ref, child) => FutureBuilder(
-            future: _fetchedMyRequest,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return SizedBox(
-                  height: 70.h,
-                  child: const Center(
-                    child: LoaderWidget(),
-                  ),
-                );
+    return SafeArea(
+        child: Scaffold(
+      backgroundColor: AppColors.scadryColor,
+      body: Consumer(
+        builder: (context, ref, child) => FutureBuilder(
+          future: _fetchedMyRequest,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return SizedBox(
+                height: 70.h,
+                child: const Center(
+                  child: LoaderWidget(),
+                ),
+              );
+            }
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            }
+            if (snapshot.hasData) {
+              if (snapshot.data is Failure) {
+                return Center(child: TextWidget(snapshot.data.toString()));
               }
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              }
-              if (snapshot.hasData) {
-                if (snapshot.data is Failure) {
-                  return Center(child: TextWidget(snapshot.data.toString()));
-                }
-                //
-                //  print("snapshot data is ${snapshot.data}");
+              //
+              //  print("snapshot data is ${snapshot.data}");
 
-                // var getModel =
-                // var forgetModel = ref.watch(accountProvider).getForgetPassModel;
-                var changPassModel = ref.watch(accountProvider);
-                return validate == 1
-                    ? Visibility(
-                        visible: validate == 1
-                            ? true
-                            : validate == 2
-                                ? false
-                                : validate == 3
-                                    ? false
-                                    : false,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(20.h),
-                              child: Container(
-                                alignment: Alignment.topCenter,
-                                height: 80.h,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CustomText(
-                                      ' نسيت كلمة السر ',
-                                      textAlign: TextAlign.start,
-                                      fontSize: 18.sp,
-                                      fontFamily: 'DINNEXTLTARABIC',
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.white,
-                                    ),
-                                  ],
-                                ),
+              // var getModel =
+              // var forgetModel = ref.watch(accountProvider).getForgetPassModel;
+              var changPassModel = ref.watch(accountProvider);
+              return validate == 1
+                  ? Visibility(
+                      visible: validate == 1
+                          ? true
+                          : validate == 2
+                              ? false
+                              : validate == 3
+                                  ? false
+                                  : false,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(20.h),
+                            child: Container(
+                              alignment: Alignment.topCenter,
+                              height: 80.h,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomText(
+                                    'forget-pass'.tr(),
+                                    textAlign: TextAlign.start,
+                                    fontSize: 18.sp,
+                                    fontFamily: 'DINNEXTLTARABIC',
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.white,
+                                  ),
+                                ],
                               ),
                             ),
-                            Expanded(
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Color.fromARGB(255, 47, 47, 47)
-                                              .withOpacity(0.5),
-                                          spreadRadius: 4,
-                                          blurRadius: 10,
-                                          offset: const Offset(0,
-                                              1), // changes position of shadow
+                          ),
+                          Expanded(
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color.fromARGB(255, 47, 47, 47)
+                                            .withOpacity(0.5),
+                                        spreadRadius: 4,
+                                        blurRadius: 10,
+                                        offset: const Offset(
+                                            0, 1), // changes position of shadow
+                                      ),
+                                    ],
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(35.w),
+                                      topRight: Radius.circular(35.w),
+                                    )),
+                                height: 700.h,
+                                alignment: Alignment.bottomCenter,
+                                child: Padding(
+                                  padding: EdgeInsets.all(20.w),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText(
+                                        'enter-email'.tr(),
+                                        fontSize: 18.sp,
+                                        fontFamily: 'DINNEXTLTARABIC',
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      SizedBox(
+                                        height: 20.h,
+                                      ),
+                                      Image.asset(
+                                        'assets/images/forget_pass/first_step.png',
+                                        fit: BoxFit.fill,
+                                        height: 35.h,
+                                      ),
+                                      SizedBox(
+                                        height: 16.h,
+                                      ),
+                                      RoundedInputField(
+                                        hintText: 'email'.tr(),
+                                        onChanged: (value) {},
+                                        hintColor: AppColors.hint,
+                                        color: AppColors.lightgrey,
+                                        circuler: 10.w,
+                                        height: 48.h,
+                                        icon: Icon(
+                                          Icons.email,
+                                          color: AppColors.hint,
+                                          size: 17.w,
                                         ),
-                                      ],
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(35.w),
-                                        topRight: Radius.circular(35.w),
-                                      )),
-                                  height: 700.h,
-                                  alignment: Alignment.bottomCenter,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(20.w),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          alignment: Alignment.centerRight,
-                                          child: CustomText(
-                                            'ادخل بريدك الالكتروني',
-                                            textAlign: TextAlign.start,
-                                            fontSize: 18.sp,
-                                            fontFamily: 'DINNEXTLTARABIC',
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 20.h,
-                                        ),
-                                        Image.asset(
-                                          'assets/images/forget_pass/first_step.png',
-                                          fit: BoxFit.fill,
-                                          height: 35.h,
-                                        ),
-                                        SizedBox(
-                                          height: 16.h,
-                                        ),
-                                        RoundedInputField(
-                                          hintText: 'البريد الالكتروني',
-                                          onChanged: (value) {},
-                                          hintColor: AppColors.hint,
-                                          color: AppColors.lightgrey,
-                                          circuler: 10.w,
-                                          height: 48.h,
-                                          icon: Icon(
-                                            Icons.email,
-                                            color: AppColors.hint,
-                                            size: 17.w,
-                                          ),
-                                          validator: validateEmail,
-                                          seen: false,
-                                          controller: _emailController,
-                                        ),
-                                        SizedBox(
-                                          height: 16.h,
-                                        ),
-                                        RaisedGradientButton(
-                                          text: 'التالي',
-                                          color: AppColors.scadryColor,
-                                          height: 48.h,
-                                          circular: 10.w,
-                                          width: 340.w,
-                                          onPressed: () async {
-                                            await ref
-                                                .read(accountProvider)
-                                                .forgetPassRequest(
-                                                    email:
-                                                        _emailController.text);
-                                            var forgetModel = ref
-                                                .watch(accountProvider)
-                                                .getForgetPassModel;
-                                            print(
-                                                'forgetModel?.data?.mobile.toString() ${forgetModel?.data?.mobile.toString()}');
-                                            // _getContentData();
+                                        validator: validateEmail,
+                                        seen: false,
+                                        controller: _emailController,
+                                      ),
+                                      SizedBox(
+                                        height: 16.h,
+                                      ),
+                                      RaisedGradientButton(
+                                        text: 'next'.tr(),
+                                        color: AppColors.scadryColor,
+                                        height: 48.h,
+                                        circular: 10.w,
+                                        width: 340.w,
+                                        onPressed: () async {
+                                          await ref
+                                              .read(accountProvider)
+                                              .forgetPassRequest(
+                                                  email: _emailController.text);
+                                          var forgetModel = ref
+                                              .watch(accountProvider)
+                                              .getForgetPassModel;
+                                          print(
+                                              'forgetModel?.data?.mobile.toString() ${forgetModel?.data?.mobile.toString()}');
+                                          // _getContentData();
 
-                                            loginWithPhone(forgetModel
-                                                ?.data?.mobile
-                                                .toString());
+                                          loginWithPhone(forgetModel
+                                              ?.data?.mobile
+                                              .toString());
 
-                                            validate = 2;
+                                          validate = 2;
 
-                                            // Navigator.push(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //       builder: (context) =>
-                                            //           SecoundForgetScreen(
-                                            //               verificationID:
-                                            //                   verificationID,
-                                            //               otpVerfied:
-                                            //                   otpVerfied)),
-                                            // );
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //       builder: (context) =>
+                                          //           SecoundForgetScreen(
+                                          //               verificationID:
+                                          //                   verificationID,
+                                          //               otpVerfied:
+                                          //                   otpVerfied)),
+                                          // );
 
-                                            // Navigator.popAndPushNamed(
-                                            // context, '/secound_screen');
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  )),
-                            ),
-                          ],
-                        ),
-                      )
-                    : validate == 2
-                        ? Visibility(
-                            visible: validate == 1
-                                ? false
-                                : validate == 2
-                                    ? true
-                                    : validate == 3
-                                        ? false
-                                        : false,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(20.h),
-                                  child: Container(
-                                    alignment: Alignment.topCenter,
-                                    height: 80.h,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CustomText(
-                                          ' نسيت كلمة السر ',
-                                          textAlign: TextAlign.start,
-                                          fontSize: 18.sp,
-                                          fontFamily: 'DINNEXTLTARABIC',
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.white,
-                                        ),
-                                      ],
-                                    ),
+                                          // Navigator.popAndPushNamed(
+                                          // context, '/secound_screen');
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                          ),
+                        ],
+                      ),
+                    )
+                  : validate == 2
+                      ? Visibility(
+                          visible: validate == 1
+                              ? false
+                              : validate == 2
+                                  ? true
+                                  : validate == 3
+                                      ? false
+                                      : false,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(20.h),
+                                child: Container(
+                                  alignment: Alignment.topCenter,
+                                  height: 80.h,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CustomText(
+                                        'forget-pass'.tr(),
+                                        textAlign: TextAlign.start,
+                                        fontSize: 18.sp,
+                                        fontFamily: 'DINNEXTLTARABIC',
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.white,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Expanded(
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Color.fromARGB(
-                                                      255, 47, 47, 47)
-                                                  .withOpacity(0.5),
-                                              spreadRadius: 4,
-                                              blurRadius: 10,
-                                              offset: const Offset(0,
-                                                  1), // changes position of shadow
-                                            ),
-                                          ],
-                                          color: AppColors.white,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(35.w),
-                                            topRight: Radius.circular(35.w),
-                                          )),
-                                      height: 700.h,
-                                      alignment: Alignment.bottomCenter,
+                              ),
+                              Expanded(
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Color.fromARGB(255, 47, 47, 47)
+                                                    .withOpacity(0.5),
+                                            spreadRadius: 4,
+                                            blurRadius: 10,
+                                            offset: const Offset(0,
+                                                1), // changes position of shadow
+                                          ),
+                                        ],
+                                        color: AppColors.white,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(35.w),
+                                          topRight: Radius.circular(35.w),
+                                        )),
+                                    height: 700.h,
+                                    alignment: Alignment.bottomCenter,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(20.w),
                                       child: Padding(
-                                        padding: EdgeInsets.all(20.w),
+                                        padding: EdgeInsetsDirectional.only(
+                                            start: 10.w),
                                         child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Container(
+                                            Padding(
                                               padding:
-                                                  EdgeInsets.only(right: 10.w),
-                                              alignment: Alignment.centerRight,
+                                                  EdgeInsetsDirectional.only(
+                                                      start: 10.w),
                                               child: CustomText(
-                                                'ادخل كود التفعيل',
+                                                'enter-code'.tr(),
                                                 textAlign: TextAlign.start,
                                                 fontSize: 18.sp,
                                                 fontFamily: 'DINNEXTLTARABIC',
@@ -373,7 +374,7 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                               height: 16.h,
                                             ),
                                             RaisedGradientButton(
-                                              text: 'التالي',
+                                              text: 'next'.tr(),
                                               width: 340.w,
                                               color: AppColors.scadryColor,
                                               height: 48.h,
@@ -396,78 +397,214 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                                 Navigator.pushNamed(
                                                     context, '/signup_screen');
                                               },
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  CustomText(
-                                                    'لم تصلك رسالة حتى الان ؟',
-                                                    textAlign: TextAlign.start,
-                                                    fontSize: 16.sp,
-                                                    fontFamily:
-                                                        'DINNEXTLTARABIC',
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.orange,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 5.w,
-                                                  ),
-                                                  CustomText(
-                                                    'اعادة الارسال ',
-                                                    textAlign: TextAlign.start,
-                                                    fontSize: 16.sp,
-                                                    fontFamily:
-                                                        'DINNEXTLTARABIC',
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ],
+                                              child: Center(
+                                                child: CustomText(
+                                                  "dont_sent".tr(),
+                                                  textAlign: TextAlign.start,
+                                                  fontSize: 16.sp,
+                                                  fontFamily: 'DINNEXTLTARABIC',
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.orange,
+                                                ),
                                               ),
                                             )
                                           ],
                                         ),
-                                      )),
-                                ),
-                              ],
-                            ))
-                        : validate == 3
-                            ? Visibility(
-                                visible: validate == 1
-                                    ? false
-                                    : validate == 2
-                                        ? false
-                                        : validate == 3
-                                            ? true
-                                            : false,
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(20.h),
-                                      child: Container(
-                                        alignment: Alignment.topCenter,
-                                        height: 80.h,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            CustomText(
-                                              ' نسيت كلمة السر ',
-                                              textAlign: TextAlign.start,
-                                              fontSize: 18.sp,
-                                              fontFamily: 'DINNEXTLTARABIC',
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.white,
-                                            ),
-                                          ],
-                                        ),
+                                      ),
+                                    )),
+                              ),
+                            ],
+                          ))
+                      : validate == 3
+                          ? Visibility(
+                              visible: validate == 1
+                                  ? false
+                                  : validate == 2
+                                      ? false
+                                      : validate == 3
+                                          ? true
+                                          : false,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(20.h),
+                                    child: Container(
+                                      alignment: Alignment.topCenter,
+                                      height: 80.h,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          CustomText(
+                                            'forget-pass'.tr(),
+                                            textAlign: TextAlign.start,
+                                            fontSize: 18.sp,
+                                            fontFamily: 'DINNEXTLTARABIC',
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.white,
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Container(
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Color.fromARGB(
+                                                        255, 47, 47, 47)
+                                                    .withOpacity(0.5),
+                                                spreadRadius: 4,
+                                                blurRadius: 10,
+                                                offset: const Offset(0,
+                                                    1), // changes position of shadow
+                                              ),
+                                            ],
+                                            color: AppColors.white,
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(35.w),
+                                              topRight: Radius.circular(35.w),
+                                            )),
+                                        height: 700.h,
+                                        alignment: Alignment.bottomCenter,
+                                        child: Padding(
+                                          padding: EdgeInsets.all(20.w),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    EdgeInsetsDirectional.only(
+                                                        start: 10.w),
+                                                child: CustomText(
+                                                  'neew'.tr(),
+                                                  textAlign: TextAlign.start,
+                                                  fontSize: 18.sp,
+                                                  fontFamily: 'DINNEXTLTARABIC',
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 20.h,
+                                              ),
+                                              Image.asset(
+                                                'assets/images/forget_pass/theard_step.png',
+                                                fit: BoxFit.fill,
+                                                height: 35.h,
+                                              ),
+                                              SizedBox(
+                                                height: 16.h,
+                                              ),
+                                              RoundedInputField(
+                                                hintText: 'new-pass'.tr(),
+                                                onChanged: (value) {},
+                                                hintColor: AppColors.hint,
+                                                color: AppColors.lightgrey,
+                                                circuler: 10.w,
+                                                height: 48.h,
+                                                icon: Icon(
+                                                  Icons.email,
+                                                  color: AppColors.hint,
+                                                  size: 17.w,
+                                                ),
+                                                validator: validatePassword,
+                                                seen: true,
+                                                controller: _passwordController,
+                                              ),
+                                              RoundedInputField(
+                                                hintText:
+                                                    'confirm-new-pass'.tr(),
+                                                onChanged: (value) {},
+                                                hintColor: AppColors.hint,
+                                                color: AppColors.lightgrey,
+                                                circuler: 10.w,
+                                                height: 48.h,
+                                                icon: const Icon(
+                                                  Icons.email,
+                                                  color: AppColors.hint,
+                                                ),
+                                                validator: validatePassword,
+                                                seen: true,
+                                                controller:
+                                                    _confirmPasswordController,
+                                              ),
+                                              SizedBox(
+                                                height: 16.h,
+                                              ),
+                                              RaisedGradientButton(
+                                                text: 'next'.tr(),
+                                                color: AppColors.scadryColor,
+                                                height: 48.h,
+                                                circular: 10.w,
+                                                width: 340.w,
+                                                onPressed: () async {
+                                                  print(
+                                                      '${_emailController.text}');
+
+                                                  await changPassModel
+                                                      .updatePass(data: {
+                                                    'email':
+                                                        _emailController.text,
+                                                    'password':
+                                                        _passwordController.text
+                                                  });
+                                                  // changPassModel
+                                                  //     .getChangePassModel
+                                                  //     ?.message;
+                                                  Navigator.popAndPushNamed(
+                                                      context, '/final_screen');
+//
+                                                  validate = 4;
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        )),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : validate == 4
+                              ? Visibility(
+                                  visible: validate == 1
+                                      ? false
+                                      : validate == 2
+                                          ? false
+                                          : validate == 3
+                                              ? false
+                                              : true,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(20.h),
+                                        child: Container(
+                                          alignment: Alignment.topCenter,
+                                          height: 80.h,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              CustomText(
+                                                'forget-pass'.tr(),
+                                                textAlign: TextAlign.start,
+                                                fontSize: 18.sp,
+                                                fontFamily: 'DINNEXTLTARABIC',
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.white,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
                                           decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Color.fromARGB(
-                                                          255, 47, 47, 47)
+                                                  color: Color(0xFF2F2F2F)
                                                       .withOpacity(0.5),
                                                   spreadRadius: 4,
                                                   blurRadius: 10,
@@ -485,14 +622,14 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                           child: Padding(
                                             padding: EdgeInsets.all(20.w),
                                             child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Container(
                                                   padding: EdgeInsets.only(
                                                       right: 10.w),
-                                                  alignment:
-                                                      Alignment.centerRight,
                                                   child: CustomText(
-                                                    ' تعيين كلمة مرور جديدة',
+                                                    'change-pass-details'.tr(),
                                                     textAlign: TextAlign.start,
                                                     fontSize: 18.sp,
                                                     fontFamily:
@@ -504,204 +641,46 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                                   height: 20.h,
                                                 ),
                                                 Image.asset(
-                                                  'assets/images/forget_pass/theard_step.png',
+                                                  'assets/images/forget_pass/final_step.png',
                                                   fit: BoxFit.fill,
                                                   height: 35.h,
                                                 ),
                                                 SizedBox(
                                                   height: 16.h,
                                                 ),
-                                                RoundedInputField(
-                                                  hintText: 'كلمة مرور جديدة ',
-                                                  onChanged: (value) {},
-                                                  hintColor: AppColors.hint,
-                                                  color: AppColors.lightgrey,
-                                                  circuler: 10.w,
-                                                  height: 48.h,
-                                                  icon: Icon(
-                                                    Icons.email,
-                                                    color: AppColors.hint,
-                                                    size: 17.w,
-                                                  ),
-                                                  validator: validatePassword,
-                                                  seen: true,
-                                                  controller:
-                                                      _passwordController,
-                                                ),
-                                                RoundedInputField(
-                                                  hintText:
-                                                      'تأكيد كلمة المرور  ',
-                                                  onChanged: (value) {},
-                                                  hintColor: AppColors.hint,
-                                                  color: AppColors.lightgrey,
-                                                  circuler: 10.w,
-                                                  height: 48.h,
-                                                  icon: const Icon(
-                                                    Icons.email,
-                                                    color: AppColors.hint,
-                                                  ),
-                                                  validator: validatePassword,
-                                                  seen: true,
-                                                  controller:
-                                                      _confirmPasswordController,
+                                                Image.asset(
+                                                  'assets/images/forget_pass/done.png',
+                                                  height: 350.h,
+                                                  fit: BoxFit.fill,
                                                 ),
                                                 SizedBox(
-                                                  height: 16.h,
+                                                  height: 28.h,
                                                 ),
                                                 RaisedGradientButton(
-                                                  text: 'التالي',
+                                                  text: 'login'.tr(),
                                                   color: AppColors.scadryColor,
                                                   height: 48.h,
-                                                  circular: 10.w,
                                                   width: 340.w,
-                                                  onPressed: () async {
-                                                    print(
-                                                        '${_emailController.text}');
-
-                                                    await changPassModel
-                                                        .updatePass(data: {
-                                                      'email':
-                                                          _emailController.text,
-                                                      'password':
-                                                          _passwordController
-                                                              .text
-                                                    });
-                                                    // changPassModel
-                                                    //     .getChangePassModel
-                                                    //     ?.message;
+                                                  circular: 10.w,
+                                                  onPressed: () {
                                                     Navigator.popAndPushNamed(
                                                         context,
-                                                        '/final_screen');
-//
-                                                    validate = 4;
+                                                        '/login_screen');
                                                   },
                                                 ),
                                               ],
                                             ),
                                           )),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : validate == 4
-                                ? Visibility(
-                                    visible: validate == 1
-                                        ? false
-                                        : validate == 2
-                                            ? false
-                                            : validate == 3
-                                                ? false
-                                                : true,
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(20.h),
-                                          child: Container(
-                                            alignment: Alignment.topCenter,
-                                            height: 80.h,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                CustomText(
-                                                  ' نسيت كلمة السر ',
-                                                  textAlign: TextAlign.start,
-                                                  fontSize: 18.sp,
-                                                  fontFamily: 'DINNEXTLTARABIC',
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.white,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                            decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Color(0xFF2F2F2F)
-                                                        .withOpacity(0.5),
-                                                    spreadRadius: 4,
-                                                    blurRadius: 10,
-                                                    offset: const Offset(0,
-                                                        1), // changes position of shadow
-                                                  ),
-                                                ],
-                                                color: AppColors.white,
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft:
-                                                      Radius.circular(35.w),
-                                                  topRight:
-                                                      Radius.circular(35.w),
-                                                )),
-                                            height: 700.h,
-                                            alignment: Alignment.bottomCenter,
-                                            child: Padding(
-                                              padding: EdgeInsets.all(20.w),
-                                              child: Column(
-                                                children: [
-                                                  Container(
-                                                    padding: EdgeInsets.only(
-                                                        right: 10.w),
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: CustomText(
-                                                      'تم تعيين كلمة المرور بنجاح',
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      fontSize: 18.sp,
-                                                      fontFamily:
-                                                          'DINNEXTLTARABIC',
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 20.h,
-                                                  ),
-                                                  Image.asset(
-                                                    'assets/images/forget_pass/final_step.png',
-                                                    fit: BoxFit.fill,
-                                                    height: 35.h,
-                                                  ),
-                                                  SizedBox(
-                                                    height: 16.h,
-                                                  ),
-                                                  Image.asset(
-                                                    'assets/images/forget_pass/done.png',
-                                                    height: 350.h,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                  SizedBox(
-                                                    height: 28.h,
-                                                  ),
-                                                  RaisedGradientButton(
-                                                    text: 'تسجيل دخول',
-                                                    color:
-                                                        AppColors.scadryColor,
-                                                    height: 48.h,
-                                                    width: 340.w,
-                                                    circular: 10.w,
-                                                    onPressed: () {
-                                                      Navigator.popAndPushNamed(
-                                                          context,
-                                                          '/login_screen');
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            )),
-                                      ],
-                                    ),
-                                  )
-                                : Container();
-              }
-              return Container();
-            },
-          ),
+                                    ],
+                                  ),
+                                )
+                              : Container();
+            }
+            return Container();
+          },
         ),
-      )),
-    );
+      ),
+    ));
   }
 
   Future<void> loginWithPhone(val) async {

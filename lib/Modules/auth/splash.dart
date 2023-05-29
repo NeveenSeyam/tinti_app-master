@@ -44,9 +44,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
               isLoaded = true;
               if (_prefs.getString(Keys.hasSaveUserData) == null) {
+                Constants.isQuest = true;
                 Navigator.popAndPushNamed(context, '/poard_screen');
               } else {
                 var AuthProvider = ref.read(accountProvider);
+                Constants.isQuest = false;
 
                 Constants.token = _prefs.getString(Keys.hasSaveUserData);
                 await AuthProvider.getUserProfileRequset();

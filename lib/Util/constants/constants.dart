@@ -2,6 +2,8 @@ class Constants {
   //UI
   static const double padding = 16;
   static String? token = "";
+  static String? lang = "en";
+  static bool? isQuest = true;
 
   static const String googleMapKeyIos =
       'AIzaSyBRjT8ScgjVDqeiHIDjn1x-neyhWE0X9Fk';

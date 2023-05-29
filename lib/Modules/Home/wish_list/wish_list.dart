@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tinti_app/Modules/auth/login_screen.dart';
+import 'package:tinti_app/Util/constants/constants.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/custom_text.dart';
 import 'package:tinti_app/Widgets/wish_list_card.dart';
@@ -42,167 +44,171 @@ class _WishListPageState extends ConsumerState<WishListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: Colors.grey[100],
-        appBar: CustomAppBar(
-          "المفضلة",
-          isNotification: false,
-        ),
-        body: RefreshIndicator(
-          onRefresh: () {
-            setState(() {
-              _fetchedFvsRequest = _getFavsData();
-            });
-            return _fetchedFvsRequest;
-          },
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  child: Consumer(
-                    builder: (context, ref, child) => FutureBuilder(
-                      future: _fetchedFvsRequest,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return SizedBox(
-                            height: 70.h,
-                            child: const Center(
-                              child: LoaderWidget(),
-                            ),
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          return Padding(
-                            padding: EdgeInsets.all(20.w),
-                            child: Container(
+    return Scaffold(
+      backgroundColor: Colors.grey[100],
+      appBar: CustomAppBar(
+        "المفضلة",
+        isNotification: false,
+      ),
+      body: RefreshIndicator(
+        onRefresh: () {
+          setState(() {
+            _fetchedFvsRequest = _getFavsData();
+          });
+          return _fetchedFvsRequest;
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                child: Constants.isQuest == false
+                    ? Consumer(
+                        builder: (context, ref, child) => FutureBuilder(
+                          future: _fetchedFvsRequest,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return SizedBox(
+                                height: 70.h,
+                                child: const Center(
+                                  child: LoaderWidget(),
+                                ),
+                              );
+                            }
+                            if (snapshot.hasError) {
+                              return Padding(
                                 padding: EdgeInsets.all(20.w),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        offset: Offset(0, 7),
-                                        blurRadius: 10,
-                                      ),
-                                    ],
-                                    borderRadius: BorderRadius.circular(20.w),
-                                    color: AppColors.white.withOpacity(0.9)),
-                                width: 320.w,
-                                height: 500.h,
-                                child: Column(
-                                  children: [
-                                    Image.asset('assets/images/nullstate.png'),
-                                    SizedBox(
-                                      height: 20.h,
-                                    ),
-                                    Container(
-                                      width: 300.w,
-                                      child: CustomText(
-                                        '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
-                                        color: AppColors.orange,
-                                        // fontWeight: FontWeight.bold,
-                                        fontFamily: 'DINNEXTLTARABIC',
-
-                                        textAlign: TextAlign.center,
-                                        fontSize: 18.sp,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 60.h,
-                                    ),
-                                    RaisedGradientButton(
-                                      text: 'تواصل معنا',
-                                      color: AppColors.scadryColor,
-                                      height: 48.h,
-                                      width: 320.w,
-                                      circular: 10.w,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ContactUsScreen()),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                )),
-                          );
-                        }
-                        if (snapshot.hasData) {
-                          if (snapshot.data is Failure) {
-                            return Center(
-                                child: Padding(
-                              padding: EdgeInsets.all(20.w),
-                              child: Container(
-                                  padding: EdgeInsets.all(20.w),
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20.w),
-                                      color: AppColors.lightPrimaryColor
-                                          .withOpacity(0.2)),
-                                  width: 320.w,
-                                  height: 500.h,
-                                  child: Column(
-                                    children: [
-                                      Image.asset(
-                                          'assets/images/nullstate.png'),
-                                      SizedBox(
-                                        height: 20.h,
-                                      ),
-                                      Container(
-                                        width: 300.w,
-                                        child: CustomText(
-                                          '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
-                                          color: AppColors.orange,
-                                          // fontWeight: FontWeight.bold,
-                                          fontFamily: 'DINNEXTLTARABIC',
-
-                                          textAlign: TextAlign.center,
-                                          fontSize: 18.sp,
+                                child: Container(
+                                    padding: EdgeInsets.all(20.w),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.black12,
+                                            offset: Offset(0, 7),
+                                            blurRadius: 10,
+                                          ),
+                                        ],
+                                        borderRadius:
+                                            BorderRadius.circular(20.w),
+                                        color:
+                                            AppColors.white.withOpacity(0.9)),
+                                    width: 320.w,
+                                    height: 500.h,
+                                    child: Column(
+                                      children: [
+                                        Image.asset(
+                                            'assets/images/nullstate.png'),
+                                        SizedBox(
+                                          height: 20.h,
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 60.h,
-                                      ),
-                                      RaisedGradientButton(
-                                        text: 'تصفح المنتجات',
-                                        color: AppColors.scadryColor,
-                                        height: 48.h,
-                                        width: 320.w,
-                                        circular: 10.w,
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ServicesScreen()),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  )),
-                            ));
-                          }
-                          //
-                          //  print("snapshot data is ${snapshot.data}");
+                                        Container(
+                                          width: 300.w,
+                                          child: CustomText(
+                                            '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                            color: AppColors.orange,
+                                            // fontWeight: FontWeight.bold,
+                                            fontFamily: 'DINNEXTLTARABIC',
 
-                          var favsModel =
-                              ref.watch(favsProvider).getFavsDataList;
+                                            textAlign: TextAlign.center,
+                                            fontSize: 18.sp,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 60.h,
+                                        ),
+                                        RaisedGradientButton(
+                                          text: 'تواصل معنا',
+                                          color: AppColors.scadryColor,
+                                          height: 48.h,
+                                          width: 320.w,
+                                          circular: 10.w,
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ContactUsScreen()),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    )),
+                              );
+                            }
+                            if (snapshot.hasData) {
+                              if (snapshot.data is Failure) {
+                                return Center(
+                                    child: Padding(
+                                  padding: EdgeInsets.all(20.w),
+                                  child: Container(
+                                      padding: EdgeInsets.all(20.w),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20.w),
+                                          color: AppColors.lightPrimaryColor
+                                              .withOpacity(0.2)),
+                                      width: 320.w,
+                                      height: 500.h,
+                                      child: Column(
+                                        children: [
+                                          Image.asset(
+                                              'assets/images/nullstate.png'),
+                                          SizedBox(
+                                            height: 20.h,
+                                          ),
+                                          Container(
+                                            width: 300.w,
+                                            child: CustomText(
+                                              '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                              color: AppColors.orange,
+                                              // fontWeight: FontWeight.bold,
+                                              fontFamily: 'DINNEXTLTARABIC',
 
-                          return favsModel?.favoriteProducts?.length != 0
-                              ? ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount:
-                                      favsModel?.favoriteProducts?.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) =>
+                                              textAlign: TextAlign.center,
+                                              fontSize: 18.sp,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 60.h,
+                                          ),
+                                          RaisedGradientButton(
+                                            text: 'تصفح المنتجات',
+                                            color: AppColors.scadryColor,
+                                            height: 48.h,
+                                            width: 320.w,
+                                            circular: 10.w,
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ServicesScreen()),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      )),
+                                ));
+                              }
+                              //
+                              //  print("snapshot data is ${snapshot.data}");
+
+                              var favsModel =
+                                  ref.watch(favsProvider).getFavsDataList;
+
+                              return favsModel?.favoriteProducts?.length != 0
+                                  ? ListView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount:
+                                          favsModel?.favoriteProducts?.length,
+                                      itemBuilder: (BuildContext context,
+                                              int index) =>
                                           GestureDetector(
                                             onTap: () {
                                               // _fetchedFvsRequest = _getFavsData();
@@ -238,65 +244,116 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                               isFavorite: isFav,
                                             ),
                                           ))
-                              : // :
-                              Padding(
-                                  padding: EdgeInsets.all(20.w),
-                                  child: Container(
+                                  : // :
+                                  Padding(
                                       padding: EdgeInsets.all(20.w),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20.w),
-                                          color: AppColors.lightPrimaryColor
-                                              .withOpacity(0.2)),
-                                      width: 320.w,
-                                      height: 500.h,
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                              'assets/images/nullstate.png'),
-                                          SizedBox(
-                                            height: 20.h,
-                                          ),
-                                          Container(
-                                            width: 300.w,
-                                            child: CustomText(
-                                              'لم تقم باضافة اي خدمة للمفضله  يمكنك اضافة واحده الان',
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.bold,
-                                              textAlign: TextAlign.center,
-                                              fontSize: 18.sp,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 60.h,
-                                          ),
-                                          RaisedGradientButton(
-                                            text: 'تصفح المنتجات',
-                                            color: AppColors.scadryColor,
-                                            height: 48.h,
-                                            width: 320.w,
-                                            circular: 10.w,
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ServicesScreen()),
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      )),
+                                      child: Container(
+                                          padding: EdgeInsets.all(20.w),
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.w),
+                                              color: AppColors.lightPrimaryColor
+                                                  .withOpacity(0.2)),
+                                          width: 320.w,
+                                          height: 500.h,
+                                          child: Column(
+                                            children: [
+                                              Image.asset(
+                                                  'assets/images/nullstate.png'),
+                                              SizedBox(
+                                                height: 20.h,
+                                              ),
+                                              Container(
+                                                width: 300.w,
+                                                child: CustomText(
+                                                  'لم تقم باضافة اي خدمة للمفضله  يمكنك اضافة واحده الان',
+                                                  color: AppColors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  textAlign: TextAlign.center,
+                                                  fontSize: 18.sp,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 60.h,
+                                              ),
+                                              RaisedGradientButton(
+                                                text: 'تصفح المنتجات',
+                                                color: AppColors.scadryColor,
+                                                height: 48.h,
+                                                width: 320.w,
+                                                circular: 10.w,
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ServicesScreen()),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          )),
+                                    );
+                            }
+                            return Container();
+                          },
+                        ),
+                      )
+                    : Container(
+                        padding: EdgeInsets.all(20.w),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0, 7),
+                                blurRadius: 10,
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(20.w),
+                            color: AppColors.white.withOpacity(0.9)),
+                        width: 320.w,
+                        height: 500.h,
+                        child: Column(
+                          children: [
+                            Image.asset('assets/images/nullstate.png'),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Container(
+                              width: 300.w,
+                              child: CustomText(
+                                '       يجب عليك تسجيل الدخول البيانات والاستمتاع بكل مميزات التطبيق ورؤية بياناتك    ',
+                                color: AppColors.orange,
+                                // fontWeight: FontWeight.bold,
+                                fontFamily: 'DINNEXTLTARABIC',
+
+                                textAlign: TextAlign.center,
+                                fontSize: 18.sp,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60.h,
+                            ),
+                            RaisedGradientButton(
+                              text: ' تسجيل الدخول',
+                              color: AppColors.scadryColor,
+                              height: 48.h,
+                              width: 320.w,
+                              circular: 10.w,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()),
                                 );
-                        }
-                        return Container();
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                              },
+                            ),
+                          ],
+                        )),
+              ),
+            ],
           ),
         ),
       ),

@@ -91,7 +91,7 @@ class BaseDioApi {
             'device_id': '123456789',
             'os': 'ios',
             "Authorization": "Bearer ${Constants.token}",
-            'language': 'ar',
+            'Accept-Language': '${Constants.lang}',
           },
         ),
         queryParameters: queryParameters(),

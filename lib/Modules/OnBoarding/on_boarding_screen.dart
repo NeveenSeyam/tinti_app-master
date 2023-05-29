@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tinti_app/Util/constants/constants.dart';
 import 'package:tinti_app/Widgets/on_boarding_content_custom.dart';
 import 'package:tinti_app/Widgets/page_view_indicator.dart';
 import 'package:tinti_app/provider/intro_provider%20copy.dart';
 import '../../Helpers/failure.dart';
+import '../../Util/constants/keys.dart';
 import '../../Widgets/custom_button.dart';
 import '../../Widgets/loader_widget.dart';
 import '../../Widgets/text_widget.dart';
@@ -48,180 +51,189 @@ class _OnBoardingScreensState extends ConsumerState<OnBoardingScreens> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Consumer(
-            builder: (context, ref, child) => FutureBuilder(
-              future: _fetchedIntroRequest,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return SizedBox(
-                    height: 70.h,
-                    child: const Center(
-                      child: LoaderWidget(),
-                    ),
-                  );
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Consumer(
+          builder: (context, ref, child) => FutureBuilder(
+            future: _fetchedIntroRequest,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return SizedBox(
+                  height: 70.h,
+                  child: const Center(
+                    child: LoaderWidget(),
+                  ),
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              }
+              if (snapshot.hasData) {
+                if (snapshot.data is Failure) {
+                  return Center(child: TextWidget(snapshot.data.toString()));
                 }
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                }
-                if (snapshot.hasData) {
-                  if (snapshot.data is Failure) {
-                    return Center(child: TextWidget(snapshot.data.toString()));
-                  }
-                  //
-                  //  print("snapshot data is ${snapshot.data}");
+                //
+                //  print("snapshot data is ${snapshot.data}");
 
-                  var introsModel = ref.watch(introProvider).getDataList;
+                var introsModel = ref.watch(introProvider).getDataList;
 
-                  return Column(
-                    children: [
-                      Expanded(
-                          child: PageView(
-                        scrollDirection: Axis.horizontal,
-                        controller: _pageController,
-                        physics: const BouncingScrollPhysics(),
-                        onPageChanged: (int currentPage) {
-                          setState(() => _currentPage = currentPage);
-                        },
-                        children: [
-                          OnBoardingContentCustom(
-                            image: introsModel?.intros?[3].image ?? 'num4',
-                            title: introsModel?.intros?[3].name ?? 'num1',
-                            description:
-                                introsModel?.intros?[3].description ?? 'num1',
-                          ),
-                          OnBoardingContentCustom(
-                            image: introsModel?.intros?[2].image ?? 'num3',
-                            title: introsModel?.intros?[2].name ?? 'num1',
-                            description:
-                                introsModel?.intros?[2].description ?? 'num1',
-                          ),
-                          OnBoardingContentCustom(
-                            image: introsModel?.intros?[1].image ?? 'num2',
-                            title: introsModel?.intros?[1].name ?? 'num1',
-                            description:
-                                introsModel?.intros?[1].description ?? 'num1',
-                          ),
-                          OnBoardingContentCustom(
-                            image: introsModel?.intros?[0].image ?? 'num1',
-                            title: introsModel?.intros?[0].name ?? 'num1',
-                            description:
-                                introsModel?.intros?[0].description ?? 'num1',
-                          ),
-                        ],
-                      )),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Visibility(
-                            visible: _currentPage < 3,
-                            maintainSize: true,
-                            maintainState: true,
-                            maintainAnimation: true,
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.only(
-                                start: 20.w,
-                              ),
-                              child: Row(
-                                children: [
-                                  PageViewIndicatorCustom(
-                                    isCurrentPage: _currentPage == 0,
-                                    marginEnd: 4.w,
-                                  ),
-                                  PageViewIndicatorCustom(
-                                    isCurrentPage: _currentPage == 1,
-                                    marginEnd: 4.w,
-                                  ),
-                                  PageViewIndicatorCustom(
-                                    isCurrentPage: _currentPage == 2,
-                                  ),
-                                  PageViewIndicatorCustom(
-                                    isCurrentPage: _currentPage == 3,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          Visibility(
-                            visible: _currentPage < 3,
-                            maintainSize: true,
-                            maintainState: true,
-                            maintainAnimation: true,
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.only(
-                                end: 20.w,
-                              ),
-                              child: CustomButton(
-                                  width: 42,
-                                  height: 42,
-                                  backgroundColor: const Color(0xffFF7A18),
-                                  childWidget: const Icon(Icons.arrow_forward),
-                                  shape: const CircleBorder(),
-                                  onpressed: () {
-                                    _pageController.nextPage(
-                                      duration: const Duration(seconds: 1),
-                                      curve: Curves.easeInOutBack,
-                                    );
-                                  }),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Visibility(
-                        visible: _currentPage == 3,
-                        maintainSize: true,
-                        maintainState: true,
-                        maintainAnimation: true,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 79.5.w),
-                          child: ElevatedButton(
-                            onPressed: () => Navigator.pushReplacementNamed(
-                                context, '/login_screen'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xffF57A38),
-                              minimumSize: Size(
-                                216.w,
-                                42.h,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                return Column(
+                  children: [
+                    Expanded(
+                        child: PageView(
+                      scrollDirection: Axis.horizontal,
+                      controller: _pageController,
+                      physics: const BouncingScrollPhysics(),
+                      onPageChanged: (int currentPage) {
+                        setState(() => _currentPage = currentPage);
+                      },
+                      children: [
+                        OnBoardingContentCustom(
+                          image: introsModel?.intros?[3].image ?? 'num4',
+                          title: introsModel?.intros?[3].name ?? 'num1',
+                          description:
+                              introsModel?.intros?[3].description ?? 'num1',
+                        ),
+                        OnBoardingContentCustom(
+                          image: introsModel?.intros?[2].image ?? 'num3',
+                          title: introsModel?.intros?[2].name ?? 'num1',
+                          description:
+                              introsModel?.intros?[2].description ?? 'num1',
+                        ),
+                        OnBoardingContentCustom(
+                          image: introsModel?.intros?[1].image ?? 'num2',
+                          title: introsModel?.intros?[1].name ?? 'num1',
+                          description:
+                              introsModel?.intros?[1].description ?? 'num1',
+                        ),
+                        OnBoardingContentCustom(
+                          image: introsModel?.intros?[0].image ?? 'num1',
+                          title: introsModel?.intros?[0].name ?? 'num1',
+                          description:
+                              introsModel?.intros?[0].description ?? 'num1',
+                        ),
+                      ],
+                    )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Visibility(
+                          visible: _currentPage < 3,
+                          maintainSize: true,
+                          maintainState: true,
+                          maintainAnimation: true,
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.only(
+                              start: 20.w,
                             ),
                             child: Row(
                               children: [
-                                const Spacer(),
-                                Text(
-                                  'ابدأ',
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    fontFamily: 'DINNEXTLTARABIC',
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.white,
-                                  ),
+                                PageViewIndicatorCustom(
+                                  isCurrentPage: _currentPage == 0,
+                                  marginEnd: 4.w,
                                 ),
-                                const Spacer(),
-                                const Icon(Icons.arrow_forward),
+                                PageViewIndicatorCustom(
+                                  isCurrentPage: _currentPage == 1,
+                                  marginEnd: 4.w,
+                                ),
+                                PageViewIndicatorCustom(
+                                  isCurrentPage: _currentPage == 2,
+                                ),
+                                PageViewIndicatorCustom(
+                                  isCurrentPage: _currentPage == 3,
+                                ),
                               ],
                             ),
                           ),
                         ),
+                        const Spacer(),
+                        Visibility(
+                          visible: _currentPage < 3,
+                          maintainSize: true,
+                          maintainState: true,
+                          maintainAnimation: true,
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.only(
+                              end: 20.w,
+                            ),
+                            child: CustomButton(
+                                width: 42,
+                                height: 42,
+                                backgroundColor: const Color(0xffFF7A18),
+                                childWidget: const Icon(Icons.arrow_forward),
+                                shape: const CircleBorder(),
+                                onpressed: () {
+                                  _pageController.nextPage(
+                                    duration: const Duration(seconds: 1),
+                                    curve: Curves.easeInOutBack,
+                                  );
+                                }),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Visibility(
+                      visible: _currentPage == 3,
+                      maintainSize: true,
+                      maintainState: true,
+                      maintainAnimation: true,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 79.5.w),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            SharedPreferences? _prefs =
+                                await SharedPreferences.getInstance();
+
+                            if (_prefs.getString(Keys.hasSaveUserData) ==
+                                null) {
+                              Constants.isQuest = true;
+                            } else {
+                              Constants.isQuest = false;
+                            }
+
+                            Navigator.pushReplacementNamed(
+                                context, '/navegaitor_screen');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xffF57A38),
+                            minimumSize: Size(
+                              216.w,
+                              42.h,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              const Spacer(),
+                              Text(
+                                'ابدأ',
+                                style: TextStyle(
+                                  fontSize: 18.sp,
+                                  fontFamily: 'DINNEXTLTARABIC',
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Spacer(),
+                              const Icon(Icons.arrow_forward),
+                            ],
+                          ),
+                        ),
                       ),
-                      SizedBox(
-                        height: 96.h,
-                      )
-                    ],
-                  );
-                }
-                return Container();
-              },
-            ),
+                    ),
+                    SizedBox(
+                      height: 96.h,
+                    )
+                  ],
+                );
+              }
+              return Container();
+            },
           ),
         ),
       ),

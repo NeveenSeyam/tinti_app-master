@@ -64,408 +64,397 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: SafeArea(
-          child: Scaffold(
-        backgroundColor: AppColors.scadryColor,
-        body: Container(
-          width: double.infinity,
+    return SafeArea(
+        child: Scaffold(
+      backgroundColor: AppColors.scadryColor,
+      body: Container(
+        width: double.infinity,
+        child: SingleChildScrollView(
           child: SingleChildScrollView(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(20.h),
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      width: double.infinity,
-                      height: 80.h,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: Center(
-                                  child: Icon(
-                                Icons.arrow_back_ios_rounded,
-                                color: AppColors.white,
-                              )),
-                            ),
-                          ),
-                          Center(
-                            child: CustomText(
-                              ' تواصل معنا ',
-                              textAlign: TextAlign.start,
-                              fontSize: 18.sp,
-                              fontFamily: 'DINNEXTLTARABIC',
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.white,
-                            ),
-                          ),
-                          Container(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(20.h),
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    width: double.infinity,
+                    height: 80.h,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
                             alignment: Alignment.centerLeft,
-                            child: Center(),
+                            child: Center(
+                                child: Icon(
+                              Icons.arrow_back_ios_rounded,
+                              color: AppColors.white,
+                            )),
                           ),
-                        ],
-                      ),
+                        ),
+                        Center(
+                          child: CustomText(
+                            ' تواصل معنا ',
+                            textAlign: TextAlign.start,
+                            fontSize: 18.sp,
+                            fontFamily: 'DINNEXTLTARABIC',
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.white,
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Center(),
+                        ),
+                      ],
                     ),
                   ),
-                  Consumer(
-                    builder: (context, ref, child) => FutureBuilder(
-                      future: _fetchedContactRequest,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return SizedBox(
-                            height: 70.h,
-                            child: const Center(
-                              child: LoaderWidget(),
-                            ),
-                          );
-                        }
-                        if (snapshot.hasError) {
+                ),
+                Consumer(
+                  builder: (context, ref, child) => FutureBuilder(
+                    future: _fetchedContactRequest,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return SizedBox(
+                          height: 70.h,
+                          child: const Center(
+                            child: LoaderWidget(),
+                          ),
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text('Error: ${snapshot.error}'),
+                        );
+                      }
+                      if (snapshot.hasData) {
+                        if (snapshot.data is Failure) {
                           return Center(
-                            child: Text('Error: ${snapshot.error}'),
-                          );
+                              child: TextWidget(snapshot.data.toString()));
                         }
-                        if (snapshot.hasData) {
-                          if (snapshot.data is Failure) {
-                            return Center(
-                                child: TextWidget(snapshot.data.toString()));
-                          }
-                          //
-                          //  print("snapshot data is ${snapshot.data}");
+                        //
+                        //  print("snapshot data is ${snapshot.data}");
 
-                          var appContactDataModel =
-                              ref.watch(contactDataProvider).getContactDataList;
-                          var appContactUsDataModel =
-                              ref.watch(contactUsProvider);
+                        var appContactDataModel =
+                            ref.watch(contactDataProvider).getContactDataList;
+                        var appContactUsDataModel =
+                            ref.watch(contactUsProvider);
 
-                          return Container(
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.fromARGB(255, 47, 47, 47)
-                                          .withOpacity(0.5),
-                                      spreadRadius: 4,
-                                      blurRadius: 10,
-                                      offset: const Offset(
-                                          0, 1), // changes position of shadow
-                                    ),
-                                  ],
-                                  color: AppColors.white,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(35.w),
-                                    topRight: Radius.circular(35.w),
-                                  )),
-                              height: 760.h,
-                              width: double.infinity,
-                              alignment: Alignment.bottomCenter,
-                              child: Padding(
-                                padding: EdgeInsets.all(20.w),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      child: Center(
-                                          child: Image.asset(
-                                        'assets/images/logol.png',
-                                        width: 200.w,
-                                        height: 100.h,
-                                      )),
-                                    ),
-                                    Container(
-                                      width: double.infinity,
-                                      height: 600.h,
-                                      child: Column(
-                                        children: [
-                                          profCard(
-                                              'العنوان',
-                                              appContactDataModel
-                                                      ?.info?.first.address ??
-                                                  '',
-                                              () {}),
-                                          profCard(
-                                              'البريد الالكتروني',
-                                              appContactDataModel
-                                                      ?.info?.first.email ??
-                                                  '', () {
-                                            _launchURL(appContactDataModel
-                                                ?.info?.first.email);
-                                          }),
-                                          profCard(
-                                              'رقم الهاتف',
-                                              appContactDataModel
-                                                      ?.info?.first.mobile ??
-                                                  '', () {
-                                            _launchURL(appContactDataModel
-                                                ?.info?.first.mobile);
-                                          }),
-                                          profCard(
-                                              'فسبوك',
-                                              appContactDataModel
-                                                      ?.info?.first.facebook ??
-                                                  '', () {
-                                            _launchURL(appContactDataModel
-                                                ?.info?.first.facebook);
-                                          }),
-                                          profCard(
-                                              'instagram',
-                                              appContactDataModel
-                                                      ?.info?.first.instagram ??
-                                                  '', () {
-                                            _launchURL(appContactDataModel
-                                                ?.info?.first.instagram);
-                                          }),
-                                          profCard(
-                                              'تويتر',
-                                              appContactDataModel
-                                                      ?.info?.first.twitter ??
-                                                  '', () {
-                                            _launchURL(appContactDataModel
-                                                ?.info?.first.twitter);
-                                          }),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
+                        return Container(
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromARGB(255, 47, 47, 47)
+                                        .withOpacity(0.5),
+                                    spreadRadius: 4,
+                                    blurRadius: 10,
+                                    offset: const Offset(
+                                        0, 1), // changes position of shadow
+                                  ),
+                                ],
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(35.w),
+                                  topRight: Radius.circular(35.w),
+                                )),
+                            height: 760.h,
+                            width: double.infinity,
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: EdgeInsets.all(20.w),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    child: Center(
+                                        child: Image.asset(
+                                      'assets/images/logol.png',
+                                      width: 200.w,
+                                      height: 100.h,
+                                    )),
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 600.h,
+                                    child: Column(
+                                      children: [
+                                        profCard(
+                                            'العنوان',
+                                            appContactDataModel
+                                                    ?.info?.first.address ??
+                                                '',
+                                            () {}),
+                                        profCard(
+                                            'البريد الالكتروني',
+                                            appContactDataModel
+                                                    ?.info?.first.email ??
+                                                '', () {
+                                          _launchURL(appContactDataModel
+                                              ?.info?.first.email);
+                                        }),
+                                        profCard(
+                                            'رقم الهاتف',
+                                            appContactDataModel
+                                                    ?.info?.first.mobile ??
+                                                '', () {
+                                          _launchURL(appContactDataModel
+                                              ?.info?.first.mobile);
+                                        }),
+                                        profCard(
+                                            'فسبوك',
+                                            appContactDataModel
+                                                    ?.info?.first.facebook ??
+                                                '', () {
+                                          _launchURL(appContactDataModel
+                                              ?.info?.first.facebook);
+                                        }),
+                                        profCard(
+                                            'instagram',
+                                            appContactDataModel
+                                                    ?.info?.first.instagram ??
+                                                '', () {
+                                          _launchURL(appContactDataModel
+                                              ?.info?.first.instagram);
+                                        }),
+                                        profCard(
+                                            'تويتر',
+                                            appContactDataModel
+                                                    ?.info?.first.twitter ??
+                                                '', () {
+                                          _launchURL(appContactDataModel
+                                              ?.info?.first.twitter);
+                                        }),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors.orange
+                                                    .withOpacity(0.3),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        20.w)),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8.w,
+                                                vertical: 20.h),
                                             child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: AppColors.orange
-                                                      .withOpacity(0.3),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.w)),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 8.w,
-                                                  vertical: 20.h),
-                                              child: Container(
-                                                height: 130.h,
-                                                child: Column(
-                                                  children: [
-                                                    const CustomText(
-                                                      ' يمكنك التواصل معنا عبر اي وسيلة تواصل لتفعيل حسابك او اجراء تعديلات على الحساب \n شكرا لتعاملك معنا فريق سيارتي',
-                                                      color: AppColors
-                                                          .lightPrimaryColor,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      fontFamily:
-                                                          'DINNEXTLTARABIC',
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10.h,
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        showBottomSheet(
-                                                            context,
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .all(
-                                                                      20.0),
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .end,
-                                                                children: [
-                                                                  CustomText(
-                                                                    'ادخل بيانات المراسلة',
-                                                                    color: AppColors
-                                                                        .lightPrimaryColor,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .left,
-                                                                    fontFamily:
-                                                                        'DINNEXTLTARABIC',
-                                                                    fontSize:
-                                                                        18.sp,
-                                                                  ),
-                                                                  RoundedInputField(
-                                                                    hintText:
-                                                                        'البريد الالكتروني',
-                                                                    onChanged:
-                                                                        (value) {},
-                                                                    hintColor:
-                                                                        AppColors
-                                                                            .hint,
-                                                                    color: AppColors
-                                                                        .lightgrey,
-                                                                    circuler:
-                                                                        10.w,
-                                                                    height:
-                                                                        48.h,
-                                                                    icon:
-                                                                        const Icon(
-                                                                      Icons
-                                                                          .email,
-                                                                      color: AppColors
+                                              height: 130.h,
+                                              child: Column(
+                                                children: [
+                                                  const CustomText(
+                                                    ' يمكنك التواصل معنا عبر اي وسيلة تواصل لتفعيل حسابك او اجراء تعديلات على الحساب \n شكرا لتعاملك معنا فريق سيارتي',
+                                                    color: AppColors
+                                                        .lightPrimaryColor,
+                                                    textAlign: TextAlign.center,
+                                                    fontFamily:
+                                                        'DINNEXTLTARABIC',
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10.h,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      showBottomSheet(
+                                                          context,
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(20.0),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                CustomText(
+                                                                  'ادخل بيانات المراسلة',
+                                                                  color: AppColors
+                                                                      .lightPrimaryColor,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  fontFamily:
+                                                                      'DINNEXTLTARABIC',
+                                                                  fontSize:
+                                                                      18.sp,
+                                                                ),
+                                                                RoundedInputField(
+                                                                  hintText:
+                                                                      'البريد الالكتروني',
+                                                                  onChanged:
+                                                                      (value) {},
+                                                                  hintColor:
+                                                                      AppColors
                                                                           .hint,
-                                                                    ),
-                                                                    seen: false,
-                                                                    controller:
-                                                                        _emailController,
-                                                                  ),
-                                                                  RoundedInputField(
-                                                                    hintText:
-                                                                        'الاسم',
-                                                                    onChanged:
-                                                                        (value) {},
-                                                                    hintColor:
+                                                                  color: AppColors
+                                                                      .lightgrey,
+                                                                  circuler:
+                                                                      10.w,
+                                                                  height: 48.h,
+                                                                  icon:
+                                                                      const Icon(
+                                                                    Icons.email,
+                                                                    color:
                                                                         AppColors
                                                                             .hint,
-                                                                    color: AppColors
-                                                                        .lightgrey,
-                                                                    circuler:
-                                                                        10.w,
-                                                                    height:
-                                                                        48.h,
-                                                                    icon:
-                                                                        const Icon(
-                                                                      Icons
-                                                                          .email,
-                                                                      color: AppColors
+                                                                  ),
+                                                                  seen: false,
+                                                                  controller:
+                                                                      _emailController,
+                                                                ),
+                                                                RoundedInputField(
+                                                                  hintText:
+                                                                      'الاسم',
+                                                                  onChanged:
+                                                                      (value) {},
+                                                                  hintColor:
+                                                                      AppColors
                                                                           .hint,
-                                                                    ),
-                                                                    seen: false,
-                                                                    controller:
-                                                                        _nameController,
-                                                                  ),
-                                                                  RoundedInputField(
-                                                                    hintText:
-                                                                        'العنوان',
-                                                                    onChanged:
-                                                                        (value) {},
-                                                                    hintColor:
+                                                                  color: AppColors
+                                                                      .lightgrey,
+                                                                  circuler:
+                                                                      10.w,
+                                                                  height: 48.h,
+                                                                  icon:
+                                                                      const Icon(
+                                                                    Icons.email,
+                                                                    color:
                                                                         AppColors
                                                                             .hint,
-                                                                    color: AppColors
-                                                                        .lightgrey,
-                                                                    circuler:
-                                                                        10.w,
-                                                                    height:
-                                                                        48.h,
-                                                                    icon:
-                                                                        const Icon(
-                                                                      Icons
-                                                                          .email,
-                                                                      color: AppColors
+                                                                  ),
+                                                                  seen: false,
+                                                                  controller:
+                                                                      _nameController,
+                                                                ),
+                                                                RoundedInputField(
+                                                                  hintText:
+                                                                      'العنوان',
+                                                                  onChanged:
+                                                                      (value) {},
+                                                                  hintColor:
+                                                                      AppColors
                                                                           .hint,
-                                                                    ),
-                                                                    seen: false,
-                                                                    controller:
-                                                                        _addriesController,
-                                                                  ),
-                                                                  RoundedInputField(
-                                                                    linght: 5,
-                                                                    hintText:
-                                                                        'نص الرسالة',
-                                                                    onChanged:
-                                                                        (value) {},
-                                                                    hintColor:
+                                                                  color: AppColors
+                                                                      .lightgrey,
+                                                                  circuler:
+                                                                      10.w,
+                                                                  height: 48.h,
+                                                                  icon:
+                                                                      const Icon(
+                                                                    Icons.email,
+                                                                    color:
                                                                         AppColors
                                                                             .hint,
-                                                                    color: AppColors
-                                                                        .lightgrey,
-                                                                    circuler:
-                                                                        10.w,
-                                                                    height:
-                                                                        48.h,
-                                                                    seen: false,
-                                                                    controller:
-                                                                        _textEditingController,
                                                                   ),
-                                                                  SizedBox(
-                                                                    height:
-                                                                        10.h,
-                                                                  ),
-                                                                  ButtonWidget(
-                                                                    backgroundColor:
-                                                                        AppColors
-                                                                            .scadryColor,
-                                                                    onPressed:
-                                                                        () async {
-                                                                      await appContactUsDataModel.postCountact(
-                                                                          email: _emailController
-                                                                              .text,
-                                                                          name: _nameController
-                                                                              .text,
-                                                                          address: _addriesController
-                                                                              .text,
-                                                                          text:
-                                                                              _textEditingController.text);
-                                                                      UIHelper.showNotification(
-                                                                          'تم ارسال الرسالة',
-                                                                          backgroundColor:
-                                                                              Colors.green);
+                                                                  seen: false,
+                                                                  controller:
+                                                                      _addriesController,
+                                                                ),
+                                                                RoundedInputField(
+                                                                  linght: 5,
+                                                                  hintText:
+                                                                      'نص الرسالة',
+                                                                  onChanged:
+                                                                      (value) {},
+                                                                  hintColor:
+                                                                      AppColors
+                                                                          .hint,
+                                                                  color: AppColors
+                                                                      .lightgrey,
+                                                                  circuler:
+                                                                      10.w,
+                                                                  height: 48.h,
+                                                                  seen: false,
+                                                                  controller:
+                                                                      _textEditingController,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 10.h,
+                                                                ),
+                                                                ButtonWidget(
+                                                                  backgroundColor:
+                                                                      AppColors
+                                                                          .scadryColor,
+                                                                  onPressed:
+                                                                      () async {
+                                                                    await appContactUsDataModel.postCountact(
+                                                                        email: _emailController
+                                                                            .text,
+                                                                        name: _nameController
+                                                                            .text,
+                                                                        address:
+                                                                            _addriesController
+                                                                                .text,
+                                                                        text: _textEditingController
+                                                                            .text);
+                                                                    UIHelper.showNotification(
+                                                                        'تم ارسال الرسالة',
+                                                                        backgroundColor:
+                                                                            Colors.green);
 
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
-                                                                    },
-                                                                    title:
-                                                                        'ارسال',
-                                                                    textColor:
-                                                                        AppColors
-                                                                            .white,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ));
-                                                      },
-                                                      child: Container(
-                                                        width: 280.w,
-                                                        height: 40.h,
-                                                        decoration: BoxDecoration(
-                                                            color: AppColors
-                                                                .scadryColor
-                                                                .withOpacity(
-                                                                    0.8),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10.w)),
-                                                        child: const Center(
-                                                          child: CustomText(
-                                                            'تواصل معنا',
-                                                            color:
-                                                                AppColors.white,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            fontFamily:
-                                                                'DINNEXTLTARABIC',
-                                                          ),
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                  title:
+                                                                      'ارسال',
+                                                                  textColor:
+                                                                      AppColors
+                                                                          .white,
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ));
+                                                    },
+                                                    child: Container(
+                                                      width: 280.w,
+                                                      height: 40.h,
+                                                      decoration: BoxDecoration(
+                                                          color: AppColors
+                                                              .scadryColor
+                                                              .withOpacity(0.8),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.w)),
+                                                      child: const Center(
+                                                        child: CustomText(
+                                                          'تواصل معنا',
+                                                          color:
+                                                              AppColors.white,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          fontFamily:
+                                                              'DINNEXTLTARABIC',
                                                         ),
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ));
-                        }
-                        return Container();
-                      },
-                    ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ));
+                      }
+                      return Container();
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-      )),
-    );
+      ),
+    ));
   }
 
   GestureDetector profCard(title, data, onPress) {

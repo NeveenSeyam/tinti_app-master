@@ -45,48 +45,44 @@ class _RoundedInputFieldState extends State<RoundedInputField> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: TextFieldContainer(
-        height: widget.height ?? 100.h,
-        width: widget.width ?? 370.w,
-        color: widget.color,
-        borderColor: widget.borderColor,
-        circuler: 10.w,
-        child: TextFormField(
-          obscureText: _isObscure,
-          controller: widget.controller,
-          maxLines: widget.linght ?? 1,
-          validator: widget.validator ??
-              (value) {
-                return null;
-              },
-          cursorColor: AppColors.primaryColor,
-          textAlign: TextAlign.start,
-          decoration: InputDecoration(
-            suffixIcon: widget.seen == true
-                ? IconButton(
-                    icon: Icon(
-                      _isObscure ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.hint,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isObscure = !_isObscure;
-                      });
-                    })
-                : null,
-            icon: widget.icon ?? null,
-            hintText: widget.hintText,
-            // alignLabelWithHint: true,
-            hintStyle: TextStyle(
-              fontFamily: 'DINNEXTLTARABIC',
-              color:
-                  widget.hintColor ?? AppColors.primaryColor.withOpacity(0.6),
-              fontSize: 14.sp,
-            ),
-            border: InputBorder.none,
+    return TextFieldContainer(
+      height: widget.height ?? 100.h,
+      width: widget.width ?? 370.w,
+      color: widget.color,
+      borderColor: widget.borderColor,
+      circuler: 10.w,
+      child: TextFormField(
+        obscureText: _isObscure,
+        controller: widget.controller,
+        maxLines: widget.linght ?? 1,
+        validator: widget.validator ??
+            (value) {
+              return null;
+            },
+        cursorColor: AppColors.primaryColor,
+        textAlign: TextAlign.start,
+        decoration: InputDecoration(
+          suffixIcon: widget.seen == true
+              ? IconButton(
+                  icon: Icon(
+                    _isObscure ? Icons.visibility_off : Icons.visibility,
+                    color: AppColors.hint,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  })
+              : null,
+          icon: widget.icon ?? null,
+          hintText: widget.hintText,
+          // alignLabelWithHint: true,
+          hintStyle: TextStyle(
+            fontFamily: 'DINNEXTLTARABIC',
+            color: widget.hintColor ?? AppColors.primaryColor.withOpacity(0.6),
+            fontSize: 14.sp,
           ),
+          border: InputBorder.none,
         ),
       ),
     );

@@ -63,230 +63,218 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: Colors.grey[100],
-        appBar: CustomAppBar(
-          isProfile: false,
-          "الخدمات",
-          isNotification: false,
-          isHome: true,
-        ),
-        body: RefreshIndicator(
-          onRefresh: () {
-            setState(() {
-              _fetchedProductRequest = _getProductsData();
-            });
-            return _fetchedProductRequest;
-          },
-          child: ListView(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
-                child: RoundedInputField(
-                  hintText: 'بحث',
-                  hintColor: AppColors.scadryColor,
-                  seen: false,
-                  onChanged: (val) {},
-                  icon: const Icon(
-                    Icons.search,
-                    color: AppColors.scadryColor,
-                  ),
+    return Scaffold(
+      backgroundColor: Colors.grey[100],
+      appBar: CustomAppBar(
+        isProfile: false,
+        "الخدمات",
+        isNotification: false,
+        isHome: true,
+      ),
+      body: RefreshIndicator(
+        onRefresh: () {
+          setState(() {
+            _fetchedProductRequest = _getProductsData();
+          });
+          return _fetchedProductRequest;
+        },
+        child: ListView(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
+              child: RoundedInputField(
+                hintText: 'بحث',
+                hintColor: AppColors.scadryColor,
+                seen: false,
+                onChanged: (val) {},
+                icon: const Icon(
+                  Icons.search,
+                  color: AppColors.scadryColor,
                 ),
               ),
-              Consumer(
-                builder: (context, ref, child) => FutureBuilder(
-                  future: _fetchedMyRequest,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return SizedBox(
-                        height: 70.h,
-                        child: const Center(
-                          child: LoaderWidget(),
-                        ),
-                      );
-                    }
-                    if (snapshot.hasError) {
+            ),
+            Consumer(
+              builder: (context, ref, child) => FutureBuilder(
+                future: _fetchedMyRequest,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return SizedBox(
+                      height: 70.h,
+                      child: const Center(
+                        child: LoaderWidget(),
+                      ),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    if (snapshot.data is Failure) {
                       return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
+                          child: TextWidget(snapshot.data.toString()));
                     }
-                    if (snapshot.hasData) {
-                      if (snapshot.data is Failure) {
-                        return Center(
-                            child: TextWidget(snapshot.data.toString()));
-                      }
-                      //
-                      //  print("snapshot data is ${snapshot.data}");
+                    //
+                    //  print("snapshot data is ${snapshot.data}");
 
-                      var serviecesModel =
-                          ref.watch(servicesProvider).getDataList;
+                    var serviecesModel =
+                        ref.watch(servicesProvider).getDataList;
 
-                      return Column(
-                        children: [
-                          Center(
-                            child: SizedBox(
-                              width: 370.w,
-                              height: 48.h,
-                              child: Center(
-                                child: ListView.builder(
-                                    physics: const ClampingScrollPhysics(),
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: serviecesModel?.services?.length,
-                                    itemBuilder: (BuildContext context,
-                                            int index) =>
-                                        textButtonModel(
-                                            serviecesModel
-                                                ?.services?[index].name,
-                                            serviecesModel?.services?[index].id,
-                                            serviecesModel
-                                                ?.services?[index].id)),
-                              ),
+                    return Column(
+                      children: [
+                        Center(
+                          child: SizedBox(
+                            width: 370.w,
+                            height: 48.h,
+                            child: Center(
+                              child: ListView.builder(
+                                  physics: const ClampingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: serviecesModel?.services?.length,
+                                  itemBuilder: (BuildContext context,
+                                          int index) =>
+                                      textButtonModel(
+                                          serviecesModel?.services?[index].name,
+                                          serviecesModel?.services?[index].id,
+                                          serviecesModel?.services?[index].id)),
                             ),
                           ),
-                          Consumer(
-                            builder: (context, ref, child) => FutureBuilder(
-                              future: _fetchedProductRequest,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return SizedBox(
-                                    height: 70.h,
-                                    child: const Center(
-                                      child: LoaderWidget(),
-                                    ),
-                                  );
-                                }
-                                if (snapshot.hasError) {
+                        ),
+                        Consumer(
+                          builder: (context, ref, child) => FutureBuilder(
+                            future: _fetchedProductRequest,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return SizedBox(
+                                  height: 70.h,
+                                  child: const Center(
+                                    child: LoaderWidget(),
+                                  ),
+                                );
+                              }
+                              if (snapshot.hasError) {
+                                return Center(
+                                  child: Text('Error: ${snapshot.error}'),
+                                );
+                              }
+                              if (snapshot.hasData) {
+                                if (snapshot.data is Failure) {
                                   return Center(
-                                    child: Text('Error: ${snapshot.error}'),
-                                  );
+                                      child:
+                                          TextWidget(snapshot.data.toString()));
                                 }
-                                if (snapshot.hasData) {
-                                  if (snapshot.data is Failure) {
-                                    return Center(
-                                        child: TextWidget(
-                                            snapshot.data.toString()));
-                                  }
-                                  //
-                                  //  print("snapshot data is ${snapshot.data}");
+                                //
+                                //  print("snapshot data is ${snapshot.data}");
 
-                                  var productByServiceModel = ref
-                                          .watch(productsProvider)
-                                          .getProductsSirvesDataList ??
-                                      ServiceProductModel();
-                                  return Padding(
-                                    padding: EdgeInsetsDirectional.only(
-                                        start: 15.w,
-                                        end: 15.w,
-                                        top: 5.h,
-                                        bottom: 20.h),
-                                    child: SizedBox(
-                                      height: 620.h,
-                                      child: GridView.builder(
-                                          // physics: BouncingScrollPhysics(),
-                                          shrinkWrap: true,
-                                          gridDelegate:
-                                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                                                  maxCrossAxisExtent: 300,
-                                                  childAspectRatio: 2 / 2.3,
-                                                  crossAxisSpacing: 10,
-                                                  mainAxisSpacing: 10),
-                                          itemCount: productByServiceModel
-                                                  .success?.items?.length ??
-                                              0,
-                                          itemBuilder:
-                                              (BuildContext ctx, index) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ServiceDetailsScreen(
-                                                            id: productByServiceModel
-                                                                    .success
-                                                                    ?.items?[
-                                                                        index]
-                                                                    .id ??
-                                                                0,
-                                                            row_id:
-                                                                productByServiceModel
-                                                                        .success
-                                                                        ?.items?[
-                                                                            index]
-                                                                        .id ??
-                                                                    0,
-                                                            isFavorite:
-                                                                productByServiceModel
-                                                                        .success
-                                                                        ?.items?[
-                                                                            index]
-                                                                        .is_favorite ??
-                                                                    0,
-                                                          )),
-                                                );
-                                                print(
-                                                    ' sssssssss ${productByServiceModel.success?.items?.length}');
-                                              },
-                                              child: ServicesCard(
-                                                  // productByServiceModel.Products.length ??
-                                                  productByServiceModel
-                                                          .success
-                                                          ?.items?[index]
-                                                          .image ??
-                                                      'assets/images/sa1.jpeg',
-                                                  productByServiceModel
-                                                          .success
-                                                          ?.items?[index]
-                                                          .name ??
-                                                      ' تظليل',
-                                                  productByServiceModel
-                                                          .success
-                                                          ?.items?[index]
-                                                          .description ??
-                                                      'شركة جونسون اد جونسون.',
-                                                  productByServiceModel
-                                                          .success
-                                                          ?.items?[index]
-                                                          .price ??
-                                                      '355',
-                                                  '',
-                                                  '',
-                                                  productByServiceModel
-                                                          .success
-                                                          ?.items?[index]
-                                                          .is_favorite ??
-                                                      0,
-                                                  productByServiceModel.success
-                                                          ?.items?[index].id ??
-                                                      0),
-                                            );
-                                          }),
-                                    ),
-                                  );
-                                }
-                                return Container();
-                              },
-                            ),
+                                var productByServiceModel = ref
+                                        .watch(productsProvider)
+                                        .getProductsSirvesDataList ??
+                                    ServiceProductModel();
+                                return Padding(
+                                  padding: EdgeInsetsDirectional.only(
+                                      start: 15.w,
+                                      end: 15.w,
+                                      top: 5.h,
+                                      bottom: 20.h),
+                                  child: SizedBox(
+                                    height: 620.h,
+                                    child: GridView.builder(
+                                        // physics: BouncingScrollPhysics(),
+                                        shrinkWrap: true,
+                                        gridDelegate:
+                                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                                maxCrossAxisExtent: 300,
+                                                childAspectRatio: 2 / 2.3,
+                                                crossAxisSpacing: 10,
+                                                mainAxisSpacing: 10),
+                                        itemCount: productByServiceModel
+                                                .success?.items?.length ??
+                                            0,
+                                        itemBuilder: (BuildContext ctx, index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ServiceDetailsScreen(
+                                                          id: productByServiceModel
+                                                                  .success
+                                                                  ?.items?[
+                                                                      index]
+                                                                  .id ??
+                                                              0,
+                                                          row_id:
+                                                              productByServiceModel
+                                                                      .success
+                                                                      ?.items?[
+                                                                          index]
+                                                                      .id ??
+                                                                  0,
+                                                          isFavorite:
+                                                              productByServiceModel
+                                                                      .success
+                                                                      ?.items?[
+                                                                          index]
+                                                                      .is_favorite ??
+                                                                  0,
+                                                        )),
+                                              );
+                                              print(
+                                                  ' sssssssss ${productByServiceModel.success?.items?.length}');
+                                            },
+                                            child: ServicesCard(
+                                                // productByServiceModel.Products.length ??
+                                                productByServiceModel.success
+                                                        ?.items?[index].image ??
+                                                    'assets/images/sa1.jpeg',
+                                                productByServiceModel.success
+                                                        ?.items?[index].name ??
+                                                    ' تظليل',
+                                                productByServiceModel
+                                                        .success
+                                                        ?.items?[index]
+                                                        .description ??
+                                                    'شركة جونسون اد جونسون.',
+                                                productByServiceModel.success
+                                                        ?.items?[index].price ??
+                                                    '355',
+                                                '',
+                                                '',
+                                                productByServiceModel
+                                                        .success
+                                                        ?.items?[index]
+                                                        .is_favorite ??
+                                                    0,
+                                                productByServiceModel.success
+                                                        ?.items?[index].id ??
+                                                    0),
+                                          );
+                                        }),
+                                  ),
+                                );
+                              }
+                              return Container();
+                            },
                           ),
-                          SizedBox(
-                            height: 20.h,
-                          )
-                        ],
-                      );
-                    }
-                    return Container();
-                  },
-                ),
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        )
+                      ],
+                    );
+                  }
+                  return Container();
+                },
               ),
-              SizedBox(
-                height: 20.h,
-              )
-            ],
-          ),
+            ),
+            SizedBox(
+              height: 20.h,
+            )
+          ],
         ),
       ),
     );

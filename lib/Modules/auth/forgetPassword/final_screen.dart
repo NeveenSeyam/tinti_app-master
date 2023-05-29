@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -29,104 +30,100 @@ class _FinalForgetScreenState extends State<FinalForgetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: SafeArea(
-          child: Scaffold(
-        backgroundColor: AppColors.scadryColor,
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(20.h),
-              child: Container(
-                alignment: Alignment.topCenter,
-                height: 80.h,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomText(
-                      ' نسيت كلمة السر ',
-                      textAlign: TextAlign.start,
-                      fontSize: 18.sp,
-                      fontFamily: 'DINNEXTLTARABIC',
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.white,
-                    ),
-                  ],
-                ),
+    return SafeArea(
+        child: Scaffold(
+      backgroundColor: AppColors.scadryColor,
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(20.h),
+            child: Container(
+              alignment: Alignment.topCenter,
+              height: 80.h,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomText(
+                    'forget-pass'.tr(),
+                    textAlign: TextAlign.start,
+                    fontSize: 18.sp,
+                    fontFamily: 'DINNEXTLTARABIC',
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.white,
+                  ),
+                ],
               ),
             ),
-            Expanded(
-              child: Container(
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color:
-                              Color.fromARGB(255, 47, 47, 47).withOpacity(0.5),
-                          spreadRadius: 4,
-                          blurRadius: 10,
-                          offset:
-                              const Offset(0, 1), // changes position of shadow
+          ),
+          Expanded(
+            child: Container(
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 47, 47, 47).withOpacity(0.5),
+                        spreadRadius: 4,
+                        blurRadius: 10,
+                        offset:
+                            const Offset(0, 1), // changes position of shadow
+                      ),
+                    ],
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(35.w),
+                      topRight: Radius.circular(35.w),
+                    )),
+                height: 700.h,
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.all(20.w),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(right: 10.w),
+                        alignment: Alignment.centerRight,
+                        child: CustomText(
+                          'change-pass-details'.tr(),
+                          textAlign: TextAlign.start,
+                          fontSize: 18.sp,
+                          fontFamily: 'DINNEXTLTARABIC',
+                          fontWeight: FontWeight.w400,
                         ),
-                      ],
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(35.w),
-                        topRight: Radius.circular(35.w),
-                      )),
-                  height: 700.h,
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.all(20.w),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.only(right: 10.w),
-                          alignment: Alignment.centerRight,
-                          child: CustomText(
-                            'تم تعيين كلمة المرور بنجاح',
-                            textAlign: TextAlign.start,
-                            fontSize: 18.sp,
-                            fontFamily: 'DINNEXTLTARABIC',
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        Image.asset(
-                          'assets/images/forget_pass/final_step.png',
-                          fit: BoxFit.fill,
-                          height: 35.h,
-                        ),
-                        SizedBox(
-                          height: 16.h,
-                        ),
-                        Image.asset(
-                          'assets/images/forget_pass/done.png',
-                          height: 350.h,
-                          fit: BoxFit.fill,
-                        ),
-                        SizedBox(
-                          height: 28.h,
-                        ),
-                        RaisedGradientButton(
-                          text: 'تسجيل دخول',
-                          color: AppColors.scadryColor,
-                          height: 48.h,
-                          width: 340.w,
-                          circular: 10.w,
-                          onPressed: () {
-                            Navigator.popAndPushNamed(context, '/login_screen');
-                          },
-                        ),
-                      ],
-                    ),
-                  )),
-            ),
-          ],
-        ),
-      )),
-    );
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Image.asset(
+                        'assets/images/forget_pass/final_step.png',
+                        fit: BoxFit.fill,
+                        height: 35.h,
+                      ),
+                      SizedBox(
+                        height: 16.h,
+                      ),
+                      Image.asset(
+                        'assets/images/forget_pass/done.png',
+                        height: 350.h,
+                        fit: BoxFit.fill,
+                      ),
+                      SizedBox(
+                        height: 28.h,
+                      ),
+                      RaisedGradientButton(
+                        text: 'login'.tr(),
+                        color: AppColors.scadryColor,
+                        height: 48.h,
+                        width: 340.w,
+                        circular: 10.w,
+                        onPressed: () {
+                          Navigator.popAndPushNamed(context, '/login_screen');
+                        },
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+        ],
+      ),
+    ));
   }
 }

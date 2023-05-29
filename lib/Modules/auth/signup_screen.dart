@@ -316,347 +316,358 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: SafeArea(
-          child: Scaffold(
-        backgroundColor: AppColors.scadryColor,
-        body: ListView(
-          shrinkWrap: true,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(20.h),
-              child: Container(
-                alignment: Alignment.topCenter,
-                child: Image.asset(
-                  'assets/images/sayartearabic.png',
-                  height: 100.h,
-                  width: 300.w,
-                ),
+    return SafeArea(
+        child: Scaffold(
+      backgroundColor: AppColors.scadryColor,
+      body: ListView(
+        shrinkWrap: true,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(20.h),
+            child: Container(
+              alignment: Alignment.topCenter,
+              child: Image.asset(
+                'assets/images/sayartearabic.png',
+                height: 100.h,
+                width: 300.w,
               ),
-            ), // const Spacer(),
-            Container(
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(255, 47, 47, 47).withOpacity(0.5),
-                      spreadRadius: 4,
-                      blurRadius: 10,
-                      offset: const Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(35.w),
-                    topRight: Radius.circular(35.w),
-                  )),
-              height: 700.h,
-              alignment: Alignment.bottomCenter,
-              child: Form(
-                key: _Key,
-                child: Padding(
-                  padding: EdgeInsets.all(20.w),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ListView(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.only(right: 10.w),
-                          alignment: Alignment.centerRight,
-                          child: CustomText(
-                            'تسجيل جديد',
-                            textAlign: TextAlign.start,
-                            fontSize: 18.sp,
-                            fontFamily: 'DINNEXTLTARABIC',
-                            fontWeight: FontWeight.w400,
-                          ),
+            ),
+          ), // const Spacer(),
+          Container(
+            decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 47, 47, 47).withOpacity(0.5),
+                    spreadRadius: 4,
+                    blurRadius: 10,
+                    offset: const Offset(0, 1), // changes position of shadow
+                  ),
+                ],
+                color: AppColors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(35.w),
+                  topRight: Radius.circular(35.w),
+                )),
+            height: 700.h,
+            alignment: Alignment.bottomCenter,
+            child: Form(
+              key: _Key,
+              child: Padding(
+                padding: EdgeInsets.all(20.w),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ListView(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(right: 10.w),
+                        alignment: Alignment.centerRight,
+                        child: CustomText(
+                          'تسجيل جديد',
+                          textAlign: TextAlign.start,
+                          fontSize: 18.sp,
+                          fontFamily: 'DINNEXTLTARABIC',
+                          fontWeight: FontWeight.w400,
                         ),
-                        SizedBox(
-                          height: 20.h,
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      RoundedInputField(
+                        hintText: 'الاسم الأول',
+                        onChanged: (value) {},
+                        hintColor: AppColors.hint,
+                        color: AppColors.lightgrey,
+                        circuler: 10.w,
+                        height: 48.h,
+                        icon: const Icon(
+                          Icons.person,
+                          color: AppColors.hint,
                         ),
-                        RoundedInputField(
-                          hintText: 'الاسم الأول',
-                          onChanged: (value) {},
-                          hintColor: AppColors.hint,
-                          color: AppColors.lightgrey,
-                          circuler: 10.w,
-                          height: 48.h,
-                          icon: const Icon(
-                            Icons.person,
-                            color: AppColors.hint,
-                          ),
-                          validator: validateFirstName,
-                          seen: false,
-                          controller: _fNameController,
+                        validator: validateFirstName,
+                        seen: false,
+                        controller: _fNameController,
+                      ),
+                      RoundedInputField(
+                        hintText: 'الاسم الأخير',
+                        onChanged: (value) {},
+                        hintColor: AppColors.hint,
+                        color: AppColors.lightgrey,
+                        circuler: 10.w,
+                        height: 48.h,
+                        icon: Icon(
+                          Icons.person,
+                          color: AppColors.hint,
+                          size: 17.w,
                         ),
-                        RoundedInputField(
-                          hintText: 'الاسم الأخير',
-                          onChanged: (value) {},
-                          hintColor: AppColors.hint,
-                          color: AppColors.lightgrey,
-                          circuler: 10.w,
-                          height: 48.h,
-                          icon: Icon(
-                            Icons.person,
-                            color: AppColors.hint,
-                            size: 17.w,
-                          ),
-                          validator: validateLastName,
-                          seen: false,
-                          controller: _lNameController,
+                        validator: validateLastName,
+                        seen: false,
+                        controller: _lNameController,
+                      ),
+                      RoundedInputField(
+                        hintText: 'البريد الالكتروني',
+                        onChanged: (value) {},
+                        hintColor: AppColors.hint,
+                        color: AppColors.lightgrey,
+                        circuler: 10.w,
+                        height: 48.h,
+                        icon: Icon(
+                          Icons.email,
+                          color: AppColors.hint,
+                          size: 17.w,
                         ),
-                        RoundedInputField(
-                          hintText: 'البريد الالكتروني',
-                          onChanged: (value) {},
-                          hintColor: AppColors.hint,
-                          color: AppColors.lightgrey,
-                          circuler: 10.w,
-                          height: 48.h,
-                          icon: Icon(
-                            Icons.email,
-                            color: AppColors.hint,
-                            size: 17.w,
-                          ),
-                          validator: validateEmail,
-                          seen: false,
-                          controller: _emailController,
-                        ),
-                        Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: Container(
-                            width: 350.w,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w, vertical: 3.h),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.w),
-                                color: AppColors.grey.withOpacity(0.3)),
-                            child: SizedBox(
-                              width: 200.w,
-                              child: InternationalPhoneNumberInput(
-                                // textAlign: TextAlign.end,
-                                textFieldController: _mobileController,
-                                // ignoreBlank: true,
-                                inputDecoration: InputDecoration(
-                                  hintText: 'رقم الهاتف',
-                                  border: InputBorder.none,
-                                ),
-                                onInputChanged: (PhoneNumber number) {
-                                  print(number.phoneNumber);
-                                  mob = number.phoneNumber.toString();
-                                  print('mob  ${mob}');
-                                },
-                                onInputValidated: (bool value) {},
-                                errorMessage: 'رقم هاتف خاطئ',
-                                selectorConfig: SelectorConfig(
-                                  selectorType: PhoneInputSelectorType.DIALOG,
-                                ),
-                              ),
+                        validator: validateEmail,
+                        seen: false,
+                        controller: _emailController,
+                      ),
+                      Container(
+                        width: 350.w,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.w, vertical: 3.h),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.w),
+                            color: AppColors.grey.withOpacity(0.3)),
+                        child: SizedBox(
+                          width: 200.w,
+                          child: InternationalPhoneNumberInput(
+                            // textAlign: TextAlign.end,
+                            textFieldController: _mobileController,
+                            // ignoreBlank: true,
+                            inputDecoration: InputDecoration(
+                              hintText: 'رقم الهاتف',
+                              border: InputBorder.none,
+                            ),
+                            onInputChanged: (PhoneNumber number) {
+                              print(number.phoneNumber);
+                              mob = number.phoneNumber.toString();
+                              print('mob  ${mob}');
+                            },
+                            onInputValidated: (bool value) {}, maxLength: 9,
+                            errorMessage: 'رقم هاتف خاطئ',
+                            selectorConfig: SelectorConfig(
+                              selectorType: PhoneInputSelectorType.DIALOG,
                             ),
                           ),
                         ),
-                        RoundedInputField(
-                          hintText: 'كلمة المرور',
-                          onChanged: (value) {},
-                          isObscured: false,
-                          hintColor: AppColors.hint,
-                          color: AppColors.lightgrey,
-                          circuler: 10.w,
-                          height: 48.h,
-                          icon: Icon(
-                            Icons.key,
-                            color: AppColors.hint,
-                            size: 17.w,
-                          ),
-                          seen: true,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Please enter password";
+                      ),
+                      RoundedInputField(
+                        hintText: 'كلمة المرور',
+                        onChanged: (value) {},
+                        isObscured: false,
+                        hintColor: AppColors.hint,
+                        color: AppColors.lightgrey,
+                        circuler: 10.w,
+                        height: 48.h,
+                        icon: Icon(
+                          Icons.key,
+                          color: AppColors.hint,
+                          size: 17.w,
+                        ),
+                        seen: true,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter password";
+                          } else {
+                            //call function to check password
+                            bool result = validatePassword(value);
+                            if (result) {
+                              // create account event
+                              return null;
                             } else {
-                              //call function to check password
-                              bool result = validatePassword(value);
-                              if (result) {
-                                // create account event
-                                return null;
-                              } else {
-                                return " يجب ان تحتوي كلمة المرور على حروف كبيرة وحروف صغيرة وعلامات مميزة وارقام";
-                              }
+                              return " يجب ان تحتوي كلمة المرور على حروف كبيرة وحروف صغيرة وعلامات مميزة وارقام";
                             }
-                          },
-                          controller: _passwordController,
+                          }
+                        },
+                        controller: _passwordController,
+                      ),
+                      RoundedInputField(
+                        hintText: 'تأكيد كلمة المرور',
+                        onChanged: (value) {},
+                        isObscured: true,
+                        hintColor: AppColors.hint,
+                        color: AppColors.lightgrey,
+                        circuler: 10.w,
+                        height: 48.h,
+                        icon: Icon(
+                          Icons.key,
+                          color: AppColors.hint,
+                          size: 17.w,
                         ),
-                        RoundedInputField(
-                          hintText: 'تأكيد كلمة المرور',
-                          onChanged: (value) {},
-                          isObscured: true,
-                          hintColor: AppColors.hint,
-                          color: AppColors.lightgrey,
-                          circuler: 10.w,
-                          height: 48.h,
-                          icon: Icon(
-                            Icons.key,
-                            color: AppColors.hint,
-                            size: 17.w,
-                          ),
-                          seen: true,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Please enter password";
+                        seen: true,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter password";
+                          } else {
+                            //call function to check password
+                            bool result = validateConfirmPassword(value);
+                            if (result) {
+                              // create account event
+                              return null;
                             } else {
-                              //call function to check password
-                              bool result = validateConfirmPassword(value);
-                              if (result) {
-                                // create account event
-                                return null;
-                              } else {
-                                return "كلمة المرور غير متطابقة ";
-                              }
+                              return "كلمة المرور غير متطابقة ";
                             }
-                          },
-                          controller: _cpasswordController,
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        Consumer(
-                          builder: (context, ref, _) {
-                            var userModel = ref.read(accountProvider);
-                            return RaisedGradientButton(
-                              text: 'تسجيل ',
-                              color: AppColors.scadryColor,
-                              width: 340.w,
-                              height: 48.h,
-                              circular: 10.w,
-                              onPressed: () async {
-                                // _loginFun(context, ref);
+                          }
+                        },
+                        controller: _cpasswordController,
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Consumer(
+                        builder: (context, ref, _) {
+                          var userModel = ref.read(accountProvider);
+                          return RaisedGradientButton(
+                            text: 'تسجيل ',
+                            color: AppColors.scadryColor,
+                            width: 340.w,
+                            height: 48.h,
+                            circular: 10.w,
+                            onPressed: () async {
+                              // _loginFun(context, ref);
 
-                                if (_Key.currentState!.validate()) {
-                                  _Key.currentState!.save();
-                                  loadingDialog(context);
-                                  //await AuthProvider.loginOut();
-                                  // get fcm tokenhld,gdjv
-                                  //print("token $token");
-                                  var AuthProvider = ref.read(accountProvider);
-                                  final response =
-                                      await AuthProvider.postRegisterUser(
-                                    fName: _fNameController.text,
-                                    confirmPassword: _cpasswordController.text,
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                    phoneNumber: mob,
-                                    lName: _lNameController.text,
-                                  ).onError((error, stackTrace) {
+                              if (_Key.currentState!.validate()) {
+                                _Key.currentState!.save();
+                                loadingDialog(context);
+                                //await AuthProvider.loginOut();
+                                // get fcm tokenhld,gdjv
+                                //print("token $token");
+                                var AuthProvider = ref.read(accountProvider);
+                                final response =
+                                    await AuthProvider.postRegisterUser(
+                                  fName: _fNameController.text,
+                                  confirmPassword: _cpasswordController.text,
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                  phoneNumber: mob,
+                                  lName: _lNameController.text,
+                                ).onError((error, stackTrace) {
+                                  Navigator.pop(context);
+                                }).then((value) async {
+                                  if (value is! Failure) {
+                                    if (value == null) {
+                                      UIHelper.showNotification(
+                                          "البريد الالكتروني او رقم الهاتف مستخدم ");
+                                      //    Navigator.pop(context);
+                                      return;
+                                    }
+                                    loginWithPhone();
+
+                                    Constants.token = value["data"]["token"];
+                                    SharedPreferences? _prefs =
+                                        await SharedPreferences.getInstance();
+                                    _prefs.setString(Keys.hasSaveUserData,
+                                        value["data"]["token"]);
+                                    await AuthProvider.getUserProfileRequset();
                                     Navigator.pop(context);
-                                  }).then((value) async {
-                                    if (value is! Failure) {
-                                      if (value == null) {
-                                        UIHelper.showNotification(
-                                            "البريد الالكتروني او رقم الهاتف مستخدم ");
-                                        //    Navigator.pop(context);
-                                        return;
-                                      }
-                                      loginWithPhone();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          // Future.delayed(
+                                          //     Duration(seconds: 1000), () {
+                                          //   Navigator.of(context).pop(true);
+                                          // });
+                                          return AlertDialog(
+                                              insetPadding: EdgeInsets.all(8.0),
+                                              title: CustomText(
+                                                "تفعيل الحساب",
+                                                fontSize: 24.sp,
+                                                textAlign: TextAlign.center,
+                                                fontFamily: 'DINNEXTLTARABIC',
+                                                color: AppColors.scadryColor,
+                                              ),
+                                              content: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.w)),
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      100,
+                                                  height: 300.h,
+                                                  child: Column(
+                                                    children: [
+                                                      CustomText(
+                                                        'تم ارسال كود التفعيل الى رقم الجوال المدرج سابقاً الرجاء ادخال الكود المرسل في الحقل أدناه',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        fontFamily:
+                                                            'DINNEXTLTARABIC',
+                                                        fontSize: 16.sp,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 22.h,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 335.w,
+                                                        child: Pinput(
+                                                          length: 6,
+                                                          // pinContentAlignment: Alignment.center,
+                                                          obscureText: true,
+                                                          defaultPinTheme:
+                                                              defaultPinTheme,
 
-                                      Constants.token = value["data"]["token"];
-                                      SharedPreferences? _prefs =
-                                          await SharedPreferences.getInstance();
-                                      _prefs.setString(Keys.hasSaveUserData,
-                                          value["data"]["token"]);
-                                      await AuthProvider
-                                          .getUserProfileRequset();
-                                      Navigator.pop(context);
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            // Future.delayed(
-                                            //     Duration(seconds: 1000), () {
-                                            //   Navigator.of(context).pop(true);
-                                            // });
-                                            return AlertDialog(
-                                                insetPadding:
-                                                    EdgeInsets.all(8.0),
-                                                title: CustomText(
-                                                  "تفعيل الحساب",
-                                                  fontSize: 24.sp,
-                                                  textAlign: TextAlign.center,
-                                                  fontFamily: 'DINNEXTLTARABIC',
-                                                  color: AppColors.scadryColor,
-                                                ),
-                                                content: Container(
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    20.w)),
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width -
-                                                            100,
-                                                    height: 300.h,
-                                                    child: Column(
-                                                      children: [
-                                                        CustomText(
-                                                          'تم ارسال كود التفعيل الى رقم الجوال المدرج سابقاً الرجاء ادخال الكود المرسل في الحقل أدناه',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          fontFamily:
-                                                              'DINNEXTLTARABIC',
-                                                          fontSize: 16.sp,
-                                                          fontWeight:
-                                                              FontWeight.w300,
+                                                          closeKeyboardWhenCompleted:
+                                                              true,
+                                                          textInputAction:
+                                                              TextInputAction
+                                                                  .next,
+                                                          controller:
+                                                              otpController,
                                                         ),
-                                                        SizedBox(
-                                                          height: 22.h,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 335.w,
-                                                          child: Pinput(
-                                                            length: 6,
-                                                            // pinContentAlignment: Alignment.center,
-                                                            obscureText: true,
-                                                            defaultPinTheme:
-                                                                defaultPinTheme,
-
-                                                            closeKeyboardWhenCompleted:
-                                                                true,
-                                                            textInputAction:
-                                                                TextInputAction
-                                                                    .next,
-                                                            controller:
-                                                                otpController,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 22.h,
-                                                        ),
-                                                        RaisedGradientButton(
-                                                          text: 'التالي',
-                                                          width: 340.w,
-                                                          color: AppColors
-                                                              .scadryColor,
-                                                          height: 48.h,
-                                                          circular: 10.w,
-                                                          onPressed: () async {
-                                                            await verifyOTP(
-                                                                ref);
-                                                          },
-                                                        ),
-                                                        SizedBox(
-                                                          height: 16.h,
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            // Navigator.pushNamed(
-                                                            //     context,
-                                                            //     '/navegaitor_screen');
-                                                          },
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              CustomText(
-                                                                'لم تصلك رسالة حتى الان ؟',
+                                                      ),
+                                                      SizedBox(
+                                                        height: 22.h,
+                                                      ),
+                                                      RaisedGradientButton(
+                                                        text: 'التالي',
+                                                        width: 340.w,
+                                                        color: AppColors
+                                                            .scadryColor,
+                                                        height: 48.h,
+                                                        circular: 10.w,
+                                                        onPressed: () async {
+                                                          await verifyOTP(ref);
+                                                        },
+                                                      ),
+                                                      SizedBox(
+                                                        height: 16.h,
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          // Navigator.pushNamed(
+                                                          //     context,
+                                                          //     '/navegaitor_screen');
+                                                        },
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            CustomText(
+                                                              'لم تصلك رسالة حتى الان ؟',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                              fontSize: 16.sp,
+                                                              fontFamily:
+                                                                  'DINNEXTLTARABIC',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: AppColors
+                                                                  .orange,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 5.w,
+                                                            ),
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                loginWithPhone();
+                                                              },
+                                                              child: CustomText(
+                                                                'اعادة الارسال ',
                                                                 textAlign:
                                                                     TextAlign
                                                                         .start,
@@ -666,126 +677,102 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w400,
-                                                                color: AppColors
-                                                                    .orange,
                                                               ),
-                                                              SizedBox(
-                                                                width: 5.w,
-                                                              ),
-                                                              GestureDetector(
-                                                                onTap: () {
-                                                                  loginWithPhone();
-                                                                },
-                                                                child:
-                                                                    CustomText(
-                                                                  'اعادة الارسال ',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .start,
-                                                                  fontSize:
-                                                                      16.sp,
-                                                                  fontFamily:
-                                                                      'DINNEXTLTARABIC',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    )));
-                                          });
-                                      //134092
-                                    } else {
-                                      Navigator.pop(context);
-                                    }
-                                  });
-                                  log("response $response");
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )));
+                                        });
+                                    //134092
+                                  } else {
+                                    Navigator.pop(context);
+                                  }
+                                });
+                                log("response $response");
 
-                                  FocusScope.of(context).unfocus();
-                                  // ignore: use_build_context_synchronously
-                                }
-                              },
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        Consumer(builder: (context, ref, _) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/login_screen');
+                                FocusScope.of(context).unfocus();
+                                // ignore: use_build_context_synchronously
+                              }
                             },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomText(
-                                  ' لديك حساب بالفعل ؟',
-                                  textAlign: TextAlign.start,
-                                  fontSize: 16.sp,
-                                  fontFamily: 'DINNEXTLTARABIC',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                SizedBox(
-                                  width: 5.w,
-                                ),
-                                CustomText(
-                                  'تسجيل دخول',
-                                  textAlign: TextAlign.start,
-                                  fontSize: 16.sp,
-                                  fontFamily: 'DINNEXTLTARABIC',
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.orange,
-                                ),
-                              ],
-                            ),
                           );
-                        }),
-                        SizedBox(
-                          height: 40.h,
-                        ),
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                        },
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Consumer(builder: (context, ref, _) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/login_screen');
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CustomText(
-                                'عند تسجيلك تقر وتوافق على',
+                                ' لديك حساب بالفعل ؟',
+                                textAlign: TextAlign.start,
+                                fontSize: 16.sp,
+                                fontFamily: 'DINNEXTLTARABIC',
+                                fontWeight: FontWeight.w400,
+                              ),
+                              SizedBox(
+                                width: 5.w,
+                              ),
+                              CustomText(
+                                'تسجيل دخول',
                                 textAlign: TextAlign.start,
                                 fontSize: 16.sp,
                                 fontFamily: 'DINNEXTLTARABIC',
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.orange,
                               ),
-                              SizedBox(
-                                width: 5.w,
-                              ),
-                              CustomText(
-                                ' سياسة الخصوصية وشروط الاستخدام',
-                                textAlign: TextAlign.start,
-                                fontSize: 16.sp,
-                                fontFamily: 'DINNEXTLTARABIC',
-                                fontWeight: FontWeight.w400,
-                              ),
-                              SizedBox(
-                                height: 10.h,
-                              )
                             ],
                           ),
+                        );
+                      }),
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CustomText(
+                              'عند تسجيلك تقر وتوافق على',
+                              textAlign: TextAlign.start,
+                              fontSize: 16.sp,
+                              fontFamily: 'DINNEXTLTARABIC',
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.orange,
+                            ),
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                            CustomText(
+                              ' سياسة الخصوصية وشروط الاستخدام',
+                              textAlign: TextAlign.start,
+                              fontSize: 16.sp,
+                              fontFamily: 'DINNEXTLTARABIC',
+                              fontWeight: FontWeight.w400,
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            )
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-          ],
-        ),
-      )),
-    );
+          ),
+        ],
+      ),
+    ));
   }
 
   void loginWithPhone() async {

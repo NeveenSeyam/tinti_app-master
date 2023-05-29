@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:circular_menu/circular_menu.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,111 +56,106 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        extendBody: true,
-        // appBar: CustomAppBar(''),
-        body: pages[pageIndex],
+    return Scaffold(
+      extendBody: true,
+      // appBar: CustomAppBar(''),
+      body: pages[pageIndex],
 
-        bottomNavigationBar: SpinCircleBottomBarHolder(
-          bottomNavigationBar: SCBottomBarDetails(
-              circleColors: [Colors.white, AppColors.orange, Colors.redAccent],
-              iconTheme: IconThemeData(color: Colors.white),
-              activeIconTheme: IconThemeData(color: AppColors.orange),
-              backgroundColor: AppColors.scadryColor,
-              titleStyle: TextStyle(color: Colors.white, fontSize: 12),
-              activeTitleStyle: TextStyle(
+      bottomNavigationBar: SpinCircleBottomBarHolder(
+        bottomNavigationBar: SCBottomBarDetails(
+            circleColors: [Colors.white, AppColors.orange, Colors.redAccent],
+            iconTheme: IconThemeData(color: Colors.white),
+            activeIconTheme: IconThemeData(color: AppColors.orange),
+            backgroundColor: AppColors.scadryColor,
+            titleStyle: TextStyle(color: Colors.white, fontSize: 12),
+            activeTitleStyle: TextStyle(
+                color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+            actionButtonDetails: SCActionButtonDetails(
+                color: AppColors.orange,
+                icon: Icon(
+                  Icons.expand_less,
                   color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold),
-              actionButtonDetails: SCActionButtonDetails(
-                  color: AppColors.orange,
-                  icon: Icon(
-                    Icons.expand_less,
-                    color: Colors.white,
-                  ),
-                  elevation: 2),
-              elevation: 2.0,
-              items: [
-                SCBottomBarItem(
-                    icon: Icons.home_rounded,
-                    title: "الرئيسية ",
-                    onPressed: () {
-                      setState(() {
-                        pageIndex = 0;
-                      });
-                    }),
-                SCBottomBarItem(
-                    icon: Icons.favorite_border,
-                    title: "المفضلة ",
-                    onPressed: () {
-                      setState(() {
-                        pageIndex = 1;
-                      });
-                    }),
-                SCBottomBarItem(
-                    icon: Icons.shopping_bag_outlined,
-                    title: "طلباتي ",
-                    onPressed: () {
-                      setState(() {
-                        pageIndex = 2;
-                      });
-                    }),
-                SCBottomBarItem(
-                    icon: Icons.person,
-                    title: "حسابي",
-                    onPressed: () {
-                      setState(() {
-                        pageIndex = 3;
-                      });
-                    }),
+                ),
+                elevation: 2),
+            elevation: 2.0,
+            items: [
+              SCBottomBarItem(
+                  icon: Icons.home_rounded,
+                  title: "hoome".tr(),
+                  onPressed: () {
+                    setState(() {
+                      pageIndex = 0;
+                    });
+                  }),
+              SCBottomBarItem(
+                  icon: Icons.favorite_border,
+                  title: 'favorite'.tr(),
+                  onPressed: () {
+                    setState(() {
+                      pageIndex = 1;
+                    });
+                  }),
+              SCBottomBarItem(
+                  icon: Icons.shopping_bag_outlined,
+                  title: "My-Orders".tr(),
+                  onPressed: () {
+                    setState(() {
+                      pageIndex = 2;
+                    });
+                  }),
+              SCBottomBarItem(
+                  icon: Icons.person,
+                  title: "Profile".tr(),
+                  onPressed: () {
+                    setState(() {
+                      pageIndex = 3;
+                    });
+                  }),
 
-                // Suggested count : 4
-              ],
-              circleItems: [
-                //Suggested Count: 3
-                SCItem(
-                    icon: const Icon(
-                      Icons.info_outline_rounded,
-                      color: AppColors.orange,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => HowWeAreScreen()));
-                    }),
-                SCItem(
-                    icon: const Icon(
-                      Icons.business_outlined,
-                      color: AppColors.orange,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const CampanyPage()));
-                    }),
-                SCItem(
-                    icon: const Icon(
-                      Icons.car_repair,
-                      color: AppColors.orange,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const MyCarsScreen()));
-                    }),
-                SCItem(
-                    icon: const Icon(
-                      Icons.call,
-                      color: AppColors.orange,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ContactUsScreen()));
-                    }),
-              ],
-              bnbHeight: 80 // Suggested Height 80
-              ),
-          child: Container(),
-        ),
+              // Suggested count : 4
+            ],
+            circleItems: [
+              //Suggested Count: 3
+              SCItem(
+                  icon: const Icon(
+                    Icons.info_outline_rounded,
+                    color: AppColors.orange,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => HowWeAreScreen()));
+                  }),
+              SCItem(
+                  icon: const Icon(
+                    Icons.business_outlined,
+                    color: AppColors.orange,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const CampanyPage()));
+                  }),
+              SCItem(
+                  icon: const Icon(
+                    Icons.car_repair,
+                    color: AppColors.orange,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const MyCarsScreen()));
+                  }),
+              SCItem(
+                  icon: const Icon(
+                    Icons.call,
+                    color: AppColors.orange,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const ContactUsScreen()));
+                  }),
+            ],
+            bnbHeight: 80 // Suggested Height 80
+            ),
+        child: Container(),
       ),
     );
   }

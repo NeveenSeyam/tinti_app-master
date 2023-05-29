@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -73,6 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         }
         if (value != false) {
           Constants.token = value["data"]["token"];
+          Constants.isQuest = false;
           SharedPreferences? _prefs = await SharedPreferences.getInstance();
           _prefs.setString(Keys.hasSaveUserData, value["data"]["token"]);
           await AuthProvider.getUserProfileRequset();
@@ -91,183 +93,167 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: SafeArea(
-          child: Scaffold(
-        backgroundColor: AppColors.scadryColor,
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(20.h),
-              child: Container(
-                alignment: Alignment.topCenter,
-                child: Image.asset(
-                  'assets/images/sayartearabic.png',
-                  height: 100.h,
-                  width: 300.h,
-                ),
+    return SafeArea(
+        child: Scaffold(
+      backgroundColor: AppColors.scadryColor,
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(20.h),
+            child: Container(
+              alignment: Alignment.topCenter,
+              child: Image.asset(
+                'assets/images/sayartearabic.png',
+                height: 100.h,
+                width: 300.h,
               ),
             ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromARGB(255, 47, 47, 47).withOpacity(0.5),
-                        spreadRadius: 4,
-                        blurRadius: 10,
-                        offset:
-                            const Offset(0, 1), // changes position of shadow
-                      ),
-                    ],
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(35.w),
-                      topRight: Radius.circular(35.w),
-                    )),
-                height: 700.h,
-                alignment: Alignment.bottomCenter,
-                child: Form(
-                  key: _Key,
-                  child: Padding(
-                    padding: EdgeInsets.all(20.w),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(right: 10.w),
-                            alignment: Alignment.centerRight,
-                            child: CustomText(
-                              'تسجيل الدخول',
-                              textAlign: TextAlign.start,
-                              fontSize: 18.sp,
-                              fontFamily: 'DINNEXTLTARABIC',
-                              fontWeight: FontWeight.w400,
-                            ),
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 47, 47, 47).withOpacity(0.5),
+                      spreadRadius: 4,
+                      blurRadius: 10,
+                      offset: const Offset(0, 1), // changes position of shadow
+                    ),
+                  ],
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(35.w),
+                    topRight: Radius.circular(35.w),
+                  )),
+              height: 700.h,
+              alignment: Alignment.bottomCenter,
+              child: Form(
+                key: _Key,
+                child: Padding(
+                  padding: EdgeInsets.all(20.w),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: EdgeInsetsDirectional.only(start: 15.w),
+                          child: CustomText(
+                            'login'.tr(),
+                            textAlign: TextAlign.start,
+                            fontSize: 18.sp,
+                            fontFamily: 'DINNEXTLTARABIC',
+                            fontWeight: FontWeight.w400,
                           ),
-                          SizedBox(
-                            height: 20.h,
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        RoundedInputField(
+                          hintText: 'email'.tr(),
+                          onChanged: (value) {},
+                          hintColor: AppColors.hint,
+                          color: AppColors.lightgrey,
+                          circuler: 10.w,
+                          height: 48.h,
+                          icon: const Icon(
+                            Icons.email,
+                            color: AppColors.hint,
                           ),
-                          RoundedInputField(
-                            hintText: 'البريد الالكتروني',
-                            onChanged: (value) {},
-                            hintColor: AppColors.hint,
-                            color: AppColors.lightgrey,
-                            circuler: 10.w,
-                            height: 48.h,
-                            icon: const Icon(
-                              Icons.email,
-                              color: AppColors.hint,
-                            ),
-                            validator: validateEmail,
-                            seen: false,
-                            controller: _emailController,
+                          validator: validateEmail,
+                          seen: false,
+                          controller: _emailController,
+                        ),
+                        RoundedInputField(
+                          hintText: 'password'.tr(),
+                          onChanged: (value) {},
+                          isObscured: true,
+                          hintColor: AppColors.hint,
+                          color: AppColors.lightgrey,
+                          circuler: 10.w,
+                          height: 48.h,
+                          icon: const Icon(
+                            Icons.key,
+                            color: AppColors.hint,
                           ),
-                          RoundedInputField(
-                            hintText: 'كلمة المرور',
-                            onChanged: (value) {},
-                            isObscured: true,
-                            hintColor: AppColors.hint,
-                            color: AppColors.lightgrey,
-                            circuler: 10.w,
-                            height: 48.h,
-                            icon: const Icon(
-                              Icons.key,
-                              color: AppColors.hint,
-                            ),
-                            seen: true,
-                            validator: validatePassword,
-                            controller: _passwordController,
-                          ),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          FirstForgetScreen()),
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.only(right: 10.w),
-                                alignment: Alignment.centerRight,
-                                child: CustomText(
-                                  'نسيت كلمة المرور ؟',
-                                  textAlign: TextAlign.start,
-                                  fontSize: 15.sp,
-                                  color: AppColors.orange,
-                                  fontFamily: 'DINNEXTLTARABIC',
-                                  fontWeight: FontWeight.w400,
-                                ),
+                          seen: true,
+                          validator: validatePassword,
+                          controller: _passwordController,
+                        ),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FirstForgetScreen()),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(right: 10.w),
+                              child: CustomText(
+                                'forget-pass'.tr(),
+                                textAlign: TextAlign.start,
+                                fontSize: 15.sp,
+                                color: AppColors.orange,
+                                fontFamily: 'DINNEXTLTARABIC',
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: 20.h,
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        RaisedGradientButton(
+                          text: 'login'.tr(),
+                          color: AppColors.scadryColor,
+                          height: 48.h,
+                          width: 340.w,
+                          circular: 10.w,
+                          onPressed: () {
+                            if (_Key.currentState!.validate()) {
+                              _Key.currentState!.save();
+                              FocusScope.of(context).unfocus();
+                              _loginFun(context, ref);
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.popAndPushNamed(
+                                context, '/signup_screen');
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomText(
+                                'dont-have-account'.tr(),
+                                textAlign: TextAlign.start,
+                                fontSize: 16.sp,
+                                fontFamily: 'DINNEXTLTARABIC',
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.orange,
+                              ),
+                            ],
                           ),
-                          RaisedGradientButton(
-                            text: 'تسجيل الدخول',
-                            color: AppColors.scadryColor,
-                            height: 48.h,
-                            width: 340.w,
-                            circular: 10.w,
-                            onPressed: () {
-                              if (_Key.currentState!.validate()) {
-                                _Key.currentState!.save();
-                                FocusScope.of(context).unfocus();
-                                _loginFun(context, ref);
-                              }
-                            },
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.popAndPushNamed(
-                                  context, '/signup_screen');
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomText(
-                                  'ليس لديك حساب ؟',
-                                  textAlign: TextAlign.start,
-                                  fontSize: 16.sp,
-                                  fontFamily: 'DINNEXTLTARABIC',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                SizedBox(
-                                  width: 5.w,
-                                ),
-                                CustomText(
-                                  'تسجيل جديد',
-                                  textAlign: TextAlign.start,
-                                  fontSize: 16.sp,
-                                  fontFamily: 'DINNEXTLTARABIC',
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.orange,
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        ),
-      )),
-    );
+          ),
+        ],
+      ),
+    ));
   }
 }

@@ -1,0 +1,151 @@
+{
+    "appName":"sayyarte",
+    "home":"Home Page",
+    "sales":"Sales",
+    "more":"more",
+    "sales-description":"All service offers you want are here",
+    "services":"services",
+    "services-description":"All service  you want are here",
+
+
+    "hoome":"Home",
+
+
+
+
+    "favorite":"Favorite",
+
+    "notification":"Notification",
+
+    "My-Orders":"Orders",
+
+    "company-profile":"company-profile",
+    "about-company":"about-company",
+    "company-services":"company-services",
+    "company-name":"company-name",
+
+
+
+    "Profile":"Profile",
+
+    "my-data":"my-data",
+    "fname":"fname",
+    "lname":"lname",
+    "city":"city",
+    "update":"update",
+    "my-data-title":"My Data",
+    "my-data-update":"Update My Data",
+
+
+
+
+
+
+
+
+    "change-password":"change password",
+    "old-pass":"old password",
+    "new-pass":"new password",
+    "confirm-new-pass":"confirm new password",
+    "save":"save",
+
+
+
+
+
+
+    "langouage":"langouage",
+    "logout":"logout",
+    "arabic":"Arabic",
+    "english":"English",
+
+
+
+
+
+
+
+    "contactus":"contact Us",
+    "title":"title",
+    "email":"email",
+    "mobile":"mobile",
+    "feacbook":"feacbook",
+    "instagram":"instagram",
+    "twetter":"twetter",
+    "contact-details":"You can contact us via any means of communication to activate your account or make changes to the account",
+    "email-header":"email data",
+    "name":"name",
+    "msg":"msg",
+    "send":"send",
+
+
+
+
+    "next":"Next",
+
+
+
+
+
+
+
+
+
+
+
+
+
+    "aboutus":"About Us",
+
+
+    "my-cars":"My Cars",
+    "add-car":"Add Car",   
+     "update-car":"Update Car",
+
+    "car-name":"Car Name",
+    "model":"Model",
+    "size":"Size",
+    "number":"Car Number",
+    "color":"Car Color",
+
+
+    "services-companes":"Services Companes",
+    "search":"search",
+    "companys":"companys",
+    "rating":"rating",
+    "people":"people",
+    "card-num":"card number",
+    "expierd-date":"expierd date",
+    "cvv":"cvv",
+    "car":"Car",
+    "done":"done",
+    "faield":"faield",
+
+
+
+
+
+    "login":"login",
+    "forget-pass":"forget password",
+    "password":"password",
+    "dont-have-account":"dont-have-account ?? SignUp",
+    "have-an-account":"Already have an account ?? LogIn",
+    "enter-email":"enter your email",
+    "enter-code":"enter verfication code",
+    "change-pass-details":"The password has been set successfully",
+
+    "dont_sent":"You haven't received a message yet ?? Re-transmitter",
+    "neew":"enter new password",
+
+
+
+    "privacy-policy":"By registering, you acknowledge and agree to this  /n Privacy Policy and Terms of Use"
+   
+
+
+
+
+
+
+
+}
