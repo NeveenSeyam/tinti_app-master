@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -24,7 +25,7 @@ class _RequestServiesesState extends State<RequestServieses> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        'طلب الخدمة',
+        'request service'.tr(),
         isHome: true,
       ),
       body: Padding(

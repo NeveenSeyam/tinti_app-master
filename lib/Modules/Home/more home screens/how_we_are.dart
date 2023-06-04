@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -9,6 +10,7 @@ import 'package:tinti_app/Widgets/custom_appbar.dart';
 import 'package:tinti_app/provider/app_data_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../../Helpers/failure.dart';
+import '../../../Util/constants/constants.dart';
 import '../../../Util/theme/app_colors.dart';
 import '../../../Widgets/custom_text.dart';
 import '../../../Widgets/custom_text_field.dart';
@@ -40,6 +42,8 @@ class _HowWeAreScreenScreenState extends ConsumerState<HowWeAreScreen> {
     super.initState();
     _fetchedIntroRequest = _getIntrosData();
   }
+
+  var logo = Constants.blackLogo;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +104,7 @@ class _HowWeAreScreenScreenState extends ConsumerState<HowWeAreScreen> {
                       ),
                       Center(
                         child: CustomText(
-                          ' من نحن ',
+                          'aboutus'.tr(),
                           textAlign: TextAlign.start,
                           fontSize: 18.sp,
                           fontFamily: 'DINNEXTLTARABIC',
@@ -171,7 +175,7 @@ class _HowWeAreScreenScreenState extends ConsumerState<HowWeAreScreen> {
                               children: [
                                 Center(
                                     child: Image.asset(
-                                  'assets/images/logol.png',
+                                  logo!,
                                   width: 200.w,
                                   height: 100.h,
                                 )),
@@ -182,8 +186,8 @@ class _HowWeAreScreenScreenState extends ConsumerState<HowWeAreScreen> {
                                     children: [
                                       CustomText(
                                         appDataModel?.intros?[1].description ??
-                                            'من نحن',
-                                        textAlign: TextAlign.start,
+                                            'aboutus'.tr(),
+                                        textAlign: TextAlign.center,
                                         fontFamily: 'DINNEXTLTARABIC',
                                         color: AppColors.grey,
                                       ),

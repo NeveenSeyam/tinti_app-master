@@ -64,8 +64,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
       bottomNavigationBar: SpinCircleBottomBarHolder(
         bottomNavigationBar: SCBottomBarDetails(
             circleColors: [Colors.white, AppColors.orange, Colors.redAccent],
-            iconTheme: IconThemeData(color: Colors.white),
-            activeIconTheme: IconThemeData(color: AppColors.orange),
+            iconTheme: IconThemeData(color: Colors.white, size: 30),
+            activeIconTheme: IconThemeData(color: AppColors.orange, size: 35),
             backgroundColor: AppColors.scadryColor,
             titleStyle: TextStyle(color: Colors.white, fontSize: 12),
             activeTitleStyle: TextStyle(
@@ -81,7 +81,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
             items: [
               SCBottomBarItem(
                   icon: Icons.home_rounded,
-                  title: "hoome".tr(),
                   onPressed: () {
                     setState(() {
                       pageIndex = 0;
@@ -89,7 +88,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   }),
               SCBottomBarItem(
                   icon: Icons.favorite_border,
-                  title: 'favorite'.tr(),
                   onPressed: () {
                     setState(() {
                       pageIndex = 1;
@@ -97,7 +95,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   }),
               SCBottomBarItem(
                   icon: Icons.shopping_bag_outlined,
-                  title: "My-Orders".tr(),
                   onPressed: () {
                     setState(() {
                       pageIndex = 2;
@@ -105,7 +102,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   }),
               SCBottomBarItem(
                   icon: Icons.person,
-                  title: "Profile".tr(),
                   onPressed: () {
                     setState(() {
                       pageIndex = 3;

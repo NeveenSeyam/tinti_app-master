@@ -16,6 +16,7 @@ import '../../../Widgets/custom_text.dart';
 import '../../../Widgets/custom_text_field.dart';
 import '../../../Widgets/gradint_button.dart';
 import '../../../Widgets/loader_widget.dart';
+import '../../../Widgets/loading_dialog.dart';
 import '../../../Widgets/text_widget.dart';
 import '../../../provider/account_provider.dart';
 import '../../Home/main/services/saels_page.dart';
@@ -150,13 +151,36 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  CustomText(
-                                    'forget-pass'.tr(),
-                                    textAlign: TextAlign.start,
-                                    fontSize: 18.sp,
-                                    fontFamily: 'DINNEXTLTARABIC',
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.white,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Center(
+                                              child: Icon(
+                                            Icons.arrow_back_ios_rounded,
+                                            color: AppColors.white,
+                                          )),
+                                        ),
+                                      ),
+                                      CustomText(
+                                        'forget-pass'.tr(),
+                                        textAlign: TextAlign.start,
+                                        fontSize: 18.sp,
+                                        fontFamily: 'DINNEXTLTARABIC',
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.white,
+                                      ),
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: Center(),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -211,6 +235,8 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                         onChanged: (value) {},
                                         hintColor: AppColors.hint,
                                         color: AppColors.lightgrey,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
                                         circuler: 10.w,
                                         height: 48.h,
                                         icon: Icon(
@@ -232,20 +258,23 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                         circular: 10.w,
                                         width: 340.w,
                                         onPressed: () async {
+                                          await loadingDialog(context);
+
                                           await ref
                                               .read(accountProvider)
                                               .forgetPassRequest(
                                                   email: _emailController.text);
+
                                           var forgetModel = ref
                                               .watch(accountProvider)
                                               .getForgetPassModel;
                                           print(
                                               'forgetModel?.data?.mobile.toString() ${forgetModel?.data?.mobile.toString()}');
                                           // _getContentData();
-
-                                          loginWithPhone(forgetModel
+                                          await loginWithPhone(forgetModel
                                               ?.data?.mobile
                                               .toString());
+                                          Navigator.of(context).pop();
 
                                           validate = 2;
 
@@ -358,6 +387,9 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                             Container(
                                               width: 335.w,
                                               child: Pinput(
+                                                keyboardType:
+                                                    TextInputType.number,
+
                                                 length: 6,
                                                 // pinContentAlignment: Alignment.center,
                                                 obscureText: true,
@@ -502,6 +534,8 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                               RoundedInputField(
                                                 hintText: 'new-pass'.tr(),
                                                 onChanged: (value) {},
+                                                keyboardType: TextInputType
+                                                    .visiblePassword,
                                                 hintColor: AppColors.hint,
                                                 color: AppColors.lightgrey,
                                                 circuler: 10.w,
@@ -518,6 +552,8 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                               RoundedInputField(
                                                 hintText:
                                                     'confirm-new-pass'.tr(),
+                                                keyboardType: TextInputType
+                                                    .visiblePassword,
                                                 onChanged: (value) {},
                                                 hintColor: AppColors.hint,
                                                 color: AppColors.lightgrey,

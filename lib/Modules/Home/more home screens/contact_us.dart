@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:regexpattern/regexpattern.dart';
+import 'package:tinti_app/Util/constants/constants.dart';
 import 'package:tinti_app/helpers/ui_helper.dart';
 import 'package:tinti_app/provider/app_data_provider.dart';
 import 'package:tinti_app/provider/contact_data_provider.dart';
@@ -62,6 +64,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
     _fetchedContactRequest = _getContactsData();
   }
 
+  var logo = Constants.blackLogo;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -98,7 +101,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                         ),
                         Center(
                           child: CustomText(
-                            ' تواصل معنا ',
+                            'contactus'.tr(),
                             textAlign: TextAlign.start,
                             fontSize: 18.sp,
                             fontFamily: 'DINNEXTLTARABIC',
@@ -173,7 +176,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                   Container(
                                     child: Center(
                                         child: Image.asset(
-                                      'assets/images/logol.png',
+                                      logo!,
                                       width: 200.w,
                                       height: 100.h,
                                     )),
@@ -184,13 +187,13 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                     child: Column(
                                       children: [
                                         profCard(
-                                            'العنوان',
+                                            'title'.tr(),
                                             appContactDataModel
                                                     ?.info?.first.address ??
                                                 '',
                                             () {}),
                                         profCard(
-                                            'البريد الالكتروني',
+                                            'email'.tr(),
                                             appContactDataModel
                                                     ?.info?.first.email ??
                                                 '', () {
@@ -198,7 +201,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                               ?.info?.first.email);
                                         }),
                                         profCard(
-                                            'رقم الهاتف',
+                                            'mobile'.tr(),
                                             appContactDataModel
                                                     ?.info?.first.mobile ??
                                                 '', () {
@@ -206,7 +209,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                               ?.info?.first.mobile);
                                         }),
                                         profCard(
-                                            'فسبوك',
+                                            'feacbook'.tr(),
                                             appContactDataModel
                                                     ?.info?.first.facebook ??
                                                 '', () {
@@ -214,7 +217,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                               ?.info?.first.facebook);
                                         }),
                                         profCard(
-                                            'instagram',
+                                            'instagram'.tr(),
                                             appContactDataModel
                                                     ?.info?.first.instagram ??
                                                 '', () {
@@ -222,7 +225,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                               ?.info?.first.instagram);
                                         }),
                                         profCard(
-                                            'تويتر',
+                                            'twetter'.tr(),
                                             appContactDataModel
                                                     ?.info?.first.twitter ??
                                                 '', () {
@@ -245,8 +248,8 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                               height: 130.h,
                                               child: Column(
                                                 children: [
-                                                  const CustomText(
-                                                    ' يمكنك التواصل معنا عبر اي وسيلة تواصل لتفعيل حسابك او اجراء تعديلات على الحساب \n شكرا لتعاملك معنا فريق سيارتي',
+                                                  CustomText(
+                                                    'contact-details'.tr(),
                                                     color: AppColors
                                                         .lightPrimaryColor,
                                                     textAlign: TextAlign.center,
@@ -267,15 +270,13 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                             child: Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
-                                                                      .end,
+                                                                      .start,
                                                               children: [
                                                                 CustomText(
-                                                                  'ادخل بيانات المراسلة',
+                                                                  'email-header'
+                                                                      .tr(),
                                                                   color: AppColors
                                                                       .lightPrimaryColor,
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .left,
                                                                   fontFamily:
                                                                       'DINNEXTLTARABIC',
                                                                   fontSize:
@@ -283,7 +284,8 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                                 ),
                                                                 RoundedInputField(
                                                                   hintText:
-                                                                      'البريد الالكتروني',
+                                                                      'email'
+                                                                          .tr(),
                                                                   onChanged:
                                                                       (value) {},
                                                                   hintColor:
@@ -307,7 +309,8 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                                 ),
                                                                 RoundedInputField(
                                                                   hintText:
-                                                                      'الاسم',
+                                                                      'name'
+                                                                          .tr(),
                                                                   onChanged:
                                                                       (value) {},
                                                                   hintColor:
@@ -331,7 +334,8 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                                 ),
                                                                 RoundedInputField(
                                                                   hintText:
-                                                                      'العنوان',
+                                                                      'address'
+                                                                          .tr(),
                                                                   onChanged:
                                                                       (value) {},
                                                                   hintColor:
@@ -356,7 +360,8 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                                 RoundedInputField(
                                                                   linght: 5,
                                                                   hintText:
-                                                                      'نص الرسالة',
+                                                                      'msg'
+                                                                          .tr(),
                                                                   onChanged:
                                                                       (value) {},
                                                                   hintColor:
@@ -391,7 +396,8 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                                         text: _textEditingController
                                                                             .text);
                                                                     UIHelper.showNotification(
-                                                                        'تم ارسال الرسالة',
+                                                                        'send msg'
+                                                                            .tr(),
                                                                         backgroundColor:
                                                                             Colors.green);
 
@@ -399,8 +405,8 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                                             context)
                                                                         .pop();
                                                                   },
-                                                                  title:
-                                                                      'ارسال',
+                                                                  title: 'send'
+                                                                      .tr(),
                                                                   textColor:
                                                                       AppColors
                                                                           .white,
@@ -420,9 +426,9 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                               BorderRadius
                                                                   .circular(
                                                                       10.w)),
-                                                      child: const Center(
+                                                      child: Center(
                                                         child: CustomText(
-                                                          'تواصل معنا',
+                                                          'contactus'.tr(),
                                                           color:
                                                               AppColors.white,
                                                           textAlign:

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,7 +48,7 @@ class _WishListPageState extends ConsumerState<WishListPage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: CustomAppBar(
-        "المفضلة",
+        "favorite".tr(),
         isNotification: false,
       ),
       body: RefreshIndicator(
@@ -106,7 +107,7 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                         Container(
                                           width: 300.w,
                                           child: CustomText(
-                                            '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                            'contact support'.tr(),
                                             color: AppColors.orange,
                                             // fontWeight: FontWeight.bold,
                                             fontFamily: 'DINNEXTLTARABIC',
@@ -119,7 +120,7 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                           height: 60.h,
                                         ),
                                         RaisedGradientButton(
-                                          text: 'تواصل معنا',
+                                          text: 'contactus'.tr(),
                                           color: AppColors.scadryColor,
                                           height: 48.h,
                                           width: 320.w,
@@ -162,7 +163,7 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                           Container(
                                             width: 300.w,
                                             child: CustomText(
-                                              '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                              'dont add any'.tr(),
                                               color: AppColors.orange,
                                               // fontWeight: FontWeight.bold,
                                               fontFamily: 'DINNEXTLTARABIC',
@@ -175,7 +176,7 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                             height: 60.h,
                                           ),
                                           RaisedGradientButton(
-                                            text: 'تصفح المنتجات',
+                                            text: 'show product'.tr(),
                                             color: AppColors.scadryColor,
                                             height: 48.h,
                                             width: 320.w,
@@ -267,7 +268,7 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                               Container(
                                                 width: 300.w,
                                                 child: CustomText(
-                                                  'لم تقم باضافة اي خدمة للمفضله  يمكنك اضافة واحده الان',
+                                                  'dont add any'.tr(),
                                                   color: AppColors.black,
                                                   fontWeight: FontWeight.bold,
                                                   textAlign: TextAlign.center,
@@ -278,7 +279,7 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                                 height: 60.h,
                                               ),
                                               RaisedGradientButton(
-                                                text: 'تصفح المنتجات',
+                                                text: 'show product'.tr(),
                                                 color: AppColors.scadryColor,
                                                 height: 48.h,
                                                 width: 320.w,
@@ -324,7 +325,7 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                             Container(
                               width: 300.w,
                               child: CustomText(
-                                '       يجب عليك تسجيل الدخول البيانات والاستمتاع بكل مميزات التطبيق ورؤية بياناتك    ',
+                                'need login'.tr(),
                                 color: AppColors.orange,
                                 // fontWeight: FontWeight.bold,
                                 fontFamily: 'DINNEXTLTARABIC',
@@ -337,7 +338,7 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                               height: 60.h,
                             ),
                             RaisedGradientButton(
-                              text: ' تسجيل الدخول',
+                              text: 'login'.tr(),
                               color: AppColors.scadryColor,
                               height: 48.h,
                               width: 320.w,
@@ -435,7 +436,6 @@ class _WishListCardState extends ConsumerState<WishListCard> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        alignment: Alignment.centerRight,
                         width: 200.w,
                         child: CustomText(
                           widget.title,
@@ -444,7 +444,6 @@ class _WishListCardState extends ConsumerState<WishListCard> {
                       ),
                       Container(
                         width: 200.w,
-                        alignment: Alignment.topRight,
                         child: CustomText(
                           widget.compeny,
                           fontSize: 12.sp,

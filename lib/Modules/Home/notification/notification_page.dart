@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -41,7 +42,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         isProfile: false,
-        'الاشعارات',
+        'notification'.tr(),
         isHome: true,
         isNotification: true,
       ),
@@ -86,7 +87,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                           Container(
                             width: 300.w,
                             child: CustomText(
-                              '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                              'contact support'.tr(),
                               color: AppColors.orange,
                               // fontWeight: FontWeight.bold,
                               fontFamily: 'DINNEXTLTARABIC',
@@ -99,7 +100,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                             height: 60.h,
                           ),
                           RaisedGradientButton(
-                            text: 'تواصل معنا',
+                            text: 'contactus'.tr(),
                             color: AppColors.scadryColor,
                             height: 48.h,
                             width: 320.w,
@@ -166,7 +167,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                                 SizedBox(
                                   width: 300.w,
                                   child: CustomText(
-                                    ' لم تقم بطلب اي خدمة للعربة  يمكنك اضافة واحده الان ومتابعة الطلب من خلال الاشعارات',
+                                    'dont add any'.tr(),
                                     color: AppColors.orange,
                                     textAlign: TextAlign.center,
                                     fontFamily: 'DINNEXTLTARABIC',
@@ -177,7 +178,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                                   height: 60.h,
                                 ),
                                 RaisedGradientButton(
-                                  text: 'طلب جديد',
+                                  text: 'new'.tr(),
                                   color: AppColors.scadryColor,
                                   height: 48.h,
                                   width: 320.w,

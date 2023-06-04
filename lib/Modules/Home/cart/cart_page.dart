@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,7 +47,7 @@ class _CartPageState extends ConsumerState<CartPage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: CustomAppBar(
-        "طلباتي",
+        "My-Orders".tr(),
         isProfile: false,
         isNotification: false,
       ),
@@ -99,7 +100,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                                   Container(
                                     width: 300.w,
                                     child: CustomText(
-                                      '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                      'contact support'.tr(),
                                       color: AppColors.orange,
                                       // fontWeight: FontWeight.bold,
                                       fontFamily: 'DINNEXTLTARABIC',
@@ -112,7 +113,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                                     height: 60.h,
                                   ),
                                   RaisedGradientButton(
-                                    text: 'تواصل معنا',
+                                    text: 'contact us'.tr(),
                                     color: AppColors.scadryColor,
                                     height: 48.h,
                                     width: 320.w,
@@ -192,7 +193,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                                         Container(
                                           width: 300.w,
                                           child: CustomText(
-                                            'لم تقم بطلب اي خدمة حتى الان يمكنك اضافة واحده الان',
+                                            'dont add any'.tr(),
                                             color: AppColors.orange,
                                             // fontWeight: FontWeight.bold,
                                             fontFamily: 'DINNEXTLTARABIC',
@@ -205,7 +206,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                                           height: 60.h,
                                         ),
                                         RaisedGradientButton(
-                                          text: 'تصفح المنتجات',
+                                          text: 'show product'.tr(),
                                           color: AppColors.scadryColor,
                                           height: 48.h,
                                           width: 320.w,
@@ -251,7 +252,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                       Container(
                         width: 300.w,
                         child: CustomText(
-                          '       يجب عليك تسجيل الدخول البيانات والاستمتاع بكل مميزات التطبيق ورؤية بياناتك    ',
+                          'need login'.tr(),
                           color: AppColors.orange,
                           // fontWeight: FontWeight.bold,
                           fontFamily: 'DINNEXTLTARABIC',
@@ -264,7 +265,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                         height: 60.h,
                       ),
                       RaisedGradientButton(
-                        text: ' تسجيل الدخول',
+                        text: 'login'.tr(),
                         color: AppColors.scadryColor,
                         height: 48.h,
                         width: 320.w,

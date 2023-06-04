@@ -45,13 +45,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               isLoaded = true;
               if (_prefs.getString(Keys.hasSaveUserData) == null) {
                 Constants.isQuest = true;
+                Constants.logo = "assets/images/logol2.png";
+                Constants.blackLogo = "assets/images/bllo.png";
                 Navigator.popAndPushNamed(context, '/poard_screen');
               } else {
                 var AuthProvider = ref.read(accountProvider);
                 Constants.isQuest = false;
 
                 Constants.token = _prefs.getString(Keys.hasSaveUserData);
+                Constants.lang = _prefs.getString('lang');
+
                 await AuthProvider.getUserProfileRequset();
+                if (Constants.lang == 'ar') {
+                  Constants.logo = "assets/images/logol2.png";
+                  Constants.blackLogo = "assets/images/blacklogo.png";
+                } else {
+                  Constants.logo = "assets/images/logol.png";
+                  Constants.blackLogo = "assets/images/bllo.png";
+                }
+
                 Navigator.popAndPushNamed(context, '/navegaitor_screen');
               }
             }));
@@ -65,14 +77,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: 160.w,
-              height: 120.h,
-              child: Image.asset(
-                'assets/images/llogoo.png',
-                fit: BoxFit.fill,
-                width: 200.w,
-              ),
+            Image.asset(
+              'assets/images/llogoo.png',
+              // fit: BoxFit.cover,
+              // width: 120.w,
             ),
           ],
         ),

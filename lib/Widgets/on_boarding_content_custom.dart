@@ -56,7 +56,7 @@ class OnBoardingContentCustom extends StatelessWidget {
             child: Text(
               description ??
                   'تلعب العناية المنتظمة بالسيارة دورا كبيرا في المحافظة على السيارات وهذا هو السبب الذي يجعل بعض السيارات تستمر في العمل بشكل جيد',
-              maxLines: 3,
+              maxLines: 5,
               textAlign: TextAlign.start,
               style: TextStyle(
                 fontSize: 16.sp,

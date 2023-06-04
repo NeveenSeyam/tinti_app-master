@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
@@ -34,7 +35,7 @@ class OrderListCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: GestureDetector(
         onTap: () {
-          stats == 'منتهي'
+          stats == 'finished'.tr()
               ? Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -127,7 +128,7 @@ class OrderListCard extends StatelessWidget {
                               height: 34.h,
                               padding: EdgeInsets.symmetric(horizontal: 20.w),
                               decoration: BoxDecoration(
-                                  color: stats != 'منتهي'
+                                  color: stats != 'finished'.tr()
                                       ? AppColors.orange
                                       : AppColors.grey.withOpacity(0.5),
                                   borderRadius: BorderRadius.circular(10.w)),
@@ -135,9 +136,9 @@ class OrderListCard extends StatelessWidget {
                                 child: TextButton(
                                     onPressed: () {},
                                     child: CustomText(
-                                      stats ?? 'قيد التنفيذ',
+                                      stats ?? 'on progress'.tr(),
                                       textAlign: TextAlign.center,
-                                      color: stats != 'منتهي'
+                                      color: stats != 'finished'.tr()
                                           ? AppColors.white
                                           : AppColors.black,
                                       fontFamily: 'DINNextLTArabic',

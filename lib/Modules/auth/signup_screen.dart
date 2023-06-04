@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,37 +30,37 @@ class SignUpScreen extends StatefulWidget {
 
 String? validateEmail(String? value) {
   if (!value!.isEmail() && value.isEmpty) {
-    return 'لو سمحت ادخل بريدك الالكتروني';
+    return 'email verfication'.tr();
   }
 }
 
 String? validateFirstName(String? value) {
   if (!value!.isNotEmpty || value.length > 20) {
-    return 'لو سمحت ادخل اسم متاح';
+    return 'name verfication'.tr();
   }
 }
 
 String? validateLastName(String? value) {
   if (!value!.isNotEmpty || value.length > 20) {
-    return 'لو سمحت ادخل اسم متاح';
+    return 'name verfication'.tr();
   }
 }
 
 String? validateMobileNumber(String? value) {
   if (value!.length < 7 || value.length > 14) {
-    return 'رقم الهاتف غير متاح';
+    return 'mobile verfication'.tr();
   }
 }
 
 String? validateCountryNumber(String? value) {
   if (value!.length < 2 || value.length > 4) {
-    return 'رقم الهاتف غير متاح';
+    return 'contry verfication'.tr();
   }
 }
 
 String? validatePassword(String? value) {
   if (value!.length < 6) {
-    return 'يجب ان تكون كلمة السر 6 احرف على الاقل ';
+    return 'password verfication'.tr();
   }
 }
 
@@ -314,6 +315,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  var logo = Constants.logo;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -327,7 +330,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Container(
               alignment: Alignment.topCenter,
               child: Image.asset(
-                'assets/images/sayartearabic.png',
+                logo!,
                 height: 100.h,
                 width: 300.w,
               ),
@@ -348,7 +351,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   topLeft: Radius.circular(35.w),
                   topRight: Radius.circular(35.w),
                 )),
-            height: 700.h,
+            height: 720.h,
             alignment: Alignment.bottomCenter,
             child: Form(
               key: _Key,
@@ -360,10 +363,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Container(
                         padding: EdgeInsets.only(right: 10.w),
-                        alignment: Alignment.centerRight,
                         child: CustomText(
-                          'تسجيل جديد',
-                          textAlign: TextAlign.start,
+                          'new_signup'.tr(),
                           fontSize: 18.sp,
                           fontFamily: 'DINNEXTLTARABIC',
                           fontWeight: FontWeight.w400,
@@ -373,9 +374,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 20.h,
                       ),
                       RoundedInputField(
-                        hintText: 'الاسم الأول',
+                        hintText: 'fname'.tr(),
                         onChanged: (value) {},
                         hintColor: AppColors.hint,
+                        keyboardType: TextInputType.name,
                         color: AppColors.lightgrey,
                         circuler: 10.w,
                         height: 48.h,
@@ -388,10 +390,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _fNameController,
                       ),
                       RoundedInputField(
-                        hintText: 'الاسم الأخير',
+                        hintText: 'lname'.tr(),
                         onChanged: (value) {},
                         hintColor: AppColors.hint,
                         color: AppColors.lightgrey,
+                        keyboardType: TextInputType.name,
                         circuler: 10.w,
                         height: 48.h,
                         icon: Icon(
@@ -404,10 +407,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _lNameController,
                       ),
                       RoundedInputField(
-                        hintText: 'البريد الالكتروني',
+                        hintText: 'email'.tr(),
                         onChanged: (value) {},
                         hintColor: AppColors.hint,
                         color: AppColors.lightgrey,
+                        keyboardType: TextInputType.emailAddress,
                         circuler: 10.w,
                         height: 48.h,
                         icon: Icon(
@@ -429,20 +433,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: SizedBox(
                           width: 200.w,
                           child: InternationalPhoneNumberInput(
+                            textStyle: TextStyle(fontFamily: 'DINNEXTLTARABIC'),
                             // textAlign: TextAlign.end,
                             textFieldController: _mobileController,
                             // ignoreBlank: true,
                             inputDecoration: InputDecoration(
-                              hintText: 'رقم الهاتف',
+                              hintText: 'mobile'.tr(),
+                              hintStyle:
+                                  TextStyle(fontFamily: 'DINNEXTLTARABIC'),
                               border: InputBorder.none,
                             ),
+                            keyboardType: TextInputType.number,
                             onInputChanged: (PhoneNumber number) {
                               print(number.phoneNumber);
                               mob = number.phoneNumber.toString();
                               print('mob  ${mob}');
                             },
-                            onInputValidated: (bool value) {}, maxLength: 9,
-                            errorMessage: 'رقم هاتف خاطئ',
+                            onInputValidated: (bool value) {}, maxLength: 11,
+                            errorMessage: 'mobile verfication'.tr(),
                             selectorConfig: SelectorConfig(
                               selectorType: PhoneInputSelectorType.DIALOG,
                             ),
@@ -450,12 +458,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
                       RoundedInputField(
-                        hintText: 'كلمة المرور',
+                        hintText: 'password'.tr(),
                         onChanged: (value) {},
                         isObscured: false,
                         hintColor: AppColors.hint,
                         color: AppColors.lightgrey,
                         circuler: 10.w,
+                        keyboardType: TextInputType.visiblePassword,
                         height: 48.h,
                         icon: Icon(
                           Icons.key,
@@ -465,7 +474,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         seen: true,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Please enter password";
+                            return "null verfication".tr();
                           } else {
                             //call function to check password
                             bool result = validatePassword(value);
@@ -473,17 +482,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               // create account event
                               return null;
                             } else {
-                              return " يجب ان تحتوي كلمة المرور على حروف كبيرة وحروف صغيرة وعلامات مميزة وارقام";
+                              return 'password verfication'.tr();
                             }
                           }
                         },
                         controller: _passwordController,
                       ),
                       RoundedInputField(
-                        hintText: 'تأكيد كلمة المرور',
+                        hintText: 'cpassword'.tr(),
                         onChanged: (value) {},
                         isObscured: true,
                         hintColor: AppColors.hint,
+                        keyboardType: TextInputType.visiblePassword,
                         color: AppColors.lightgrey,
                         circuler: 10.w,
                         height: 48.h,
@@ -495,7 +505,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         seen: true,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Please enter password";
+                            return "null verfication".tr();
                           } else {
                             //call function to check password
                             bool result = validateConfirmPassword(value);
@@ -503,7 +513,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               // create account event
                               return null;
                             } else {
-                              return "كلمة المرور غير متطابقة ";
+                              return "confirm password verfication".tr();
                             }
                           }
                         },
@@ -516,7 +526,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         builder: (context, ref, _) {
                           var userModel = ref.read(accountProvider);
                           return RaisedGradientButton(
-                            text: 'تسجيل ',
+                            text: 'signup'.tr(),
                             color: AppColors.scadryColor,
                             width: 340.w,
                             height: 48.h,
@@ -545,7 +555,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   if (value is! Failure) {
                                     if (value == null) {
                                       UIHelper.showNotification(
-                                          "البريد الالكتروني او رقم الهاتف مستخدم ");
+                                          'reqister error'.tr());
                                       //    Navigator.pop(context);
                                       return;
                                     }
@@ -561,14 +571,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     showDialog(
                                         context: context,
                                         builder: (context) {
-                                          // Future.delayed(
-                                          //     Duration(seconds: 1000), () {
-                                          //   Navigator.of(context).pop(true);
-                                          // });
                                           return AlertDialog(
                                               insetPadding: EdgeInsets.all(8.0),
                                               title: CustomText(
-                                                "تفعيل الحساب",
+                                                'active'.tr(),
                                                 fontSize: 24.sp,
                                                 textAlign: TextAlign.center,
                                                 fontFamily: 'DINNEXTLTARABIC',
@@ -587,7 +593,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                   child: Column(
                                                     children: [
                                                       CustomText(
-                                                        'تم ارسال كود التفعيل الى رقم الجوال المدرج سابقاً الرجاء ادخال الكود المرسل في الحقل أدناه',
+                                                        'activate msg'.tr(),
                                                         textAlign:
                                                             TextAlign.center,
                                                         fontFamily:
@@ -621,7 +627,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                         height: 22.h,
                                                       ),
                                                       RaisedGradientButton(
-                                                        text: 'التالي',
+                                                        text: 'next'.tr(),
                                                         width: 340.w,
                                                         color: AppColors
                                                             .scadryColor,
@@ -646,7 +652,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                                   .center,
                                                           children: [
                                                             CustomText(
-                                                              'لم تصلك رسالة حتى الان ؟',
+                                                              'not confirm'
+                                                                  .tr(),
                                                               textAlign:
                                                                   TextAlign
                                                                       .start,
@@ -667,7 +674,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                                 loginWithPhone();
                                                               },
                                                               child: CustomText(
-                                                                'اعادة الارسال ',
+                                                                'resent'.tr(),
                                                                 textAlign:
                                                                     TextAlign
                                                                         .start,
@@ -711,7 +718,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CustomText(
-                                ' لديك حساب بالفعل ؟',
+                                "have-an-account".tr(),
                                 textAlign: TextAlign.start,
                                 fontSize: 16.sp,
                                 fontFamily: 'DINNEXTLTARABIC',
@@ -721,7 +728,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 width: 5.w,
                               ),
                               CustomText(
-                                'تسجيل دخول',
+                                'login'.tr(),
                                 textAlign: TextAlign.start,
                                 fontSize: 16.sp,
                                 fontFamily: 'DINNEXTLTARABIC',
@@ -741,26 +748,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             CustomText(
-                              'عند تسجيلك تقر وتوافق على',
-                              textAlign: TextAlign.start,
+                              'privacy-policy'.tr(),
+                              textAlign: TextAlign.center,
                               fontSize: 16.sp,
                               fontFamily: 'DINNEXTLTARABIC',
                               fontWeight: FontWeight.w400,
                               color: AppColors.orange,
                             ),
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            CustomText(
-                              ' سياسة الخصوصية وشروط الاستخدام',
-                              textAlign: TextAlign.start,
-                              fontSize: 16.sp,
-                              fontFamily: 'DINNEXTLTARABIC',
-                              fontWeight: FontWeight.w400,
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            )
                           ],
                         ),
                       ),
@@ -810,7 +804,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       () {
         if (user != null) {
           Fluttertoast.showToast(
-            msg: "تم تسجيل الدخول بنجاح",
+            msg: "done regster".tr(),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -826,7 +820,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           // activateFun();
         } else {
           Fluttertoast.showToast(
-            msg: "لم يتم تسجيل الدخول",
+            msg: "dont done regster".tr(),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,

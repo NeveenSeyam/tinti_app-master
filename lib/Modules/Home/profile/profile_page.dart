@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Models/auth/profile_model.dart';
 import 'package:tinti_app/Modules/Home/more%20home%20screens/contact_us.dart';
+import 'package:tinti_app/Modules/auth/forgetPassword/first_forget_screen.dart';
 import 'package:tinti_app/Util/constants/constants.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/button_widget.dart';
@@ -97,16 +98,21 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   final _Key = GlobalKey<FormState>();
 
-  String _value = Constants.lang == 'en' ? 'الإنجليزية' : 'العربية';
+  Future<void> saveLang() async {
+    SharedPreferences? _prefs = await SharedPreferences.getInstance();
+    _prefs.setString("lang", Constants.lang!);
+  }
 
   @override
   Widget build(BuildContext context) {
+    String _value = Constants.lang == 'en' ? 'english'.tr() : 'arabic'.tr();
+    String pageName = 'Profile'.tr();
     return Scaffold(
       appBar: CustomAppBar(
-        isProfile: false,
-        'Profile'.tr(),
-        isHome: true,
-        isNotification: true,
+        isProfile: true,
+        pageName,
+        isHome: false,
+        isNotification: false,
       ),
       body: Container(
         width: double.infinity,
@@ -150,7 +156,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 Container(
                                   width: 300.w,
                                   child: CustomText(
-                                    '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                    'contact support'.tr(),
                                     color: AppColors.orange,
                                     // fontWeight: FontWeight.bold,
                                     fontFamily: 'DINNEXTLTARABIC',
@@ -163,7 +169,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   height: 60.h,
                                 ),
                                 RaisedGradientButton(
-                                  text: 'تواصل معنا',
+                                  text: 'contactus'.tr(),
                                   color: AppColors.scadryColor,
                                   height: 48.h,
                                   width: 320.w,
@@ -174,7 +180,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   height: 10.h,
                                 ),
                                 RaisedGradientButton(
-                                  text: ' تسجيل دخول',
+                                  text: 'login'.tr(),
                                   color: AppColors.scadryColor,
                                   width: 340.w,
                                   height: 48.h,
@@ -220,7 +226,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   Container(
                                     width: 350.w,
                                     child: CustomText(
-                                      '  حسابك غير فعال يمكنك التواصل مع الدعم لتفعيل حسابك',
+                                      'contact support'.tr(),
                                       color: AppColors.orange,
                                       // fontWeight: FontWeight.bold,
                                       fontFamily: 'DINNEXTLTARABIC',
@@ -233,7 +239,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     height: 40.h,
                                   ),
                                   RaisedGradientButton(
-                                    text: 'تواصل معنا',
+                                    text: 'contactus'.tr(),
                                     color: AppColors.scadryColor,
                                     height: 48.h,
                                     width: 320.w,
@@ -251,7 +257,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     height: 10.h,
                                   ),
                                   RaisedGradientButton(
-                                    text: ' تسجيل خروج',
+                                    text: 'lougout'.tr(),
                                     color: AppColors.scadryColor,
                                     width: 340.w,
                                     height: 48.h,
@@ -426,7 +432,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                 });
                                                                 await _getContentData();
                                                                 this.setState(
-                                                                    () {});
+                                                                    () {
+                                                                  pageName =
+                                                                      'Profile'
+                                                                          .tr();
+                                                                });
                                                                 Navigator.of(
                                                                         context,
                                                                         rootNavigator:
@@ -435,7 +445,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                 Navigator.pop(
                                                                     context);
                                                               },
-                                                              title: 'حفظ',
+                                                              title:
+                                                                  'save'.tr(),
                                                               backgroundColor:
                                                                   AppColors
                                                                       .scadryColor,
@@ -503,246 +514,264 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               padding: EdgeInsets.all(10.w),
                               child: Column(
                                 children: [
-                                  profCard('البيانات الشخصية', () {
+                                  profCard('my-data'.tr(), () {
                                     showBottomSheet(
                                       context,
                                       Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  EdgeInsetsDirectional.only(
-                                                      end: 16.w,
-                                                      bottom: 12.h,
-                                                      top: 20.h),
-                                              child: CustomText(
-                                                'البيانات الشخصية',
-                                                color: AppColors.scadryColor,
-                                                fontWeight: FontWeight.w300,
-                                                fontFamily: 'DINNextLTArabic',
-                                                fontSize: 18.sp,
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                dataContainer(
-                                                    170.w,
-                                                    serviceModel.user?.lname ??
-                                                        'البلتاجي'),
-                                                SizedBox(
-                                                  width: 15.w,
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8.w),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    EdgeInsetsDirectional.only(
+                                                        start: 20.w,
+                                                        bottom: 12.h,
+                                                        top: 20.h),
+                                                child: CustomText(
+                                                  'my-data'.tr(),
+                                                  color: AppColors.scadryColor,
+                                                  fontWeight: FontWeight.w300,
+                                                  fontFamily: 'DINNextLTArabic',
+                                                  fontSize: 18.sp,
                                                 ),
-                                                dataContainer(
-                                                    170.w,
-                                                    serviceModel.user?.fname ??
-                                                        'ناجي'),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 12.h,
-                                            ),
-                                            Center(
-                                              child: dataContainer(
-                                                  355.w,
-                                                  serviceModel.user?.email ??
-                                                      'Naji@gmail.com'),
-                                            ),
-                                            SizedBox(
-                                              height: 12.h,
-                                            ),
-                                            Center(
-                                              child: dataContainer(
-                                                  355.w,
-                                                  serviceModel.user?.mobile ??
-                                                      '+972597031739'),
-                                            ),
-                                            SizedBox(
-                                              height: 12.h,
-                                            ),
-                                            Center(
-                                              child: dataContainer(
-                                                  355.w,
-                                                  serviceModel.user?.address ??
-                                                      'جدة'),
-                                            ),
-                                            SizedBox(
-                                              height: 12.h,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 16.h),
-                                              child: ButtonWidget(
-                                                onPressed: () {
-                                                  showBottomSheet(
-                                                    context,
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      children: <Widget>[
-                                                        Padding(
-                                                          padding: EdgeInsets.only(
-                                                              bottom: MediaQuery
-                                                                      .of(context)
-                                                                  .viewInsets
-                                                                  .bottom),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
+                                              ),
+                                              Center(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    dataContainer(
+                                                        170.w,
+                                                        serviceModel
+                                                                .user?.lname ??
+                                                            'البلتاجي'),
+                                                    SizedBox(
+                                                      width: 15.w,
+                                                    ),
+                                                    dataContainer(
+                                                        170.w,
+                                                        serviceModel
+                                                                .user?.fname ??
+                                                            'ناجي'),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 12.h,
+                                              ),
+                                              Center(
+                                                child: dataContainer(
+                                                    355.w,
+                                                    serviceModel.user?.email ??
+                                                        'Naji@gmail.com'),
+                                              ),
+                                              SizedBox(
+                                                height: 12.h,
+                                              ),
+                                              Center(
+                                                child: dataContainer(
+                                                    355.w,
+                                                    serviceModel.user?.mobile ??
+                                                        '+972597031739'),
+                                              ),
+                                              SizedBox(
+                                                height: 12.h,
+                                              ),
+                                              Center(
+                                                child: dataContainer(
+                                                    355.w,
+                                                    serviceModel
+                                                            .user?.address ??
+                                                        'enter contry'.tr()),
+                                              ),
+                                              SizedBox(
+                                                height: 12.h,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 16.h),
+                                                child: ButtonWidget(
+                                                  onPressed: () {
+                                                    showBottomSheet(
+                                                      context,
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8.w),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: <Widget>[
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          10.w),
+                                                              child: Padding(
+                                                                padding: EdgeInsetsDirectional
                                                                     .only(
                                                                         end: 20
                                                                             .w,
-                                                                        bottom: 12
-                                                                            .h,
                                                                         top: 20
                                                                             .h),
-                                                            child: CustomText(
-                                                              'تعديل البيانات الشخصية',
-                                                              color: AppColors
-                                                                  .scadryColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300,
-                                                              fontFamily:
-                                                                  'DINNextLTArabic',
-                                                              fontSize: 18.sp,
+                                                                child:
+                                                                    CustomText(
+                                                                  'my-data-update'
+                                                                      .tr(),
+                                                                  color: AppColors
+                                                                      .scadryColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
+                                                                  fontFamily:
+                                                                      'DINNextLTArabic',
+                                                                  fontSize:
+                                                                      18.sp,
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            editDataContainer(
-                                                                170.w,
-                                                                serviceModel
-                                                                        .user
-                                                                        ?.lname ??
-                                                                    'البلتاجي',
-                                                                _lnameController),
-                                                            SizedBox(
-                                                              width: 15.w,
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                editDataContainer(
+                                                                    170.w,
+                                                                    serviceModel
+                                                                            .user
+                                                                            ?.lname ??
+                                                                        'البلتاجي',
+                                                                    _lnameController),
+                                                                SizedBox(
+                                                                  width: 15.w,
+                                                                ),
+                                                                editDataContainer(
+                                                                    170.w,
+                                                                    serviceModel
+                                                                            .user
+                                                                            ?.fname ??
+                                                                        'ناجي',
+                                                                    _fnameController),
+                                                              ],
                                                             ),
-                                                            editDataContainer(
-                                                                170.w,
-                                                                serviceModel
-                                                                        .user
-                                                                        ?.fname ??
-                                                                    'ناجي',
-                                                                _fnameController),
+                                                            Center(
+                                                              child: editDataContainer(
+                                                                  355.w,
+                                                                  serviceModel
+                                                                          .user
+                                                                          ?.email ??
+                                                                      'example@gmail.com',
+                                                                  _emailController),
+                                                            ),
+                                                            Center(
+                                                              child: editDataContainer(
+                                                                  355.w,
+                                                                  serviceModel
+                                                                          .user
+                                                                          ?.mobile ??
+                                                                      '+972597031739',
+                                                                  _numberController),
+                                                            ),
+                                                            Center(
+                                                              child: editDataContainer(
+                                                                  355.w,
+                                                                  serviceModel
+                                                                          .user
+                                                                          ?.address ??
+                                                                      'enter contry'
+                                                                          .tr(),
+                                                                  _addressController),
+                                                            ),
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          16.h),
+                                                              child:
+                                                                  ButtonWidget(
+                                                                onPressed:
+                                                                    () async {
+                                                                  await changPassModel
+                                                                      .editUserRequset(
+                                                                    data: {
+                                                                      "fname":
+                                                                          _fnameController
+                                                                              .text,
+                                                                      "lname":
+                                                                          _lnameController
+                                                                              .text,
+                                                                      "email":
+                                                                          _emailController
+                                                                              .text,
+                                                                      "phoneNumber":
+                                                                          _numberController
+                                                                              .text,
+                                                                      "address":
+                                                                          _addressController
+                                                                              .text
+                                                                    },
+                                                                  );
+                                                                  setState(() {
+                                                                    _fetchedMyRequest =
+                                                                        _getContentData();
+
+                                                                    _addressController
+                                                                        .text = '';
+                                                                    _emailController
+                                                                        .text = '';
+                                                                    _fnameController
+                                                                        .text = '';
+                                                                    _lnameController
+                                                                        .text = '';
+                                                                    // _image2 = null;
+                                                                    _numberController
+                                                                        .text = '';
+                                                                  });
+
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                title:
+                                                                    'save'.tr(),
+                                                                backgroundColor:
+                                                                    AppColors
+                                                                        .scadryColor,
+                                                                textColor:
+                                                                    AppColors
+                                                                        .white,
+                                                                height: 45.h,
+                                                                verticalTextPadding:
+                                                                    0,
+                                                                horizontalTextPadding:
+                                                                    0,
+                                                              ),
+                                                            ),
                                                           ],
                                                         ),
-                                                        Center(
-                                                          child: editDataContainer(
-                                                              355.w,
-                                                              serviceModel.user
-                                                                      ?.email ??
-                                                                  'example@gmail.com',
-                                                              _emailController),
-                                                        ),
-                                                        Center(
-                                                          child: editDataContainer(
-                                                              355.w,
-                                                              serviceModel.user
-                                                                      ?.mobile ??
-                                                                  '+972597031739',
-                                                              _numberController),
-                                                        ),
-                                                        Center(
-                                                          child: editDataContainer(
-                                                              355.w,
-                                                              serviceModel.user
-                                                                      ?.address ??
-                                                                  'جدة',
-                                                              _addressController),
-                                                        ),
-                                                        Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      16.h),
-                                                          child: ButtonWidget(
-                                                            onPressed:
-                                                                () async {
-                                                              await changPassModel
-                                                                  .editUserRequset(
-                                                                data: {
-                                                                  "fname":
-                                                                      _fnameController
-                                                                          .text,
-                                                                  "lname":
-                                                                      _lnameController
-                                                                          .text,
-                                                                  "email":
-                                                                      _emailController
-                                                                          .text,
-                                                                  "phoneNumber":
-                                                                      _numberController
-                                                                          .text,
-                                                                  "address":
-                                                                      _addressController
-                                                                          .text
-                                                                },
-                                                              );
-                                                              setState(() {
-                                                                _fetchedMyRequest =
-                                                                    _getContentData();
-
-                                                                _addressController
-                                                                    .text = '';
-                                                                _emailController
-                                                                    .text = '';
-                                                                _fnameController
-                                                                    .text = '';
-                                                                _lnameController
-                                                                    .text = '';
-                                                                // _image2 = null;
-                                                                _numberController
-                                                                    .text = '';
-                                                              });
-
-                                                              Navigator.pop(
-                                                                  context);
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            title: 'حفظ',
-                                                            backgroundColor:
-                                                                AppColors
-                                                                    .scadryColor,
-                                                            textColor:
-                                                                AppColors.white,
-                                                            height: 45.h,
-                                                            verticalTextPadding:
-                                                                0,
-                                                            horizontalTextPadding:
-                                                                0,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                                title: 'تعديل البيانات ',
-                                                backgroundColor:
-                                                    AppColors.scadryColor,
-                                                textColor: AppColors.white,
-                                                height: 45.h,
-                                                verticalTextPadding: 0,
-                                                horizontalTextPadding: 0,
-                                              ),
-                                            )
-                                          ],
+                                                      ),
+                                                    );
+                                                  },
+                                                  title: 'my-data-update'.tr(),
+                                                  backgroundColor:
+                                                      AppColors.scadryColor,
+                                                  textColor: AppColors.white,
+                                                  height: 45.h,
+                                                  verticalTextPadding: 0,
+                                                  horizontalTextPadding: 0,
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     );
@@ -750,7 +779,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   SizedBox(
                                     height: 10.h,
                                   ),
-                                  profCard('إعادة تعيين كلمة المرور ', () {
+                                  profCard('change-password'.tr(), () {
                                     showBottomSheet(
                                         context,
                                         Form(
@@ -758,18 +787,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
-                                            // crossAxisAlignment: CrossAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Container(
-                                                alignment:
-                                                    Alignment.centerRight,
                                                 padding:
                                                     EdgeInsetsDirectional.only(
                                                         start: 20.w,
                                                         bottom: 12.h,
                                                         top: 20.h),
                                                 child: CustomText(
-                                                  'إعادة تعيين كلمة المرور ',
+                                                  'change-password'.tr(),
                                                   color: AppColors.scadryColor,
                                                   fontWeight: FontWeight.w300,
                                                   fontFamily: 'DINNextLTArabic',
@@ -780,8 +808,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 child: RoundedInputField(
                                                   color: AppColors.grey
                                                       .withOpacity(0.1),
-                                                  hintText:
-                                                      'كلمة المرور القديمة',
+                                                  hintText: 'old-pass'.tr(),
                                                   width: 355.w,
                                                   height: 48.h,
                                                   onChanged: (value) {},
@@ -797,8 +824,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 child: RoundedInputField(
                                                   color: AppColors.grey
                                                       .withOpacity(0.1),
-                                                  hintText:
-                                                      'كلمة المرور الجديدة',
+                                                  hintText: 'new-pass'.tr(),
                                                   width: 355.w,
                                                   height: 48.h,
                                                   onChanged: (value) {},
@@ -806,7 +832,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                   icon: Icon(Icons.key),
                                                   validator: (value) {
                                                     if (value!.isEmpty) {
-                                                      return "Please enter password";
+                                                      return "null verfication"
+                                                          .tr();
                                                     } else {
                                                       //call function to check password
                                                       bool result =
@@ -816,7 +843,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                         // create account event
                                                         return null;
                                                       } else {
-                                                        return " يجب ان تحتوي كلمة المرور على حروف كبيرة وحروف صغيرة وعلامات مميزة وارقام";
+                                                        return "password verfication"
+                                                            .tr();
                                                       }
                                                     }
                                                   },
@@ -831,7 +859,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                   color: AppColors.grey
                                                       .withOpacity(0.1),
                                                   hintText:
-                                                      'تأكيد كلمة المرور الجديدة',
+                                                      'confirm-new-pass'.tr(),
                                                   width: 355.w,
                                                   height: 48.h,
                                                   onChanged: (value) {},
@@ -843,7 +871,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                       .withOpacity(0.7),
                                                   validator: (value) {
                                                     if (value!.isEmpty) {
-                                                      return "Please enter password";
+                                                      return "null verfication"
+                                                          .tr();
                                                     } else {
                                                       //call function to check password
                                                       bool result =
@@ -853,23 +882,34 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                         // create account event
                                                         return null;
                                                       } else {
-                                                        return " لا تتطابق الكلمتين";
+                                                        return "confirm password verfication"
+                                                            .tr();
                                                       }
                                                     }
                                                   },
                                                 ),
                                               ),
-                                              Container(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 26.w),
-                                                child: CustomText(
-                                                  'نسيت كلمة المرور؟',
-                                                  color: AppColors.orange,
-                                                  fontSize: 16.sp,
-                                                  fontWeight: FontWeight.w300,
-                                                  fontFamily: 'DINNextLTArabic',
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            FirstForgetScreen()),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 26.w),
+                                                  child: CustomText(
+                                                    'forget-pass'.tr(),
+                                                    color: AppColors.orange,
+                                                    textAlign: TextAlign.start,
+                                                    fontSize: 16.sp,
+                                                    fontWeight: FontWeight.w300,
+                                                    fontFamily:
+                                                        'DINNextLTArabic',
+                                                  ),
                                                 ),
                                               ),
                                               Padding(
@@ -903,7 +943,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                       Navigator.pop(context);
                                                     }
                                                   },
-                                                  title: 'حفظ',
+                                                  title: 'save'.tr(),
                                                   backgroundColor:
                                                       AppColors.scadryColor,
                                                   textColor: AppColors.white,
@@ -919,7 +959,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   SizedBox(
                                     height: 10.h,
                                   ),
-                                  profCard('اللغة ', () {
+                                  profCard('langouage'.tr(), () {
                                     showModalBottomSheet<void>(
                                       context: context,
                                       isScrollControlled: true,
@@ -952,10 +992,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Container(
-                                                      alignment:
-                                                          Alignment.centerRight,
                                                       padding:
                                                           EdgeInsetsDirectional
                                                               .only(
@@ -963,7 +1003,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                   bottom: 12.h,
                                                                   top: 20.h),
                                                       child: CustomText(
-                                                        'حدد اللغة التي تريدها',
+                                                        'select lang'.tr(),
                                                         color: AppColors
                                                             .scadryColor,
                                                         fontWeight:
@@ -1001,8 +1041,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                 activeColor:
                                                                     AppColors
                                                                         .orange,
-                                                                value:
-                                                                    "العربية",
+                                                                value: 'arabic'
+                                                                    .tr(),
                                                                 groupValue:
                                                                     _value,
                                                                 onChanged:
@@ -1016,7 +1056,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                   }); //selected value
                                                                 }),
                                                             CustomText(
-                                                              'العربية',
+                                                              'arabic'.tr(),
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w300,
@@ -1054,8 +1094,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                 activeColor:
                                                                     AppColors
                                                                         .orange,
-                                                                value:
-                                                                    "الإنجليزية",
+                                                                value: 'english'
+                                                                    .tr(),
                                                                 groupValue:
                                                                     _value,
                                                                 onChanged:
@@ -1069,7 +1109,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                   }); //selected value
                                                                 }),
                                                             CustomText(
-                                                              'الإنجليزية',
+                                                              'english'.tr(),
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w300,
@@ -1087,12 +1127,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                               horizontal: 16.h,
                                                               vertical: 12.h),
                                                       child: ButtonWidget(
-                                                        onPressed: () {
-                                                          _value =
-                                                              Constants.lang ==
-                                                                      'en'
-                                                                  ? 'الإنجليزية'
-                                                                  : 'العربية';
+                                                        onPressed: () async {
+                                                          _value = Constants
+                                                                      .lang ==
+                                                                  'en'
+                                                              ? 'english'.tr()
+                                                              : 'arabic'.tr();
+                                                          await saveLang();
                                                           Constants.lang == 'en'
                                                               ? context
                                                                   .setLocale(
@@ -1104,11 +1145,25 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                       Locale(
                                                                           'ar',
                                                                           'DZ'));
+                                                          if (Constants.lang ==
+                                                              'ar') {
+                                                            Constants.logo =
+                                                                "assets/images/logol2.png";
+                                                            Constants
+                                                                    .blackLogo =
+                                                                "assets/images/blacklogo.png";
+                                                          } else {
+                                                            Constants.logo =
+                                                                "assets/images/logol.png";
+                                                            Constants
+                                                                    .blackLogo =
+                                                                "assets/images/bllo.png";
+                                                          }
 
                                                           Navigator.pop(
                                                               context);
                                                         },
-                                                        title: 'حفظ',
+                                                        title: 'save'.tr(),
                                                         backgroundColor:
                                                             AppColors
                                                                 .scadryColor,
@@ -1126,144 +1181,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                         });
                                       },
                                     );
-
-                                    // showBottomSheet(
-                                    //     context,
-                                    //     Directionality(
-                                    //       textDirection: TextDirection.rtl,
-                                    //       child: Column(
-                                    //         mainAxisAlignment:
-                                    //             MainAxisAlignment.start,
-                                    //         children: [
-                                    //           Container(
-                                    //             alignment:
-                                    //                 Alignment.centerRight,
-                                    //             padding: EdgeInsetsDirectional
-                                    //                 .only(
-                                    //                     start: 18.w,
-                                    //                     bottom: 12.h,
-                                    //                     top: 20.h),
-                                    //             child: CustomText(
-                                    //               'حدد اللغة التي تريدها',
-                                    //               color:
-                                    //                   AppColors.scadryColor,
-                                    //               fontWeight: FontWeight.w400,
-                                    //               fontFamily:
-                                    //                   'DINNextLTArabic',
-                                    //               fontSize: 18.sp,
-                                    //             ),
-                                    //           ),
-                                    //           Padding(
-                                    //             padding: EdgeInsets.symmetric(
-                                    //                 vertical: 10.w,
-                                    //                 horizontal: 16.h),
-                                    //             child: Container(
-                                    //               height: 48.h,
-                                    //               alignment:
-                                    //                   Alignment.centerRight,
-                                    //               decoration: BoxDecoration(
-                                    //                 color: AppColors.grey
-                                    //                     .withOpacity(0.2),
-                                    //                 borderRadius:
-                                    //                     BorderRadius.circular(
-                                    //                         10.w),
-                                    //                 border: Border.all(
-                                    //                     color: Colors.grey
-                                    //                         .withOpacity(.3)),
-                                    //               ),
-                                    //               child: Row(
-                                    //                 children: [
-                                    //                   Radio(
-                                    //                       activeColor:
-                                    //                           AppColors
-                                    //                               .orange,
-                                    //                       value: "العربية",
-                                    //                       groupValue: _value,
-                                    //                       onChanged: (value) {
-                                    //                         setState(() {
-                                    //                           _value = value!;
-                                    //                         }); //selected value
-                                    //                       }),
-                                    //                   CustomText(
-                                    //                     'العربية',
-                                    //                     fontWeight:
-                                    //                         FontWeight.w300,
-                                    //                     fontFamily:
-                                    //                         'DINNextLTArabic',
-                                    //                     fontSize: 16.sp,
-                                    //                   ),
-                                    //                 ],
-                                    //               ),
-                                    //             ),
-                                    //           ),
-                                    //           Padding(
-                                    //             padding: EdgeInsets.symmetric(
-                                    //                 vertical: 10.w,
-                                    //                 horizontal: 16.h),
-                                    //             child: Container(
-                                    //               height: 48.h,
-                                    //               decoration: BoxDecoration(
-                                    //                 color: AppColors.grey
-                                    //                     .withOpacity(0.2),
-                                    //                 borderRadius:
-                                    //                     BorderRadius.circular(
-                                    //                         10.w),
-                                    //                 border: Border.all(
-                                    //                     color: Colors.grey
-                                    //                         .withOpacity(
-                                    //                             0.3)),
-                                    //               ),
-                                    //               child: Row(
-                                    //                 children: [
-                                    //                   Radio(
-                                    //                       activeColor:
-                                    //                           AppColors
-                                    //                               .orange,
-                                    //                       value: "الإنجليزية",
-                                    //                       groupValue: _value,
-                                    //                       onChanged: (value) {
-                                    //                         setState(() {
-                                    //                           _value = value!;
-                                    //                         }); //selected value
-                                    //                       }),
-                                    //                   CustomText(
-                                    //                     'الإنجليزية',
-                                    //                     fontWeight:
-                                    //                         FontWeight.w300,
-                                    //                     fontFamily:
-                                    //                         'DINNextLTArabic',
-                                    //                     fontSize: 16.sp,
-                                    //                   ),
-                                    //                 ],
-                                    //               ),
-                                    //             ),
-                                    //           ),
-                                    //           Padding(
-                                    //             padding: EdgeInsets.symmetric(
-                                    //                 horizontal: 16.h,
-                                    //                 vertical: 12.h),
-                                    //             child: ButtonWidget(
-                                    //               onPressed: () {
-                                    //                 Navigator.pop(context);
-                                    //               },
-                                    //               title: 'حفظ',
-                                    //               backgroundColor:
-                                    //                   AppColors.scadryColor,
-                                    //               textColor: AppColors.white,
-                                    //               height: 45.h,
-                                    //               verticalTextPadding: 0,
-                                    //               horizontalTextPadding: 0,
-                                    //             ),
-                                    //           )
-                                    //         ],
-                                    //       ),
-                                    //     ));
                                   }),
                                   SizedBox(
                                     height: 150.h,
                                   ),
                                   RaisedGradientButton(
-                                    text: ' تسجيل خروج',
+                                    text: 'logout'.tr(),
                                     color: AppColors.scadryColor,
                                     width: 340.w,
                                     height: 48.h,
@@ -1313,7 +1236,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     Container(
                       width: 300.w,
                       child: CustomText(
-                        '       يجب عليك تسجيل الدخول لعرض البيانات والاستمتاع بكل مميزات التطبيق ورؤية بياناتك    ',
+                        'need login'.tr(),
                         color: AppColors.orange,
                         // fontWeight: FontWeight.bold,
                         fontFamily: 'DINNEXTLTARABIC',
@@ -1326,7 +1249,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       height: 60.h,
                     ),
                     RaisedGradientButton(
-                      text: ' تسجيل الدخول',
+                      text: 'login'.tr(),
                       color: AppColors.scadryColor,
                       height: 48.h,
                       width: 320.w,

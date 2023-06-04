@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -211,7 +212,7 @@ class _OnBoardingScreensState extends ConsumerState<OnBoardingScreens> {
                             children: [
                               const Spacer(),
                               Text(
-                                'ابدأ',
+                                'Start'.tr(),
                                 style: TextStyle(
                                   fontSize: 18.sp,
                                   fontFamily: 'DINNEXTLTARABIC',

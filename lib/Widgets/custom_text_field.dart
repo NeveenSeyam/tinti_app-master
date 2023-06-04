@@ -14,6 +14,7 @@ class RoundedInputField extends StatefulWidget {
   double? circuler;
   bool? isObscured;
   Color? hintColor;
+  TextInputType? keyboardType;
   Icon? icon;
   int? linght;
   String? Function(String?)? validator;
@@ -31,6 +32,7 @@ class RoundedInputField extends StatefulWidget {
       this.isObscured = false,
       this.width,
       this.color,
+      this.keyboardType,
       this.borderColor,
       this.circuler,
       this.icon,
@@ -55,6 +57,7 @@ class _RoundedInputFieldState extends State<RoundedInputField> {
         obscureText: _isObscure,
         controller: widget.controller,
         maxLines: widget.linght ?? 1,
+        keyboardType: widget.keyboardType ?? TextInputType.name,
         validator: widget.validator ??
             (value) {
               return null;
@@ -62,28 +65,31 @@ class _RoundedInputFieldState extends State<RoundedInputField> {
         cursorColor: AppColors.primaryColor,
         textAlign: TextAlign.start,
         decoration: InputDecoration(
-          suffixIcon: widget.seen == true
-              ? IconButton(
-                  icon: Icon(
-                    _isObscure ? Icons.visibility_off : Icons.visibility,
-                    color: AppColors.hint,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isObscure = !_isObscure;
-                    });
-                  })
-              : null,
-          icon: widget.icon ?? null,
-          hintText: widget.hintText,
-          // alignLabelWithHint: true,
-          hintStyle: TextStyle(
-            fontFamily: 'DINNEXTLTARABIC',
-            color: widget.hintColor ?? AppColors.primaryColor.withOpacity(0.6),
-            fontSize: 14.sp,
-          ),
-          border: InputBorder.none,
-        ),
+            suffixIcon: widget.seen == true
+                ? IconButton(
+                    icon: Icon(
+                      _isObscure ? Icons.visibility_off : Icons.visibility,
+                      color: AppColors.hint,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isObscure = !_isObscure;
+                      });
+                    })
+                : null,
+            icon: widget.icon ?? null,
+            hintText: widget.hintText,
+            // alignLabelWithHint: true,
+            hintStyle: TextStyle(
+              fontFamily: 'DINNEXTLTARABIC',
+              color:
+                  widget.hintColor ?? AppColors.primaryColor.withOpacity(0.6),
+              fontSize: 14.sp,
+            ),
+            border: InputBorder.none,
+            errorStyle: TextStyle(
+              fontFamily: 'DINNEXTLTARABIC',
+            )),
       ),
     );
   }

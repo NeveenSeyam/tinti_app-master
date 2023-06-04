@@ -34,14 +34,14 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 String? validateEmail(String? value) {
   if (!value!.isEmail() && value.isEmpty) {
-    return 'لو سمحت ادخل بريدك الالكتروني';
+    return 'email verfication'.tr();
   }
   // return value;
 }
 
 String? validatePassword(String? value) {
   if (value!.length < 6) {
-    return 'يجب ان تكون كلمة السر 6 احرف على الاقل ';
+    return 'password verfication'.tr();
   }
   // return value;
 }
@@ -68,7 +68,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }).then((value) async {
       if (value is! Failure) {
         if (value == null) {
-          UIHelper.showNotification("حصل خطأ ما");
+          UIHelper.showNotification("error".tr());
           //    Navigator.pop(context);
           return;
         }
@@ -77,6 +77,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Constants.isQuest = false;
           SharedPreferences? _prefs = await SharedPreferences.getInstance();
           _prefs.setString(Keys.hasSaveUserData, value["data"]["token"]);
+          _prefs.setString("lang", Constants.lang!);
           await AuthProvider.getUserProfileRequset();
 
           Navigator.pop(context);
@@ -91,6 +92,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     log("response $response");
   }
 
+  var logo = Constants.logo;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -103,7 +105,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Container(
               alignment: Alignment.topCenter,
               child: Image.asset(
-                'assets/images/sayartearabic.png',
+                logo!,
                 height: 100.h,
                 width: 300.h,
               ),
@@ -152,6 +154,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         RoundedInputField(
                           hintText: 'email'.tr(),
                           onChanged: (value) {},
+                          keyboardType: TextInputType.emailAddress,
                           hintColor: AppColors.hint,
                           color: AppColors.lightgrey,
                           circuler: 10.w,
@@ -167,6 +170,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         RoundedInputField(
                           hintText: 'password'.tr(),
                           onChanged: (value) {},
+                          keyboardType: TextInputType.visiblePassword,
                           isObscured: true,
                           hintColor: AppColors.hint,
                           color: AppColors.lightgrey,
@@ -236,6 +240,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             children: [
                               CustomText(
                                 'dont-have-account'.tr(),
+                                textAlign: TextAlign.start,
+                                fontSize: 16.sp,
+                                fontFamily: 'DINNEXTLTARABIC',
+                                fontWeight: FontWeight.w400,
+                              ),
+                              SizedBox(
+                                width: 5.w,
+                              ),
+                              CustomText(
+                                'signup'.tr(),
                                 textAlign: TextAlign.start,
                                 fontSize: 16.sp,
                                 fontFamily: 'DINNEXTLTARABIC',

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,7 +50,7 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        "حساب الشركة",
+        "company-profile".tr(),
         //${widget.id.toString()
         isProfile: false,
         isNotification: false,
@@ -58,15 +59,6 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
       body: Column(children: [
         Stack(
           children: [
-            Center(
-              child: SizedBox(
-                  width: 370.w,
-                  height: 180.h,
-                  child: Image.asset(
-                    'assets/images/jonsonandjonson.png',
-                    fit: BoxFit.fill,
-                  )),
-            ),
             Center(
               child: Container(
                 width: 360.w,
@@ -104,20 +96,20 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                   SizedBox(
                     height: 12.h,
                   ),
-                  profCard('عن الشركة', () {
+                  profCard('about-company'.tr(), () {
                     showBottomSheet(
                         context,
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              alignment: Alignment.centerRight,
                               padding: EdgeInsetsDirectional.only(
                                   start: 18.w,
                                   bottom: 12.h,
                                   top: 20.h,
                                   end: 18.w),
                               child: CustomText(
-                                'عن الشركة ',
+                                'about-company'.tr(),
                                 color: AppColors.scadryColor,
                                 fontWeight: FontWeight.w400,
                                 fontFamily: 'DINNextLTArabic',
@@ -128,7 +120,6 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                               child: ListView(
                                 children: [
                                   Container(
-                                    alignment: Alignment.centerRight,
                                     padding: EdgeInsetsDirectional.only(
                                         start: 18.w,
                                         bottom: 12.h,
@@ -151,24 +142,20 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                   SizedBox(
                     height: 12.h,
                   ),
-                  profCard('بيانات التواصل', () {}),
-                  SizedBox(
-                    height: 12.h,
-                  ),
-                  profCard(' خدماتنا', () {
+                  profCard('company-services'.tr(), () {
                     showBottomSheet(
                         context,
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              alignment: Alignment.centerRight,
                               padding: EdgeInsetsDirectional.only(
-                                  start: 18.w,
+                                  start: 12.w,
                                   bottom: 12.h,
                                   top: 20.h,
-                                  end: 18.w),
+                                  end: 12.w),
                               child: CustomText(
-                                'خدماتنا ',
+                                'company-services'.tr(),
                                 color: AppColors.scadryColor,
                                 fontWeight: FontWeight.w400,
                                 fontFamily: 'DINNextLTArabic',
@@ -214,10 +201,11 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                                                 const ClampingScrollPhysics(),
                                             gridDelegate:
                                                 const SliverGridDelegateWithMaxCrossAxisExtent(
-                                                    maxCrossAxisExtent: 300,
-                                                    childAspectRatio: 2 / 3,
-                                                    crossAxisSpacing: 10,
-                                                    mainAxisSpacing: 10),
+                                              maxCrossAxisExtent: 250,
+                                              childAspectRatio: 2 / 2.9,
+                                              // crossAxisSpacing: 0,
+                                              // mainAxisSpacing: 0
+                                            ),
                                             itemCount: productModel
                                                     .getProductsCompanyDataList
                                                     ?.success
@@ -228,8 +216,8 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                                                 (BuildContext ctx, index) {
                                               return Padding(
                                                 padding: EdgeInsets.symmetric(
-                                                    vertical: 5.w,
-                                                    horizontal: 5.h),
+                                                    vertical: 10.w,
+                                                    horizontal: 10.h),
                                                 child: Container(
                                                   height: 100.h,
                                                   decoration: BoxDecoration(
@@ -275,42 +263,49 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                                                                 'assets/images/sa1.jpeg',
                                                           ),
                                                         ),
-                                                        CustomText(
-                                                          productModel
-                                                                  .getProductsCompanyDataList
-                                                                  ?.success
-                                                                  ?.items?[
-                                                                      index]
-                                                                  .name ??
-                                                              'تظليل',
-                                                          color: AppColors
-                                                              .scadryColor,
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          fontSize: 14.sp,
-                                                          fontFamily:
-                                                              'DINNextLTArabic',
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  5.w),
+                                                          child: CustomText(
+                                                            productModel
+                                                                    .getProductsCompanyDataList
+                                                                    ?.success
+                                                                    ?.items?[
+                                                                        index]
+                                                                    .name ??
+                                                                'تظليل',
+                                                            color: AppColors
+                                                                .scadryColor,
+                                                            fontSize: 14.sp,
+                                                            fontFamily:
+                                                                'DINNextLTArabic',
+                                                          ),
                                                         ),
-                                                        CustomText(
-                                                          productModel
-                                                                  .getProductsCompanyDataList
-                                                                  ?.success
-                                                                  ?.items?[
-                                                                      index]
-                                                                  .description ??
-                                                              'تلعب العناية المنتظمة بالسيارة دورا كبيرا في المحافظة على ',
-                                                          color: AppColors
-                                                              .scadryColor,
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          fontSize: 12.sp,
-                                                          fontFamily:
-                                                              'DINNextLTArabic',
-                                                          fontWeight:
-                                                              FontWeight.w300,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 2,
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  5.w),
+                                                          child: CustomText(
+                                                            productModel
+                                                                    .getProductsCompanyDataList
+                                                                    ?.success
+                                                                    ?.items?[
+                                                                        index]
+                                                                    .description ??
+                                                                'تلعب العناية المنتظمة بالسيارة دورا كبيرا في المحافظة على ',
+                                                            color: AppColors
+                                                                .scadryColor,
+                                                            fontSize: 12.sp,
+                                                            fontFamily:
+                                                                'DINNextLTArabic',
+                                                            fontWeight:
+                                                                FontWeight.w300,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines: 2,
+                                                          ),
                                                         )
                                                       ]),
                                                 ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,7 +63,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        'تفاصيل الخدمة',
+        'service details'.tr(),
         isHome: true,
       ),
       body: Consumer(
@@ -278,7 +279,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                               },
                               child: pageIndex == 0
                                   ? Container(
-                                      padding: EdgeInsets.all(3.w),
+                                      padding: EdgeInsets.all(5.w),
                                       decoration: BoxDecoration(
                                         color: const Color(0xffF57A38),
                                         borderRadius:
@@ -286,21 +287,22 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                         // border: Border.all(color: Colors.grey),
                                       ),
                                       child: Container(
-                                        width: 165.w,
-                                        child: const Center(
+                                        width: 160.w,
+                                        child: Center(
                                           child: Text(
-                                            "عن الخدمة ",
+                                            "about service".tr(),
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontFamily: 'DINNEXTLTARABIC',
+                                                fontWeight: FontWeight.normal),
                                           ),
                                         ),
                                       ),
                                     )
                                   : Container(
-                                      width: 165.w,
-                                      padding: EdgeInsets.all(3.w),
+                                      width: 160.w,
+                                      padding: EdgeInsets.all(5.w),
                                       decoration: BoxDecoration(
                                         // color: Colors.orange[300],
                                         borderRadius:
@@ -309,13 +311,14 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                           color: Color(0xffF57A38),
                                         ),
                                       ),
-                                      child: const Center(
+                                      child: Center(
                                         child: Text(
                                           textAlign: TextAlign.center,
-                                          "عن الخدمة ",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                          ),
+                                          "about service".tr(),
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontFamily: 'DINNEXTLTARABIC',
+                                              fontWeight: FontWeight.normal),
                                         ),
                                       ),
                                     ),
@@ -328,26 +331,27 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                               },
                               child: pageIndex == 1
                                   ? Container(
-                                      width: 165.w,
-                                      padding: EdgeInsets.all(3.w),
+                                      width: 160.w,
+                                      padding: EdgeInsets.all(5.w),
                                       decoration: BoxDecoration(
                                         color: Color(0xffF57A38),
                                         borderRadius:
                                             BorderRadius.circular(10.w),
                                         // border: Border.all(color: Colors.grey),
                                       ),
-                                      child: const Center(
+                                      child: Center(
                                         child: Text(
-                                          "التقييمات ",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ),
+                                          "Ratting".tr(),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'DINNEXTLTARABIC',
+                                              fontWeight: FontWeight.normal),
                                         ),
                                       ),
                                     )
                                   : Container(
-                                      width: 165.w,
-                                      padding: EdgeInsets.all(3.w),
+                                      width: 160.w,
+                                      padding: EdgeInsets.all(5.w),
                                       decoration: BoxDecoration(
                                         // color: Colors.orange[300],
                                         borderRadius:
@@ -356,12 +360,13 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                           color: Color(0xffF57A38),
                                         ),
                                       ),
-                                      child: const Center(
+                                      child: Center(
                                         child: Text(
-                                          "التقييمات ",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                          ),
+                                          "Ratting".tr(),
+                                          style: const TextStyle(
+                                              color: Colors.orange,
+                                              fontFamily: 'DINNEXTLTARABIC',
+                                              fontWeight: FontWeight.normal),
                                         ),
                                       ),
                                     ),
@@ -378,6 +383,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                         'تلعب العناية المنتظمة بالسيارة دورا كبيرا في المحافظة على السيارات وهذا هو السبب الذي يجعل بعض السيارات تستمر في العمل بشكل جيد'),
                               )
                             : Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.symmetric(
@@ -406,8 +412,8 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                                   color: Colors.orange,
                                                 )),
                                         CustomText(
-                                          "${productDetailsModel?.product?.ratingCount.toString()}  اشخاص" ??
-                                              ' اشخاص',
+                                          "${productDetailsModel?.product?.ratingCount.toString()}    ${'people'.tr()}" ??
+                                              'people'.tr(),
                                           fontFamily: 'DINNEXTLTARABIC',
                                           color: AppColors.scadryColor,
                                         ),
@@ -421,8 +427,8 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                                       ?.product?.rating ??
                                                   '0') >=
                                               3
-                                          ? 'تم تقييم الخدمة من قبل مشترين وزوار للموقع وكانت من ضمن الأعلى تقييما في الموقع'
-                                          : 'تم تقييم الخدمة من قبل مشترين وزوار للموقع وكانت من ضمن الأقلل تقييما في الموقع'),
+                                          ? "rat service".tr()
+                                          : "bad rat service".tr()),
                                 ],
                               ),
                       ],
@@ -437,7 +443,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         RaisedGradientButton(
-                          text: '  طلب الخدمة',
+                          text: 'request service'.tr(),
                           color: Constants.isQuest == false
                               ? AppColors.scadryColor
                               : AppColors.grey,

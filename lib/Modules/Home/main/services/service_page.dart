@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -67,7 +68,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
       backgroundColor: Colors.grey[100],
       appBar: CustomAppBar(
         isProfile: false,
-        "الخدمات",
+        "services".tr(),
         isNotification: false,
         isHome: true,
       ),
@@ -83,7 +84,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
               child: RoundedInputField(
-                hintText: 'بحث',
+                hintText: 'search'.tr(),
                 hintColor: AppColors.scadryColor,
                 seen: false,
                 onChanged: (val) {},
@@ -300,9 +301,11 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
               child: Center(
                 child: Text(
                   name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.sp,
+                      fontFamily: 'DINNEXTLTARABIC',
+                      fontWeight: FontWeight.normal),
                 ),
               ),
             )
@@ -320,9 +323,11 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
               child: Text(
                 name,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.black,
-                ),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12.sp,
+                    fontFamily: 'DINNEXTLTARABIC',
+                    fontWeight: FontWeight.normal),
               ),
             ),
     );

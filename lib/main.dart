@@ -22,8 +22,8 @@ Future<void> main() async {
   runApp(ProviderScope(
       child: EasyLocalization(
     supportedLocales: [
-      Locale('en', 'US'),
       Locale('ar', 'DZ'),
+      Locale('en', 'US'),
     ],
     path: 'assets/langs',
     child: MyApp(),

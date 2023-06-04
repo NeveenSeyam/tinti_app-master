@@ -1,40 +1,39 @@
 {
     "appName":"sayyarte",
-    "home":"Home Page",
+    "home":"Home",
     "sales":"Sales",
-    "more":"more",
-    "sales-description":"All service offers you want are here",
+    "more":"More",
+    "sales-description":"Find our sales",
     "services":"services",
-    "services-description":"All service  you want are here",
-
+    "services-description":"Every service you want here",
 
     "hoome":"Home",
 
 
 
 
-    "favorite":"Favorite",
+    "favorite":"Favorites",
 
-    "notification":"Notification",
+    "notification":"Notifications",
 
     "My-Orders":"Orders",
 
-    "company-profile":"company-profile",
-    "about-company":"about-company",
-    "company-services":"company-services",
-    "company-name":"company-name",
+    "company-profile":"Company profile",
+    "about-company":"About company",
+    "company-services":"Company Services",
+    "company-name":"Company Name",
 
 
 
     "Profile":"Profile",
 
-    "my-data":"my-data",
-    "fname":"fname",
-    "lname":"lname",
-    "city":"city",
-    "update":"update",
-    "my-data-title":"My Data",
-    "my-data-update":"Update My Data",
+    "my-data":"Personal Information",
+    "fname":"First Name",
+    "lname":"Last Name",
+    "city":"City",
+    "update":"Update",
+    "my-data-title":"Personal Information",
+    "my-data-update":"Update",
 
 
 
@@ -43,43 +42,50 @@
 
 
 
-    "change-password":"change password",
-    "old-pass":"old password",
-    "new-pass":"new password",
-    "confirm-new-pass":"confirm new password",
-    "save":"save",
+    "change-password":"Change password",
+    "old-pass":"Old password",
+    "new-pass":"New password",
+    "confirm-new-pass":"Confirm new password",
+    "save":"Save",
 
 
 
 
 
 
-    "langouage":"langouage",
-    "logout":"logout",
+    "langouage":"Language",
+    "logout":"Logout",
     "arabic":"Arabic",
+    "select lang":"Select Language",
     "english":"English",
+    "active":"Activate account",
+"activate msg":"The activation code has been sent to the previously listed mobile number. Please enter the code sent in the field below",
+"Start":"Start",
 
 
 
 
 
 
-
-    "contactus":"contact Us",
-    "title":"title",
-    "email":"email",
-    "mobile":"mobile",
-    "feacbook":"feacbook",
-    "instagram":"instagram",
-    "twetter":"twetter",
-    "contact-details":"You can contact us via any means of communication to activate your account or make changes to the account",
-    "email-header":"email data",
-    "name":"name",
+    "contactus":"Contact Us",
+    "title":"Title",
+    "email":"Email",
+    "mobile":"Mobile",
+    "feacbook":"Facebook",
+    "instagram":"Instagram",
+    "twetter":"Twitter",
+    "contact-details":"Keep in contact with us using any communcation channel to activate your account or perform account amedment Thanks to contact with Sayyartee",
+    "email-header":"Email",
+    "name":"Name",
     "msg":"msg",
-    "send":"send",
+    "send":"Send",
+    "request service":"Request service",
+    "service details":"Service details",
 
-
-
+    "about service":"About service",
+    "Ratting":"Ratting",
+    "rat service":"The rating of this service is the highest based on buyers and visitors.",
+    "bad rat service":"The rating of this service is the lowest based on buyers and visitors.",
 
     "next":"Next",
 
@@ -107,44 +113,79 @@
     "size":"Size",
     "number":"Car Number",
     "color":"Car Color",
+    "should select value":"You must select a value",
+    "delete succses":"Deleted successfully",
+    "dont add car":"No cars have been added yet! Add one now.",
+    "address":"Address",
+    "send msg":"Data sent successfully",
+    "new":"New order",
 
 
-    "services-companes":"Services Companes",
-    "search":"search",
-    "companys":"companys",
-    "rating":"rating",
-    "people":"people",
-    "card-num":"card number",
-    "expierd-date":"expierd date",
-    "cvv":"cvv",
+    "services-companes":"Company's services",
+    "search":"Search",
+    "companys":"Companies",
+    "rating":"Rating",
+    "people":"People",
+    "card-num":"Card number",
+    "expierd-date":"Expired date",
+    "cvv":"CVV",
     "car":"Car",
-    "done":"done",
-    "faield":"faield",
+    "done":"Completed",
+    "faield":"Failed",
+    "not confirm":"You haven't received a message yet",
+"resent":"Resent SMS",
 
 
 
 
+    "login":"Login",
+    "signup":"Create new account",
 
-    "login":"login",
-    "forget-pass":"forget password",
-    "password":"password",
-    "dont-have-account":"dont-have-account ?? SignUp",
-    "have-an-account":"Already have an account ?? LogIn",
-    "enter-email":"enter your email",
-    "enter-code":"enter verfication code",
+    "forget-pass":"Forgot password?",
+    "password":"Password",
+    "cpassword":"Confirm password",
+    "dont-have-account":"You don't have account?",
+    "have-an-account":"Already have account ?",
+    "enter-email":"Enter your email",
+    "enter-code":"Enter verfication code",
     "change-pass-details":"The password has been set successfully",
 
-    "dont_sent":"You haven't received a message yet ?? Re-transmitter",
-    "neew":"enter new password",
+    "dont_sent":"You haven't received a message yet. Resend",
+    "neew":"Enter new password",
+    "new_signup":" Create new account",
 
 
 
-    "privacy-policy":"By registering, you acknowledge and agree to this  /n Privacy Policy and Terms of Use"
+    "privacy-policy":"By registering, you acknowledge and agree to this  \n Privacy Policy and Terms of Use.",
    
 
 
 
 
+
+    "email verfication":"Enter an available email",
+    "name verfication":"Enter a valid name that does not contain special characters.",
+    "mobile verfication":"Enter an available mobile number.",
+    "contry verfication":"Enter the available country number.",
+    "password verfication":"Enter a password that contains at least 6 characters, including an uppercase letter, a lowercase letter, numbers, and special symbols.",
+    "confirm password verfication":"Passwords dose not matched",
+    "reqister error":  "Email or phone number used.",
+"done regster":"Registration Completed",
+"dont done regster":"You are not logged in.",
+
+    "null verfication":"Field required",
+    
+    "error":"Error occured",
+
+    "contact support":"Your account is not active. You can contact support to activate your account.",
+
+"contact us":"Contact us",
+"finished":"Finished",
+"on progress":"On progress",
+"dont add any":"No services have been requested yet! You can request it now.",
+"show product":"Show product",
+"need login":"You must login to enjoy all the features of the application.",
+"enter contry":"Please enter your address"
 
 
 

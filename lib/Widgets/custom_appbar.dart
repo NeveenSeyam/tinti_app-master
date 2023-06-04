@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Modules/Home/notification/notification_page.dart';
 import 'package:tinti_app/Modules/Home/profile/profile_page.dart';
@@ -51,11 +52,16 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 width: 50.w,
                 height: 50.h,
                 child: isHome == true
-                    ? const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        textDirection: TextDirection.rtl,
-                      )
-                    : Image.asset("assets/images/prof_photo.png")),
+                    ? Constants.lang == 'ar'
+                        ? Icon(
+                            Icons.arrow_back_ios_rounded,
+                            textDirection: TextDirection.ltr,
+                          )
+                        : Icon(Icons.arrow_back_ios_rounded,
+                            textDirection: TextDirection.ltr)
+                    : null
+                // Image.asset("assets/images/prof_photo.png")
+                ),
           ),
         ),
         actions: [
@@ -69,8 +75,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                               builder: (context) => const NotificationScreen()),
                         );
                       },
-                      child: Image.asset(
-                        'assets/images/notification.png', width: 50.w,
+                      child: SvgPicture.asset(
+                        'assets/Bell.svg', width: 50.w,
                         // fit: BoxFit.fill,
                       ),
                     )

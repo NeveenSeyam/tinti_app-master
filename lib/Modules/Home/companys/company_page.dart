@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -48,7 +49,7 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        'مزودي الخدمة',
+        'services-companes'.tr(),
         isHome: true,
         isNotification: false,
       ),
@@ -56,7 +57,7 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
         child: Column(
           children: [
             RoundedInputField(
-              hintText: 'بحث',
+              hintText: 'search'.tr(),
               seen: false,
               hintColor: AppColors.scadryColor,
               onChanged: (val) {},
@@ -70,7 +71,7 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
               padding: EdgeInsetsDirectional.only(
                   start: 18.w, bottom: 12.h, top: 20.h, end: 18.w),
               child: CustomText(
-                'الشركات',
+                'companys'.tr(),
                 color: AppColors.scadryColor,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'DINNextLTArabic',
@@ -215,7 +216,7 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
               padding: EdgeInsetsDirectional.only(
                   start: 18.w, bottom: 12.h, top: 20.h, end: 18.w),
               child: CustomText(
-                'الخدمات',
+                'services'.tr(),
                 color: AppColors.scadryColor,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'DINNextLTArabic',

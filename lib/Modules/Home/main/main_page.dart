@@ -638,7 +638,11 @@ class _MainPageState extends ConsumerState<MainPage> {
               child: Center(
                 child: Text(
                   name,
-                  style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.sp,
+                      fontFamily: 'DINNEXTLTARABIC',
+                      fontWeight: FontWeight.normal),
                 ),
               ),
             )
@@ -656,7 +660,11 @@ class _MainPageState extends ConsumerState<MainPage> {
               child: Text(
                 name,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black, fontSize: 12.sp),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12.sp,
+                    fontFamily: 'DINNEXTLTARABIC',
+                    fontWeight: FontWeight.normal),
               ),
             ),
     );
