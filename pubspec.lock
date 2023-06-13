@@ -350,6 +350,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.0"
+  flutter_inappwebview:
+    dependency: transitive
+    description:
+      name: flutter_inappwebview
+      sha256: f73505c792cf083d5566e1a94002311be497d984b5607f25be36d685cf6361cf
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.7.2+3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -613,6 +621,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.0"
+  my_fatoorah:
+    dependency: "direct main"
+    description:
+      name: my_fatoorah
+      sha256: be0d9541836bb81c8649063c86fd40028783a0dc89415b9e9b7834c1fa638776
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   octo_image:
     dependency: transitive
     description:

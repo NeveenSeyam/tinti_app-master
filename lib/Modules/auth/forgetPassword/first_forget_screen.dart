@@ -263,20 +263,21 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                           await ref
                                               .read(accountProvider)
                                               .forgetPassRequest(
-                                                  email: _emailController.text);
+                                                  email: _emailController.text)
+                                              .then((value) async {
+                                            var forgetModel = ref
+                                                .watch(accountProvider)
+                                                .getForgetPassModel;
+                                            print(
+                                                'forgetModel?.data?.mobile.toString() ${forgetModel?.data?.mobile.toString()}');
+                                            // _getContentData();
+                                            await loginWithPhone(forgetModel
+                                                ?.data?.mobile
+                                                .toString());
 
-                                          var forgetModel = ref
-                                              .watch(accountProvider)
-                                              .getForgetPassModel;
-                                          print(
-                                              'forgetModel?.data?.mobile.toString() ${forgetModel?.data?.mobile.toString()}');
-                                          // _getContentData();
-                                          await loginWithPhone(forgetModel
-                                              ?.data?.mobile
-                                              .toString());
+                                            validate = 2;
+                                          });
                                           Navigator.of(context).pop();
-
-                                          validate = 2;
 
                                           // Navigator.push(
                                           //   context,

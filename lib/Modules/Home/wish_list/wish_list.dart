@@ -68,15 +68,15 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                         builder: (context, ref, child) => FutureBuilder(
                           future: _fetchedFvsRequest,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return SizedBox(
-                                height: 70.h,
-                                child: const Center(
-                                  child: LoaderWidget(),
-                                ),
-                              );
-                            }
+                            // if (snapshot.connectionState ==
+                            //     ConnectionState.waiting) {
+                            //   return SizedBox(
+                            //     height: 70.h,
+                            //     child: const Center(
+                            //       child: LoaderWidget(),
+                            //     ),
+                            //   );
+                            // }
                             if (snapshot.hasError) {
                               return Padding(
                                 padding: EdgeInsets.all(20.w),
@@ -95,9 +95,13 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                             BorderRadius.circular(20.w),
                                         color:
                                             AppColors.white.withOpacity(0.9)),
-                                    width: 320.w,
+                                    // width: 320.w,
                                     height: 500.h,
                                     child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Image.asset(
                                             'assets/images/nullstate.png'),
@@ -107,7 +111,12 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                         Container(
                                           width: 300.w,
                                           child: CustomText(
-                                            'contact support'.tr(),
+                                            '${snapshot.error}' ==
+                                                    'No Internet connection'
+                                                ? Constants.lang == 'ar'
+                                                    ? 'انت غير متصل بالانترنت حاول مرة اخرى'
+                                                    : 'You don\'t connect with internet try again'
+                                                : 'contact support'.tr(),
                                             color: AppColors.orange,
                                             // fontWeight: FontWeight.bold,
                                             fontFamily: 'DINNEXTLTARABIC',
@@ -120,23 +129,27 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                           height: 60.h,
                                         ),
                                         RaisedGradientButton(
-                                          text: 'contactus'.tr(),
+                                          text: Constants.lang == 'ar'
+                                              ? ' حاول مرة اخرى'
+                                              : ' try again',
                                           color: AppColors.scadryColor,
                                           height: 48.h,
                                           width: 320.w,
                                           circular: 10.w,
                                           onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ContactUsScreen()),
-                                            );
+                                            setState(() {
+                                              late Future _fetchedFvsRequest;
+                                            });
                                           },
                                         ),
                                       ],
                                     )),
                               );
+
+                              // Center(
+                              //   // child: Text('Error: ${snapshot.error}'),
+
+                              // );
                             }
                             if (snapshot.hasData) {
                               if (snapshot.data is Failure) {
@@ -238,6 +251,11 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                                       .price
                                                       .toString() ??
                                                   '\$ 460 ',
+                                              salePrice: favsModel
+                                                      ?.favoriteProducts?[index]
+                                                      .salePrice
+                                                      .toString() ??
+                                                  '\$ 460 ',
                                               id: favsModel
                                                       ?.favoriteProducts?[index]
                                                       .productId ??
@@ -269,8 +287,10 @@ class _WishListPageState extends ConsumerState<WishListPage> {
                                                 width: 300.w,
                                                 child: CustomText(
                                                   'dont add any'.tr(),
-                                                  color: AppColors.black,
-                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColors.orange,
+                                                  // fontWeight: FontWeight.bold,
+                                                  fontFamily: 'DINNEXTLTARABIC',
+
                                                   textAlign: TextAlign.center,
                                                   fontSize: 18.sp,
                                                 ),
@@ -370,7 +390,7 @@ class WishListCard extends ConsumerStatefulWidget {
   String price;
   int id;
   int isFavorite;
-
+  String salePrice;
   WishListCard(
       {super.key,
       required this.image,
@@ -379,7 +399,8 @@ class WishListCard extends ConsumerStatefulWidget {
       required this.details,
       required this.price,
       required this.id,
-      required this.isFavorite});
+      required this.isFavorite,
+      required this.salePrice});
 
   @override
   _WishListCardState createState() => _WishListCardState();
@@ -466,9 +487,18 @@ class _WishListCardState extends ConsumerState<WishListCard> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CustomText(
+                            Text(
                               widget.price,
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                color: AppColors.scadryColor,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ),
+                            CustomText(
+                              widget.salePrice,
                               fontSize: 13.sp,
+                              color: AppColors.orange,
                             ),
                             Row(
                               children: [

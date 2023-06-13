@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -76,7 +77,7 @@ class OnBoardingContentHome extends StatelessWidget {
                       },
                       backgroundColor: const Color(0xffF57A38),
                       childWidget: Text(
-                        ' المزيد',
+                        'more'.tr(),
                         style: GoogleFonts.cairo(
                           color: const Color(0xffFFFFFF),
                           fontSize: 11.sp,

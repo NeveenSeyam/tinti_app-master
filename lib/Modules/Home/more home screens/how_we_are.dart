@@ -47,32 +47,7 @@ class _HowWeAreScreenScreenState extends ConsumerState<HowWeAreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return
-        //   MaterialApp(
-        //     debugShowCheckedModeBanner: false,
-        //     home: WebviewScaffold(
-        //       url: 'https://sayyarte.com/web/page/who%20we%20are',
-        //       // javascriptChannels: jsChannels,
-        //       mediaPlaybackRequiresUserGesture: false,
-        //       appBar: CustomAppBar(
-        //         'من نحن',
-        //         isHome: false,
-        //         isNotification: false,
-        //       ),
-        //       withZoom: true,
-        //       withLocalStorage: true,
-        //       hidden: true,
-        //       initialChild: Container(
-        //         color: Colors.white,
-        //         child: const Center(
-        //           child: Text('.... جاري تحميل البيانات.'),
-        //         ),
-        //       ),
-        //     ),
-        //   );
-        // }
-
-        Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.scadryColor,
       body: Container(
         width: double.infinity,

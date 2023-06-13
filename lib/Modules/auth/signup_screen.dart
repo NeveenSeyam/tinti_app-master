@@ -17,15 +17,18 @@ import '../../Util/constants/keys.dart';
 import '../../Widgets/custom_text.dart';
 import '../../Widgets/custom_text_field.dart';
 import '../../Widgets/gradint_button.dart';
+import '../../Widgets/loader_widget.dart';
 import '../../Widgets/loading_dialog.dart';
+import '../../Widgets/text_widget.dart';
 import '../../helpers/ui_helper.dart';
+import '../../provider/app_data_provider.dart';
 import '../Home/a.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
 String? validateEmail(String? value) {
@@ -64,7 +67,7 @@ String? validatePassword(String? value) {
   }
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _Key = GlobalKey<FormState>();
 
   String verificationID = "";
@@ -91,29 +94,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  // activateFun() async {
-  //   await
-  //     otpVerfied == true
-  //         ?
-  //             userModel.activateUserRequset()
-  //             .then((value) => otpVerfied == true
-  //                 ? Navigator.pushReplacement(
-  //                     context,
-  //                     MaterialPageRoute(
-  //                       builder: (context) => MyHomePage(),
-  //                     ),
-  //                   )
-  //                 : null)
-  //         : null;
+  Future _getIntrosData() async {
+    final prov = ref.read(appDataProvider);
 
-  //     return Container();
+    return await prov.getAppDataRequset();
+  }
 
-  // }
+  late Future _fetchedIntroRequest;
 
   Future _activeFun(BuildContext context, WidgetRef ref) async {
     var ActivateProvider = ref.read(accountProvider);
     final response = await ActivateProvider.activateUserRequset();
     return response;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchedIntroRequest = _getIntrosData();
   }
 
   RegExp pass_valid = RegExp(r"(?=.*[a-z])(?=.*[A-Z])");
@@ -747,13 +745,119 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            CustomText(
-                              'privacy-policy'.tr(),
-                              textAlign: TextAlign.center,
-                              fontSize: 16.sp,
-                              fontFamily: 'DINNEXTLTARABIC',
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.orange,
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                          insetPadding: EdgeInsets.all(8.0),
+                                          title: CustomText(
+                                            'privacy-policy'.tr(),
+                                            fontSize: 14.sp,
+                                            textAlign: TextAlign.center,
+                                            fontFamily: 'DINNEXTLTARABIC',
+                                            color: AppColors.scadryColor,
+                                          ),
+                                          content: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        20.w)),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                100,
+                                            height: 700.h,
+                                            child: Consumer(
+                                              builder: (context, ref, child) =>
+                                                  FutureBuilder(
+                                                future: _fetchedIntroRequest,
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return SizedBox(
+                                                      height: 70.h,
+                                                      child: const Center(
+                                                        child: LoaderWidget(),
+                                                      ),
+                                                    );
+                                                  }
+                                                  if (snapshot.hasError) {
+                                                    return Center(
+                                                      child: Text(
+                                                          'Error: ${snapshot.error}'),
+                                                    );
+                                                  }
+                                                  if (snapshot.hasData) {
+                                                    if (snapshot.data
+                                                        is Failure) {
+                                                      return Center(
+                                                          child: TextWidget(
+                                                              snapshot.data
+                                                                  .toString()));
+                                                    }
+                                                    //
+                                                    //  print("snapshot data is ${snapshot.data}");
+
+                                                    var appDataModel = ref
+                                                        .watch(appDataProvider)
+                                                        .getDataList;
+
+                                                    return Padding(
+                                                      padding:
+                                                          EdgeInsets.all(20.w),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            height: 650.h,
+                                                            child: ListView(
+                                                              children: [
+                                                                CustomText(
+                                                                  appDataModel
+                                                                          ?.intros?[
+                                                                              1]
+                                                                          .description ??
+                                                                      'aboutus'
+                                                                          .tr(),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  fontFamily:
+                                                                      'DINNEXTLTARABIC',
+                                                                  color:
+                                                                      AppColors
+                                                                          .black,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    );
+                                                  }
+                                                  return Container();
+                                                },
+                                              ),
+                                            ),
+                                          ));
+                                    });
+                              },
+                              child: CustomText(
+                                'privacy-policy'.tr(),
+                                textAlign: TextAlign.center,
+                                fontSize: 16.sp,
+                                fontFamily: 'DINNEXTLTARABIC',
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.orange,
+                              ),
                             ),
                           ],
                         ),

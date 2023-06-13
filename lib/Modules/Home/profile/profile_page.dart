@@ -53,6 +53,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   File? img;
 
+  final _appBartitle = StateProvider.autoDispose<String>(
+      (ref) => Constants.lang == 'en' ? "Profile" : "حسابي");
   Future _getImageData() async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -101,6 +103,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   Future<void> saveLang() async {
     SharedPreferences? _prefs = await SharedPreferences.getInstance();
     _prefs.setString("lang", Constants.lang!);
+    ref.watch(_appBartitle.state).state =
+        Constants.lang == 'en' ? "Profile" : "حسابي";
+    setState() {}
+    ;
   }
 
   @override
@@ -110,7 +116,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     return Scaffold(
       appBar: CustomAppBar(
         isProfile: true,
-        pageName,
+        ref.watch(_appBartitle.state).state,
         isHome: false,
         isNotification: false,
       ),
@@ -145,9 +151,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 ],
                                 borderRadius: BorderRadius.circular(20.w),
                                 color: AppColors.white.withOpacity(0.9)),
-                            width: 320.w,
+                            // width: 320.w,
                             height: 500.h,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Image.asset('assets/images/nullstate.png'),
                                 SizedBox(
@@ -156,7 +164,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 Container(
                                   width: 300.w,
                                   child: CustomText(
-                                    'contact support'.tr(),
+                                    '${snapshot.error}' ==
+                                            'No Internet connection'
+                                        ? Constants.lang == 'ar'
+                                            ? 'انت غير متصل بالانترنت حاول مرة اخرى'
+                                            : 'You don\'t connect with internet try again'
+                                        : 'contact support'.tr(),
                                     color: AppColors.orange,
                                     // fontWeight: FontWeight.bold,
                                     fontFamily: 'DINNEXTLTARABIC',
@@ -169,29 +182,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   height: 60.h,
                                 ),
                                 RaisedGradientButton(
-                                  text: 'contactus'.tr(),
+                                  text: Constants.lang == 'ar'
+                                      ? ' حاول مرة اخرى'
+                                      : ' try again',
                                   color: AppColors.scadryColor,
                                   height: 48.h,
                                   width: 320.w,
                                   circular: 10.w,
-                                  onPressed: () {},
-                                ),
-                                SizedBox(
-                                  height: 10.h,
-                                ),
-                                RaisedGradientButton(
-                                  text: 'login'.tr(),
-                                  color: AppColors.scadryColor,
-                                  width: 340.w,
-                                  height: 48.h,
-                                  circular: 10.w,
-                                  onPressed: () async {
-                                    Constants.token = null;
-                                    SharedPreferences? _prefs =
-                                        await SharedPreferences.getInstance();
-                                    _prefs.clear();
-                                    Navigator.popAndPushNamed(
-                                        context, '/login_screen');
+                                  onPressed: () {
+                                    setState(() {
+                                      _fetchedMyRequest = _getContentData();
+                                    });
                                   },
                                 ),
                               ],
@@ -215,18 +216,25 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   ],
                                   borderRadius: BorderRadius.circular(20.w),
                                   color: AppColors.white.withOpacity(0.9)),
-                              width: 320.w,
-                              height: 600.h,
+                              // width: 320.w,
+                              height: 500.h,
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Image.asset('assets/images/nullstate.png'),
                                   SizedBox(
                                     height: 20.h,
                                   ),
                                   Container(
-                                    width: 350.w,
+                                    width: 300.w,
                                     child: CustomText(
-                                      'contact support'.tr(),
+                                      '${snapshot.error}' ==
+                                              'No Internet connection'
+                                          ? Constants.lang == 'ar'
+                                              ? 'انت غير متصل بالانترنت حاول مرة اخرى'
+                                              : 'You don\'t connect with internet try again'
+                                          : 'contact support'.tr(),
                                       color: AppColors.orange,
                                       // fontWeight: FontWeight.bold,
                                       fontFamily: 'DINNEXTLTARABIC',
@@ -236,44 +244,30 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 40.h,
+                                    height: 60.h,
                                   ),
                                   RaisedGradientButton(
-                                    text: 'contactus'.tr(),
+                                    text: Constants.lang == 'ar'
+                                        ? ' حاول مرة اخرى'
+                                        : ' try again',
                                     color: AppColors.scadryColor,
                                     height: 48.h,
                                     width: 320.w,
                                     circular: 10.w,
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ContactUsScreen()),
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: 10.h,
-                                  ),
-                                  RaisedGradientButton(
-                                    text: 'lougout'.tr(),
-                                    color: AppColors.scadryColor,
-                                    width: 340.w,
-                                    height: 48.h,
-                                    circular: 10.w,
-                                    onPressed: () async {
-                                      Constants.token = null;
-                                      SharedPreferences? _prefs =
-                                          await SharedPreferences.getInstance();
-                                      _prefs.clear();
-                                      Navigator.popAndPushNamed(
-                                          context, '/login_screen');
+                                      setState(() {
+                                        _fetchedMyRequest = _getContentData();
+                                      });
                                     },
                                   ),
                                 ],
                               )),
                         );
+
+                        // Center(
+                        //   // child: Text('Error: ${snapshot.error}'),
+
+                        // );
                       }
 
                       var serviceModel =
@@ -638,6 +632,63 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                 ),
                                                               ),
                                                             ),
+                                                            Center(
+                                                              child: Container(
+                                                                width: 350.w,
+                                                                height: 45.h,
+                                                                decoration: BoxDecoration(
+                                                                    color: AppColors
+                                                                        .grey
+                                                                        .withOpacity(
+                                                                            0.1),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10.w)),
+                                                                child: Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(10
+                                                                              .w),
+                                                                  child:
+                                                                      CustomText(
+                                                                    serviceModel
+                                                                            .user
+                                                                            ?.email ??
+                                                                        'example@example.com',
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10.h,
+                                                            ),
+                                                            Center(
+                                                              child: Container(
+                                                                width: 350.w,
+                                                                height: 45.h,
+                                                                decoration: BoxDecoration(
+                                                                    color: AppColors
+                                                                        .grey
+                                                                        .withOpacity(
+                                                                            0.1),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10.w)),
+                                                                child: Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(10
+                                                                              .w),
+                                                                  child:
+                                                                      CustomText(
+                                                                    serviceModel
+                                                                            .user
+                                                                            ?.mobile ??
+                                                                        '+970595959834',
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
                                                             Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
@@ -667,24 +718,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                   355.w,
                                                                   serviceModel
                                                                           .user
-                                                                          ?.email ??
-                                                                      'example@gmail.com',
-                                                                  _emailController),
-                                                            ),
-                                                            Center(
-                                                              child: editDataContainer(
-                                                                  355.w,
-                                                                  serviceModel
-                                                                          .user
-                                                                          ?.mobile ??
-                                                                      '+972597031739',
-                                                                  _numberController),
-                                                            ),
-                                                            Center(
-                                                              child: editDataContainer(
-                                                                  355.w,
-                                                                  serviceModel
-                                                                          .user
                                                                           ?.address ??
                                                                       'enter contry'
                                                                           .tr(),
@@ -708,12 +741,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                       "lname":
                                                                           _lnameController
                                                                               .text,
-                                                                      "email":
-                                                                          _emailController
-                                                                              .text,
-                                                                      "phoneNumber":
-                                                                          _numberController
-                                                                              .text,
+                                                                      // "email":
+                                                                      //     _emailController
+                                                                      //         .text,
+                                                                      // "phoneNumber":
+                                                                      //     _numberController
+                                                                      //         .text,
                                                                       "address":
                                                                           _addressController
                                                                               .text

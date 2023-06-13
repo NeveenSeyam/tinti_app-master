@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Models/auth/profile_model.dart';
 import 'package:tinti_app/Models/statics/car_model.dart';
+import 'package:tinti_app/Models/statics/car_model_types_model.dart';
 import 'package:tinti_app/Models/statics/sizes.dart';
 import 'package:tinti_app/Util/constants/constants.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
@@ -48,6 +49,7 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
   TextEditingController _name = TextEditingController();
   TextEditingController _model = TextEditingController();
   TextEditingController _size = TextEditingController();
+  TextEditingController _modelType = TextEditingController();
   TextEditingController _color = TextEditingController();
   TextEditingController _number = TextEditingController();
   int pageIndex = 0;
@@ -62,8 +64,11 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
 
   String dropdownValue = '';
   String sizedropdownValue = '';
+  String modelTypesdropdownValue = '';
+  CarSizes? carSizes;
+  int? sizeId;
   String? selectedNationality;
-
+  double? widthh;
   Future _getContentData() async {
     final prov = ref.read(carProvider);
 
@@ -79,23 +84,32 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
   }
 
   late Future _fetchedCarRequest;
+  var id = 0;
+  var id2 = 0;
 
   Future _getSizesData() async {
     final prov = ref.read(staticsProvider);
-
-    return await prov.getSizesDataRequset();
+    return await prov.getSizesDataRequset(id: id2);
   }
 
   late Future _fetchedSizesRequest;
 
+  Future _getModelTypesData() async {
+    final prov = ref.read(staticsProvider);
+
+    return await prov.getSizesDataRequset(id: id);
+  }
+
+  late Future _fetchedModelTypesRequest;
+
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-
     _fetchedMyRequest = _getContentData();
 
     _fetchedCarRequest = _getCarData();
     _fetchedSizesRequest = _getSizesData();
+    _fetchedModelTypesRequest = _getModelTypesData();
 
     super.initState();
   }
@@ -109,650 +123,829 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
         isHome: true,
         isNotification: false,
       ),
-      body: RefreshIndicator(
-        onRefresh: () {
-          setState(() {
-            _fetchedMyRequest = _getContentData();
-          });
-          return _fetchedMyRequest;
-        },
-        child: SafeArea(
-          child: Container(
-            width: double.infinity,
-            child: Constants.isQuest == false
-                ? Consumer(
-                    builder: (context, ref, child) => FutureBuilder(
-                      future: _fetchedMyRequest,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return SizedBox(
-                            height: 70.h,
-                            child: const Center(
-                              child: LoaderWidget(),
+      body: Consumer(
+        builder: (context, ref, child) => FutureBuilder(
+          future: _fetchedCarRequest,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return SizedBox(
+                height: 70.h,
+                child: const Center(
+                  child: LoaderWidget(),
+                ),
+              );
+            }
+            if (snapshot.hasError) {
+              return Scaffold(
+                body: Padding(
+                  padding: EdgeInsets.all(20.w),
+                  child: Container(
+                      padding: EdgeInsets.all(20.w),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: Offset(0, 7),
+                              blurRadius: 10,
                             ),
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          return Padding(
-                            padding: EdgeInsets.all(20.w),
-                            child: Container(
-                                padding: EdgeInsets.all(20.w),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        offset: Offset(0, 7),
-                                        blurRadius: 10,
-                                      ),
-                                    ],
-                                    borderRadius: BorderRadius.circular(20.w),
-                                    color: AppColors.white.withOpacity(0.9)),
-                                width: 320.w,
-                                height: 500.h,
-                                child: Column(
-                                  children: [
-                                    Image.asset('assets/images/nullstate.png'),
-                                    SizedBox(
-                                      height: 20.h,
-                                    ),
-                                    Container(
-                                      width: 300.w,
-                                      child: CustomText(
-                                        'contact support'.tr(),
-                                        color: AppColors.orange,
-                                        // fontWeight: FontWeight.bold,
-                                        fontFamily: 'DINNEXTLTARABIC',
+                          ],
+                          borderRadius: BorderRadius.circular(20.w),
+                          color: AppColors.white.withOpacity(0.9)),
+                      // width: 320.w,
+                      height: 500.h,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/images/nullstate.png'),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          Container(
+                            width: 300.w,
+                            child: CustomText(
+                              '${snapshot.error}' == 'No Internet connection'
+                                  ? Constants.lang == 'ar'
+                                      ? 'انت غير متصل بالانترنت حاول مرة اخرى'
+                                      : 'You don\'t connect with internet try again'
+                                  : 'contact support'.tr(),
+                              color: AppColors.orange,
+                              // fontWeight: FontWeight.bold,
+                              fontFamily: 'DINNEXTLTARABIC',
 
-                                        textAlign: TextAlign.center,
-                                        fontSize: 18.sp,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 60.h,
-                                    ),
-                                    RaisedGradientButton(
-                                      text: 'contactus'.tr(),
-                                      color: AppColors.scadryColor,
-                                      height: 48.h,
-                                      width: 320.w,
-                                      circular: 10.w,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ContactUsScreen()),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                )),
-                          );
-                        }
-                        if (snapshot.hasData) {
-                          if (snapshot.data is Failure) {
-                            return Center(
-                                child: TextWidget(snapshot.data.toString()));
-                          }
-                          //
-                          //  print("snapshot data is ${snapshot.data}");
-                          var serviceModel =
-                              ref.watch(carProvider).getDataList ?? CarModel();
-                          var carModel =
-                              ref.watch(staticsProvider).getCarsDataList ??
-                                  CarModel2();
-                          var sizeModel =
-                              ref.watch(staticsProvider).getSizessDataList ??
-                                  SizesModel();
+                              textAlign: TextAlign.center,
+                              fontSize: 18.sp,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 60.h,
+                          ),
+                          RaisedGradientButton(
+                            text:
+                                '${snapshot.error}' == 'No Internet connection'
+                                    ? Constants.lang == 'ar'
+                                        ? ' حاول مرة اخرى'
+                                        : ' try again'
+                                    : 'contactus'.tr(),
+                            color: AppColors.scadryColor,
+                            height: 48.h,
+                            width: 320.w,
+                            circular: 10.w,
+                            onPressed: () {
+                              setState(() {
+                                _fetchedMyRequest = _getContentData();
 
-                          var changCarModel = ref.watch(carProvider);
-                          print('lingth ${serviceModel.carModles?.length}');
-                          return serviceModel.carModles?.length != 0
-                              ? ListView.builder(
-                                  physics: const ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount:
-                                      serviceModel.carModles?.length ?? 0,
-                                  itemBuilder:
-                                      (BuildContext context, int index) =>
-                                          Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 16.w, vertical: 10.h),
+                                _fetchedCarRequest = _getCarData();
+                                _fetchedSizesRequest = _getSizesData();
+                                _fetchedModelTypesRequest =
+                                    _getModelTypesData();
+                              });
+                            },
+                          ),
+                        ],
+                      )),
+                ),
+              );
+
+              // Center(
+              //   // child: Text('Error: ${snapshot.error}'),
+
+              // );
+            }
+            if (snapshot.hasData) {
+              if (snapshot.data is Failure) {
+                return Center(child: TextWidget(snapshot.data.toString()));
+              }
+              //
+              //  print("snapshot data is ${snapshot.data}");
+
+              return RefreshIndicator(
+                onRefresh: () {
+                  setState(() {
+                    _fetchedMyRequest = _getContentData();
+                  });
+                  return _fetchedMyRequest;
+                },
+                child: SafeArea(
+                  child: Container(
+                    width: double.infinity,
+                    child: Constants.isQuest == false
+                        ? Consumer(
+                            builder: (context, ref, child) => FutureBuilder(
+                              future: _fetchedMyRequest,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return SizedBox(
+                                    height: 70.h,
+                                    child: const Center(
+                                      child: LoaderWidget(),
+                                    ),
+                                  );
+                                }
+                                if (snapshot.hasError) {
+                                  return Padding(
+                                    padding: EdgeInsets.all(20.w),
                                     child: Container(
-                                      decoration: BoxDecoration(
-                                          color: AppColors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10.w)),
-                                      width: 370.w,
-                                      height: 140.h,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            width: 180.w,
-                                            height: 140.h,
-                                            alignment: Alignment.bottomRight,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.w),
-                                              child: Image.network(
-                                                serviceModel.carModles?[index]
-                                                        .image ??
-                                                    '',
-                                                width: 180.w,
-                                                height: 160.h,
-                                                fit: BoxFit.fill,
-                                                alignment:
-                                                    Alignment.bottomRight,
+                                        padding: EdgeInsets.all(20.w),
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: Colors.black12,
+                                                offset: Offset(0, 7),
+                                                blurRadius: 10,
+                                              ),
+                                            ],
+                                            borderRadius:
+                                                BorderRadius.circular(20.w),
+                                            color: AppColors.white
+                                                .withOpacity(0.9)),
+                                        width: 320.w,
+                                        height: 500.h,
+                                        child: Column(
+                                          children: [
+                                            Image.asset(
+                                                'assets/images/nullstate.png'),
+                                            SizedBox(
+                                              height: 20.h,
+                                            ),
+                                            Container(
+                                              width: 300.w,
+                                              child: CustomText(
+                                                'contact support'.tr(),
+                                                color: AppColors.orange,
+                                                // fontWeight: FontWeight.bold,
+                                                fontFamily: 'DINNEXTLTARABIC',
+
+                                                textAlign: TextAlign.center,
+                                                fontSize: 18.sp,
                                               ),
                                             ),
-                                          ),
-                                          // SizedBox(
-                                          //   width: 10.w,
-                                          // ),
-                                          Padding(
-                                            padding: EdgeInsets.all(10.w),
-                                            child: SizedBox(
-                                              width: 160.w,
+                                            SizedBox(
+                                              height: 60.h,
+                                            ),
+                                            RaisedGradientButton(
+                                              text: 'contactus'.tr(),
+                                              color: AppColors.scadryColor,
+                                              height: 48.h,
+                                              width: 320.w,
+                                              circular: 10.w,
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ContactUsScreen()),
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        )),
+                                  );
+                                }
+                                if (snapshot.hasData) {
+                                  if (snapshot.data is Failure) {
+                                    return Center(
+                                        child: TextWidget(
+                                            snapshot.data.toString()));
+                                  }
+                                  //
+                                  //  print("snapshot data is ${snapshot.data}");
+                                  var serviceModel =
+                                      ref.watch(carProvider).getDataList ??
+                                          CarModel();
+                                  var carModel = ref
+                                          .watch(staticsProvider)
+                                          .getCarsDataList ??
+                                      CarModel2();
+                                  var sizeModel = ref
+                                          .watch(staticsProvider)
+                                          .getSizessDataList ??
+                                      SizesModel();
+                                  var modelTypeModel = ref
+                                          .watch(staticsProvider)
+                                          .getCarModelTypesDataList ??
+                                      CarModelTaypesModel();
+                                  var changCarModel = ref.watch(carProvider);
+                                  var carModelTaypesModel = ref
+                                      .watch(staticsProvider)
+                                      .getCarModelTypesDataList;
+                                  var getSizessDataList = ref
+                                      .watch(staticsProvider)
+                                      .getSizessDataList;
+                                  print(
+                                      'lingth ${serviceModel.carModles?.length}');
+                                  return serviceModel.carModles?.length != 0
+                                      ? ListView.builder(
+                                          physics:
+                                              const ClampingScrollPhysics(),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          itemCount:
+                                              serviceModel.carModles?.length ??
+                                                  0,
+                                          itemBuilder: (BuildContext context,
+                                                  int index) =>
+                                              Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16.w,
+                                                vertical: 10.h),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: AppColors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.w)),
+                                              width: 370.w,
+                                              height: 140.h,
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      CustomText(
-                                                        fontFamily:
-                                                            'DINNEXTLTARABIC',
-                                                        color: AppColors
-                                                            .scadryColor,
+                                                  Container(
+                                                    width: 180.w,
+                                                    height: 140.h,
+                                                    alignment:
+                                                        Alignment.bottomRight,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.w),
+                                                      child: Image.network(
                                                         serviceModel
-                                                                ?.carModles?[
+                                                                .carModles?[
                                                                     index]
-                                                                .carModelName ??
-                                                            ' أودي  ',
-                                                        fontSize: 14.sp,
+                                                                .image ??
+                                                            '',
+                                                        width: 180.w,
+                                                        height: 160.h,
+                                                        fit: BoxFit.fill,
+                                                        alignment: Alignment
+                                                            .bottomRight,
                                                       ),
-                                                      CustomText(
-                                                        fontFamily:
-                                                            'DINNEXTLTARABIC',
-                                                        color: AppColors.orange,
-                                                        serviceModel
-                                                                ?.carModles?[
-                                                                    index]
-                                                                .carNumber ??
-                                                            ' 2020  ',
-                                                        fontSize: 14.sp,
-                                                      ),
-                                                      CustomText(
-                                                        fontFamily:
-                                                            'DINNEXTLTARABIC',
-                                                        color: AppColors
-                                                            .scadryColor,
-                                                        serviceModel
-                                                                ?.carModles?[
-                                                                    index]
-                                                                .color ??
-                                                            ' أحمر  ',
-                                                        fontSize: 14.sp,
-                                                      ),
-                                                    ],
+                                                    ),
                                                   ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          _color
-                                                              .text = serviceModel
-                                                                  ?.carModles?[
-                                                                      index]
-                                                                  .color ??
-                                                              '';
+                                                  // SizedBox(
+                                                  //   width: 10.w,
+                                                  // ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.all(10.w),
+                                                    child: SizedBox(
+                                                      width: 160.w,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              CustomText(
+                                                                fontFamily:
+                                                                    'DINNEXTLTARABIC',
+                                                                color: AppColors
+                                                                    .scadryColor,
+                                                                serviceModel
+                                                                        ?.carModles?[
+                                                                            index]
+                                                                        .name ??
+                                                                    ' أودي  ',
+                                                                fontSize: 14.sp,
+                                                              ),
+                                                              CustomText(
+                                                                fontFamily:
+                                                                    'DINNEXTLTARABIC',
+                                                                color: AppColors
+                                                                    .orange,
+                                                                serviceModel
+                                                                        ?.carModles?[
+                                                                            index]
+                                                                        .carNumber ??
+                                                                    ' 2020  ',
+                                                                fontSize: 14.sp,
+                                                              ),
+                                                              CustomText(
+                                                                fontFamily:
+                                                                    'DINNEXTLTARABIC',
+                                                                color: AppColors
+                                                                    .scadryColor,
+                                                                serviceModel
+                                                                        ?.carModles?[
+                                                                            index]
+                                                                        .color ??
+                                                                    ' أحمر  ',
+                                                                fontSize: 14.sp,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  _color
+                                                                      .text = serviceModel
+                                                                          ?.carModles?[
+                                                                              index]
+                                                                          .color ??
+                                                                      '';
 
-                                                          _model
-                                                              .text = serviceModel
-                                                                  ?.carModles?[
-                                                                      index]
-                                                                  .carModelName ??
-                                                              '';
-                                                          _name
-                                                              .text = serviceModel
-                                                                  ?.carModles?[
-                                                                      index]
-                                                                  .name ??
-                                                              '';
-                                                          _number
-                                                              .text = serviceModel
-                                                                  ?.carModles?[
-                                                                      index]
-                                                                  .carNumber ??
-                                                              '';
-                                                          selectedNationality =
-                                                              null;
-                                                          dropdownValue = "";
-                                                          sizedropdownValue =
-                                                              '';
-                                                          // _image2 = null;
-                                                          _size.text = '';
-                                                          img = null;
-                                                          showModalBottomSheet<
-                                                              void>(
-                                                            context: context,
-                                                            isScrollControlled:
-                                                                true,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius.vertical(
-                                                                      top: Radius
-                                                                          .circular(
-                                                                              25.w)),
-                                                            ),
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                              return StatefulBuilder(builder:
-                                                                  (BuildContext
-                                                                          context,
-                                                                      StateSetter
-                                                                          setState /*You can rename this!*/) {
-                                                                return Padding(
-                                                                  padding: EdgeInsets.only(
-                                                                      bottom: MediaQuery.of(
-                                                                              context)
-                                                                          .viewInsets
-                                                                          .bottom),
-                                                                  child:
-                                                                      Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius: BorderRadius.only(
-                                                                          topLeft: Radius.circular(10
-                                                                              .w),
-                                                                          topRight:
-                                                                              Radius.circular(10.w)),
+                                                                  _model
+                                                                      .text = serviceModel
+                                                                          ?.carModles?[
+                                                                              index]
+                                                                          .carModelName ??
+                                                                      '';
+                                                                  _name
+                                                                      .text = serviceModel
+                                                                          ?.carModles?[
+                                                                              index]
+                                                                          .name ??
+                                                                      '';
+                                                                  _number
+                                                                      .text = serviceModel
+                                                                          ?.carModles?[
+                                                                              index]
+                                                                          .carNumber ??
+                                                                      '';
+                                                                  selectedNationality = carModel
+                                                                      .carModles?[
+                                                                          index]
+                                                                      .id
+                                                                      .toString();
+                                                                  dropdownValue =
+                                                                      "";
+                                                                  sizedropdownValue =
+                                                                      '';
+
+                                                                  String?
+                                                                      subModelId =
+                                                                      "";
+                                                                  // _image2 = null;
+                                                                  _size.text =
+                                                                      '';
+                                                                  img = null;
+                                                                  widthh =
+                                                                      340.w;
+
+                                                                  carModelTaypesModel
+                                                                      ?.carModles
+                                                                      ?.clear();
+                                                                  sizeModel
+                                                                      ?.carSizes
+                                                                      ?.clear();
+                                                                  showModalBottomSheet<
+                                                                      void>(
+                                                                    context:
+                                                                        context,
+                                                                    isScrollControlled:
+                                                                        true,
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.vertical(
+                                                                              top: Radius.circular(25.w)),
                                                                     ),
-                                                                    height:
-                                                                        500.h,
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      children: <
-                                                                          Widget>[
-                                                                        Container(
-                                                                          alignment:
-                                                                              Alignment.centerRight,
-                                                                          padding: EdgeInsetsDirectional.only(
-                                                                              start: 18.w,
-                                                                              end: 18.w),
-                                                                          child:
-                                                                              CustomText(
-                                                                            'update-car'.tr(),
-                                                                            color:
-                                                                                AppColors.scadryColor,
-                                                                            fontWeight:
-                                                                                FontWeight.w400,
-                                                                            fontFamily:
-                                                                                'DINNextLTArabic',
-                                                                            fontSize:
-                                                                                18.sp,
-                                                                          ),
-                                                                        ),
-                                                                        GestureDetector(
-                                                                          onTap:
-                                                                              () async {
-                                                                            await _getImageData();
-                                                                            setState(() {});
-                                                                            // final picker = ImagePicker();
-                                                                            // final pickedFile =
-                                                                            //     await picker.getImage(
-                                                                            //         source: ImageSource
-                                                                            //             .gallery);
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return StatefulBuilder(builder: (BuildContext
+                                                                              context,
+                                                                          StateSetter
+                                                                              setState /*You can rename this!*/) {
+                                                                        // carModelTaypesModel
+                                                                        //     ?.carModles
+                                                                        //     ?.clear();
 
-                                                                            // setState() {
-                                                                            //   img =
-                                                                            //       File(pickedFile!.path);
-                                                                            // }
-                                                                          },
-                                                                          child: img == null
-                                                                              ? Padding(
-                                                                                  padding: EdgeInsets.all(10.w),
-                                                                                  child: Center(
-                                                                                    child: Container(
-                                                                                      color: AppColors.grey.withOpacity(0.3),
-                                                                                      width: 350.w,
-                                                                                      height: 100.h,
-                                                                                      child: Icon(Icons.add_a_photo_outlined),
-                                                                                    ),
-                                                                                  ),
-                                                                                )
-                                                                              : Center(
+                                                                        return Padding(
+                                                                          padding:
+                                                                              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                                          child:
+                                                                              Container(
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10.w), topRight: Radius.circular(10.w)),
+                                                                            ),
+                                                                            height:
+                                                                                600.h,
+                                                                            child:
+                                                                                Column(
+                                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: <Widget>[
+                                                                                Container(
+                                                                                  // alignment: Alignment.s,
+                                                                                  padding: EdgeInsetsDirectional.only(start: 18.w, end: 18.w),
                                                                                   child: Padding(
-                                                                                    padding: EdgeInsets.all(10.w),
-                                                                                    child: Container(
-                                                                                      height: 150.h,
-                                                                                      width: 350.w,
-                                                                                      child: Image.file(
-                                                                                        img ?? File('path'),
-                                                                                        fit: BoxFit.fill,
-                                                                                      ),
+                                                                                    padding: EdgeInsets.all(20.w),
+                                                                                    child: CustomText(
+                                                                                      'update-car'.tr(),
+                                                                                      color: AppColors.scadryColor,
+                                                                                      fontWeight: FontWeight.w400,
+                                                                                      fontFamily: 'DINNextLTArabic',
+                                                                                      fontSize: 18.sp,
                                                                                     ),
                                                                                   ),
                                                                                 ),
-                                                                        ),
-                                                                        Row(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          children: [
-                                                                            RoundedInputField(
-                                                                              hintText: serviceModel?.carModles?[index].name ?? 'name'.tr(),
-                                                                              width: 160.w,
-                                                                              seen: false,
-                                                                              controller: _name,
-                                                                              hintColor: AppColors.grey.withOpacity(0.4),
-                                                                              onChanged: (val) {},
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: 10.w,
-                                                                            ),
-                                                                            Container(
-                                                                              width: 170.w,
-                                                                              child: CustomDropDown(
-                                                                                hintText: "model".tr(),
-                                                                                title: "model".tr(),
-                                                                                value: dropdownValue,
-                                                                                list: carModel.carModles!.map((e) => e.name.toString()).toList(),
-                                                                                onChange: (p0) {
-                                                                                  selectedNationality = carModel.carModles!.firstWhere((element) => element.name == p0).id.toString();
-                                                                                  dropdownValue = selectedNationality ?? "";
-                                                                                  _model.text = dropdownValue;
-                                                                                  setState(() {});
-                                                                                },
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        Row(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          children: [
-                                                                            RoundedInputField(
-                                                                              hintText: serviceModel?.carModles?[index].color ?? 'color'.tr(),
-                                                                              hintColor: AppColors.grey.withOpacity(0.4),
-                                                                              seen: false,
-                                                                              controller: _color,
-                                                                              width: 160.w,
-                                                                              onChanged: (val) {},
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: 10.h,
-                                                                            ),
-                                                                            Container(
-                                                                              width: 170.w,
-                                                                              child: CustomDropDown(
-                                                                                hintText: "size".tr(),
-                                                                                title: "size".tr(),
-                                                                                value: sizedropdownValue,
-                                                                                list: sizeModel.carSizes!.map((e) => e.name.toString()).toList(),
-                                                                                onChange: (p0) {
-                                                                                  var selectedSize = sizeModel.carSizes!.firstWhere((element) {
-                                                                                    return element.name == p0;
-                                                                                  });
-                                                                                  sizedropdownValue = selectedSize.id.toString() ?? "";
-                                                                                  _size.text = sizedropdownValue;
-                                                                                  setState(() {});
-                                                                                },
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        RoundedInputField(
-                                                                          width:
-                                                                              340.w,
-                                                                          hintText:
-                                                                              serviceModel?.carModles?[index].carNumber ?? 'number'.tr(),
-                                                                          controller:
-                                                                              _number,
-                                                                          seen:
-                                                                              false,
-                                                                          hintColor: AppColors
-                                                                              .grey
-                                                                              .withOpacity(0.4),
-                                                                          onChanged:
-                                                                              (val) {},
-                                                                        ),
-                                                                        SizedBox(
-                                                                          height:
-                                                                              5.h,
-                                                                        ),
-                                                                        RaisedGradientButton(
-                                                                          text:
-                                                                              'save'.tr(),
-                                                                          color:
-                                                                              AppColors.scadryColor,
-                                                                          height:
-                                                                              48.h,
-                                                                          width:
-                                                                              340.w,
-                                                                          circular:
-                                                                              10.w,
-                                                                          onPressed:
-                                                                              () async {
-                                                                            loadingDialog(context);
+                                                                                GestureDetector(
+                                                                                  onTap: () async {
+                                                                                    await _getImageData();
+                                                                                    setState(() {});
+                                                                                    // final picker = ImagePicker();
+                                                                                    // final pickedFile =
+                                                                                    //     await picker.getImage(
+                                                                                    //         source: ImageSource
+                                                                                    //             .gallery);
 
-                                                                            if (selectedNationality?.isEmpty ??
-                                                                                true) {
-                                                                              UIHelper.showNotification("should select value".tr());
-                                                                              if (sizedropdownValue.isEmpty ?? true) {
-                                                                                UIHelper.showNotification("should select value".tr());
-                                                                                return;
-                                                                              }
+                                                                                    // setState() {
+                                                                                    //   img =
+                                                                                    //       File(pickedFile!.path);
+                                                                                    // }
+                                                                                  },
+                                                                                  child: img == null
+                                                                                      ? Padding(
+                                                                                          padding: EdgeInsets.all(10.w),
+                                                                                          child: Center(
+                                                                                            child: Container(
+                                                                                              color: AppColors.grey.withOpacity(0.3),
+                                                                                              width: 350.w,
+                                                                                              height: 100.h,
+                                                                                              child: Icon(Icons.add_a_photo_outlined),
+                                                                                            ),
+                                                                                          ),
+                                                                                        )
+                                                                                      : Center(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsets.all(10.w),
+                                                                                            child: Container(
+                                                                                              height: 150.h,
+                                                                                              width: 350.w,
+                                                                                              child: Image.file(
+                                                                                                img ?? File('path'),
+                                                                                                fit: BoxFit.fill,
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                ),
+                                                                                Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                                  children: [
+                                                                                    RoundedInputField(
+                                                                                      hintText: serviceModel?.carModles?[index].name ?? 'name'.tr(),
+                                                                                      width: 160.w,
+                                                                                      seen: false,
+                                                                                      controller: _name,
+                                                                                      hintColor: AppColors.grey.withOpacity(0.4),
+                                                                                      onChanged: (val) {},
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      width: 10.w,
+                                                                                    ),
+                                                                                    Container(
+                                                                                      width: 170.w,
+                                                                                      child: CustomDropDown(
+                                                                                        hintText: "model".tr(),
+                                                                                        title: "model".tr(),
+                                                                                        value: serviceModel.carModles?[index].carModelName ?? dropdownValue,
+                                                                                        list: carModel.carModles?.map((e) => e.name.toString()).toList(),
+                                                                                        onChange: (p0) async {
+                                                                                          selectedNationality = carModel.carModles?.firstWhere((element) => element.name == p0).id.toString();
 
-                                                                              return;
-                                                                            }
-                                                                            log("img ${img?.path ?? ""}");
-                                                                            await changCarModel.editCarRequset(data: {
-                                                                              "name": _name.text ?? serviceModel?.carModles?[index].name,
-                                                                              "color": _color.text ?? serviceModel?.carModles?[index].color,
-                                                                              "car_number": _number.text ?? serviceModel?.carModles?[index].carNumber,
-                                                                              "car_model_id": selectedNationality ?? serviceModel?.carModles?[index].carModelName,
-                                                                              "car_size_id": sizedropdownValue ?? serviceModel?.carModles?[index].carSizeName
-                                                                            }, id: serviceModel.carModles?[index].id.toString() ?? '', file: img);
-                                                                            setState(() {
-                                                                              _fetchedMyRequest = _getContentData();
+                                                                                          dropdownValue = carModel.carModles?.firstWhere((element) => element.name == p0).name.toString() ?? "";
+                                                                                          _model.text = dropdownValue;
+                                                                                          id2 = carModel.carModles?.firstWhere((element) => element.name == p0).id ?? 0;
+                                                                                          //    _fetchedModelTypesRequest = _getModelTypesData();
 
-                                                                              _color.text = '';
-                                                                              _model.text = '';
-                                                                              _name.text = '';
-                                                                              _number.text = '';
-                                                                              selectedNationality = '';
-                                                                              sizedropdownValue = '';
-                                                                              // _image2 = null;
-                                                                              _size.text = '';
-                                                                              dropdownValue = '';
-                                                                            });
+                                                                                          final prov = ref.read(staticsProvider);
+                                                                                          //   carModelTaypesModel = CarModelTaypesModel();
 
-                                                                            Navigator.pop(context);
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              });
-                                                            },
-                                                          );
-                                                        },
-                                                        child: Container(
-                                                          alignment: Alignment
-                                                              .bottomLeft,
-                                                          child: Image.asset(
-                                                              'assets/images/update_car.png'),
-                                                        ),
+                                                                                          await prov.getCarModelTypesDataRequset(id: id2).then((value) {
+                                                                                            //_carModelTypesList
+                                                                                          });
+                                                                                          carModelTaypesModel = ref.read(staticsProvider).getCarModelTypesDataList;
+                                                                                          carModelTaypesModel?.carModles = ref.read(staticsProvider).getCarModelTypesDataList?.carModles ?? [];
+                                                                                          setState(() {
+                                                                                            widthh = 170.w;
+                                                                                          });
+
+                                                                                          log("carModelTaypesModel?.carModles?. ${carModelTaypesModel?.carModles?.length ?? 0}");
+                                                                                        },
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                                Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                                  children: [
+                                                                                    RoundedInputField(
+                                                                                      hintText: serviceModel.carModles?[index].color ?? 'color'.tr(),
+                                                                                      hintColor: AppColors.grey.withOpacity(0.4),
+                                                                                      seen: false,
+                                                                                      controller: _color,
+                                                                                      width: widthh ?? 350.w,
+                                                                                      onChanged: (val) {},
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      width: 10.h,
+                                                                                    ),
+                                                                                    if (carModelTaypesModel?.carModles?.isNotEmpty ?? false)
+                                                                                      Container(
+                                                                                        width: 170.w,
+                                                                                        child: CustomDropDown(
+                                                                                          hintText: "model".tr(),
+                                                                                          title: "model".tr(),
+                                                                                          value: serviceModel.carModles?[index].carModelTypeName ?? dropdownValue,
+                                                                                          list: carModelTaypesModel?.carModles?.map((e) => e.title.toString()).toList(),
+                                                                                          onChange: (p0) async {
+                                                                                            subModelId = carModelTaypesModel?.carModles?.firstWhere((element) => element.title == p0).id.toString();
+
+                                                                                            id2 = carModelTaypesModel?.carModles?.firstWhere((element) => element.title == p0).id ?? 0;
+                                                                                            await _getSizesData();
+                                                                                            sizeModel = ref.watch(staticsProvider).getSizessDataList ?? SizesModel();
+                                                                                            if (sizeModel.carSizes?.isNotEmpty ?? false) sizedropdownValue = sizeModel.carSizes?.first.name.toString() ?? '';
+
+                                                                                            setState(() {});
+                                                                                          },
+                                                                                        ),
+                                                                                      ),
+                                                                                  ],
+                                                                                ),
+                                                                                if (sizeModel.carSizes?.isNotEmpty ?? false)
+                                                                                  Center(
+                                                                                    child: Container(
+                                                                                      width: 340.w,
+                                                                                      child: CustomDropDown(
+                                                                                        hintText: "size".tr(),
+                                                                                        title: "size".tr(),
+                                                                                        value: sizedropdownValue,
+                                                                                        list: sizeModel.carSizes?.map((e) => e.name.toString()).toList(),
+                                                                                        onChange: (p0) {
+                                                                                          var selectedsize = sizeModel.carSizes?.firstWhere((element) {
+                                                                                            return element.name == p0;
+                                                                                          });
+                                                                                          sizedropdownValue = selectedsize?.name.toString() ?? "";
+                                                                                          carSizes = selectedsize;
+                                                                                          _size.text = sizedropdownValue;
+                                                                                          setState(() {});
+                                                                                        },
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                Center(
+                                                                                  child: RoundedInputField(
+                                                                                    maxLingth: 9,
+                                                                                    width: 340.w,
+                                                                                    hintText: serviceModel.carModles?[index].carNumber ?? 'number'.tr(),
+                                                                                    controller: _number,
+                                                                                    seen: false,
+                                                                                    keyboardType: TextInputType.number,
+                                                                                    hintColor: AppColors.grey.withOpacity(0.4),
+                                                                                    onChanged: (val) {},
+                                                                                  ),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  height: 5.h,
+                                                                                ),
+                                                                                Center(
+                                                                                  child: RaisedGradientButton(
+                                                                                    text: 'save'.tr(),
+                                                                                    color: AppColors.scadryColor,
+                                                                                    height: 48.h,
+                                                                                    width: 340.w,
+                                                                                    circular: 10.w,
+                                                                                    onPressed: () async {
+                                                                                      loadingDialog(context);
+
+                                                                                      if (selectedNationality?.isEmpty ?? true) {
+                                                                                        UIHelper.showNotification("should select value".tr());
+                                                                                        if (sizedropdownValue.isEmpty ?? true) {
+                                                                                          UIHelper.showNotification("should select value".tr());
+                                                                                          return;
+                                                                                        }
+
+                                                                                        return;
+                                                                                      }
+
+                                                                                      log("img ${img?.path ?? ""}");
+                                                                                      await changCarModel.editCarRequset(data: {
+                                                                                        "name": _name.text ?? serviceModel?.carModles?[index].name,
+                                                                                        "color": _color.text ?? serviceModel?.carModles?[index].color,
+                                                                                        "car_number": _number.text ?? serviceModel?.carModles?[index].carNumber,
+                                                                                        "car_model_id": selectedNationality ?? serviceModel?.carModles?[index].carModelName,
+                                                                                        "car_model_type_id": subModelId ?? serviceModel?.carModles?[index].carModelTypeName,
+                                                                                        "car_size_id": carSizes?.id
+                                                                                      }, id: serviceModel.carModles?[index].id.toString() ?? '', file: img);
+                                                                                      setState(() {
+                                                                                        _fetchedMyRequest = _getContentData();
+
+                                                                                        _color.text = '';
+                                                                                        _model.text = '';
+                                                                                        _name.text = '';
+                                                                                        _number.text = '';
+                                                                                        selectedNationality = '';
+                                                                                        sizedropdownValue = '';
+                                                                                        // _image2 = null;
+                                                                                        _size.text = '';
+                                                                                        dropdownValue = '';
+                                                                                      });
+
+                                                                                      Navigator.pop(context);
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                  ),
+                                                                                )
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      });
+                                                                    },
+                                                                  );
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .bottomLeft,
+                                                                  child: Image
+                                                                      .asset(
+                                                                          'assets/images/update_car.png'),
+                                                                ),
+                                                              ),
+                                                              GestureDetector(
+                                                                onTap:
+                                                                    () async {
+                                                                  loadingDialog(
+                                                                      context);
+
+                                                                  await changCarModel.removeCarRequset(
+                                                                      id: serviceModel
+                                                                              .carModles?[index]
+                                                                              .id ??
+                                                                          '');
+
+                                                                  setState(() {
+                                                                    _fetchedMyRequest =
+                                                                        _getContentData();
+                                                                  });
+                                                                  UIHelper.showNotification(
+                                                                      'delete succses'
+                                                                          .tr(),
+                                                                      backgroundColor:
+                                                                          AppColors
+                                                                              .green);
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .bottomLeft,
+                                                                  child: Image
+                                                                      .asset(
+                                                                          'assets/images/delete.png'),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
-                                                      GestureDetector(
-                                                        onTap: () async {
-                                                          loadingDialog(
-                                                              context);
-
-                                                          await changCarModel
-                                                              .removeCarRequset(
-                                                                  id: serviceModel
-                                                                          ?.carModles?[
-                                                                              index]
-                                                                          .id ??
-                                                                      '');
-
-                                                          setState(() {
-                                                            _fetchedMyRequest =
-                                                                _getContentData();
-                                                          });
-                                                          UIHelper.showNotification(
-                                                              'delete succses'
-                                                                  .tr(),
-                                                              backgroundColor:
-                                                                  AppColors
-                                                                      .green);
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: Container(
-                                                          alignment: Alignment
-                                                              .bottomLeft,
-                                                          child: Image.asset(
-                                                              'assets/images/delete.png'),
-                                                        ),
-                                                      )
-                                                    ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
+                                        )
+                                      : Padding(
+                                          padding: EdgeInsets.all(20.w),
+                                          child: Container(
+                                              padding: EdgeInsets.all(20.w),
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.w),
+                                                  color: AppColors
+                                                      .lightPrimaryColor
+                                                      .withOpacity(0.2)),
+                                              width: 320.w,
+                                              height: 600.h,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                      'assets/images/nullstate.png'),
+                                                  SizedBox(
+                                                    height: 20.h,
+                                                  ),
+                                                  Container(
+                                                    width: 300.w,
+                                                    child: CustomText(
+                                                      'dont add car'.tr(),
+                                                      color: AppColors.orange,
+                                                      // fontWeight: FontWeight.bold,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      fontFamily:
+                                                          'DINNEXTLTARABIC',
+
+                                                      fontSize: 18.sp,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 60.h,
+                                                  ),
+                                                  // RaisedGradientButton(
+                                                  //   text: 'show product'.tr(),
+                                                  //   color:
+                                                  //       AppColors.scadryColor,
+                                                  //   height: 48.h,
+                                                  //   width: 320.w,
+                                                  //   circular: 10.w,
+                                                  //   onPressed: () {},
+                                                  // ),
+                                                ],
+                                              )),
+                                        );
+                                }
+                                return Container();
+                              },
+                            ),
+                          )
+                        : Container(
+                            padding: EdgeInsets.all(20.w),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    offset: Offset(0, 7),
+                                    blurRadius: 10,
                                   ),
-                                )
-                              : Padding(
-                                  padding: EdgeInsets.all(20.w),
-                                  child: Container(
-                                      padding: EdgeInsets.all(20.w),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20.w),
-                                          color: AppColors.lightPrimaryColor
-                                              .withOpacity(0.2)),
-                                      width: 320.w,
-                                      height: 500.h,
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                              'assets/images/nullstate.png'),
-                                          SizedBox(
-                                            height: 20.h,
-                                          ),
-                                          Container(
-                                            width: 300.w,
-                                            child: CustomText(
-                                              'dont add car'.tr(),
-                                              color: AppColors.orange,
-                                              // fontWeight: FontWeight.bold,
-                                              textAlign: TextAlign.center,
-                                              fontFamily: 'DINNEXTLTARABIC',
+                                ],
+                                borderRadius: BorderRadius.circular(20.w),
+                                color: AppColors.white.withOpacity(0.9)),
+                            width: 320.w,
+                            height: 500.h,
+                            child: Column(
+                              children: [
+                                Image.asset('assets/images/nullstate.png'),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Container(
+                                  width: 300.w,
+                                  child: CustomText(
+                                    'need login'.tr(),
+                                    color: AppColors.orange,
+                                    // fontWeight: FontWeight.bold,
+                                    fontFamily: 'DINNEXTLTARABIC',
 
-                                              fontSize: 18.sp,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 60.h,
-                                          ),
-                                          RaisedGradientButton(
-                                            text: 'show product'.tr(),
-                                            color: AppColors.scadryColor,
-                                            height: 48.h,
-                                            width: 320.w,
-                                            circular: 10.w,
-                                            onPressed: () {},
-                                          ),
-                                        ],
-                                      )),
-                                );
-                        }
-                        return Container();
-                      },
-                    ),
-                  )
-                : Container(
-                    padding: EdgeInsets.all(20.w),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(0, 7),
-                            blurRadius: 10,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(20.w),
-                        color: AppColors.white.withOpacity(0.9)),
-                    width: 320.w,
-                    height: 500.h,
-                    child: Column(
-                      children: [
-                        Image.asset('assets/images/nullstate.png'),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        Container(
-                          width: 300.w,
-                          child: CustomText(
-                            'need login'.tr(),
-                            color: AppColors.orange,
-                            // fontWeight: FontWeight.bold,
-                            fontFamily: 'DINNEXTLTARABIC',
-
-                            textAlign: TextAlign.center,
-                            fontSize: 18.sp,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 60.h,
-                        ),
-                        RaisedGradientButton(
-                          text: ' login'.tr(),
-                          color: AppColors.scadryColor,
-                          height: 48.h,
-                          width: 320.w,
-                          circular: 10.w,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
-                            );
-                          },
-                        ),
-                      ],
-                    )),
-          ),
+                                    textAlign: TextAlign.center,
+                                    fontSize: 18.sp,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 60.h,
+                                ),
+                                RaisedGradientButton(
+                                  text: ' login'.tr(),
+                                  color: AppColors.scadryColor,
+                                  height: 48.h,
+                                  width: 320.w,
+                                  circular: 10.w,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginScreen()),
+                                    );
+                                  },
+                                ),
+                              ],
+                            )),
+                  ),
+                ),
+              );
+            }
+            return Container();
+          },
         ),
       ),
       floatingActionButton: Constants.isQuest == false
@@ -769,60 +962,11 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                     );
                   }
                   if (snapshot.hasError) {
-                    return Padding(
-                      padding: EdgeInsets.all(20.w),
-                      child: Container(
-                          padding: EdgeInsets.all(20.w),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  offset: Offset(0, 7),
-                                  blurRadius: 10,
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(20.w),
-                              color: AppColors.white.withOpacity(0.9)),
-                          width: 320.w,
-                          height: 500.h,
-                          child: Column(
-                            children: [
-                              Image.asset('assets/images/nullstate.png'),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              Container(
-                                width: 300.w,
-                                child: CustomText(
-                                  "contact support".tr(),
-                                  color: AppColors.orange,
-                                  // fontWeight: FontWeight.bold,
-                                  fontFamily: 'DINNEXTLTARABIC',
-
-                                  textAlign: TextAlign.center,
-                                  fontSize: 18.sp,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 60.h,
-                              ),
-                              RaisedGradientButton(
-                                text: 'contactus'.tr(),
-                                color: AppColors.scadryColor,
-                                height: 48.h,
-                                width: 320.w,
-                                circular: 10.w,
-                                onPressed: () {},
-                              ),
-                            ],
-                          )),
-                    );
+                    return Container();
                   }
                   if (snapshot.hasData) {
                     if (snapshot.data is Failure) {
-                      return Center(
-                          child: TextWidget(snapshot.data.toString()));
+                      return Container();
                     }
                     //
                     //  print("snapshot data is ${snapshot.data}");
@@ -833,6 +977,10 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                     var sizeModel =
                         ref.watch(staticsProvider).getSizessDataList ??
                             SizesModel();
+                    var carModelTaypesModel =
+                        ref.watch(staticsProvider).getCarModelTypesDataList;
+                    var getSizessDataList =
+                        ref.watch(staticsProvider).getSizessDataList;
                     var changCarModel = ref.watch(carProvider);
                     print('lingth ${serviceModel.carModles?.length}');
                     return Container(
@@ -841,15 +989,21 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                       child: FloatingActionButton(
                         onPressed: () {
                           _color.text = '';
+
                           _model.text = '';
                           _name.text = '';
                           _number.text = '';
-                          selectedNationality = '';
+                          selectedNationality = null;
+                          dropdownValue = "";
                           sizedropdownValue = '';
-                          dropdownValue = '';
+                          widthh = 340.w;
+                          String? subModelId = "";
                           // _image2 = null;
                           _size.text = '';
                           img = null;
+
+                          carModelTaypesModel?.carModles?.clear();
+                          sizeModel.carSizes?.clear();
                           showModalBottomSheet<void>(
                             context: context,
                             isScrollControlled: true,
@@ -862,6 +1016,10 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                   (BuildContext context,
                                       StateSetter
                                           setState /*You can rename this!*/) {
+                                // carModelTaypesModel
+                                //     ?.carModles
+                                //     ?.clear();
+
                                 return Padding(
                                   padding: EdgeInsets.only(
                                       bottom: MediaQuery.of(context)
@@ -873,16 +1031,18 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                           topLeft: Radius.circular(10.w),
                                           topRight: Radius.circular(10.w)),
                                     ),
-                                    height: 500.h,
+                                    height: 600.h,
                                     child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 20.w),
-                                          child: Container(
-                                            padding: EdgeInsetsDirectional.only(
-                                                start: 18.w, end: 18.w),
+                                      children: <Widget>[
+                                        Container(
+                                          padding: EdgeInsetsDirectional.only(
+                                              start: 18.w, end: 18.w),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(20.w),
                                             child: CustomText(
                                               'add-car'.tr(),
                                               color: AppColors.scadryColor,
@@ -892,209 +1052,295 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                             ),
                                           ),
                                         ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: <Widget>[
-                                            GestureDetector(
-                                              onTap: () async {
-                                                await _getImageData();
-                                                setState(() {});
-                                                // final picker = ImagePicker();
-                                                // final pickedFile =
-                                                //     await picker.getImage(
-                                                //         source: ImageSource
-                                                //             .gallery);
-
-                                                // setState() {
-                                                //   img =
-                                                //       File(pickedFile!.path);
-                                                // }
-                                              },
-                                              child: img == null
-                                                  ? Padding(
-                                                      padding:
-                                                          EdgeInsets.all(10.w),
-                                                      child: Center(
-                                                        child: Container(
-                                                          color: AppColors.grey
-                                                              .withOpacity(0.3),
-                                                          width: 350.w,
-                                                          height: 100.h,
-                                                          child: Icon(Icons
-                                                              .add_a_photo_outlined),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : Center(
-                                                      child: Padding(
-                                                        padding: EdgeInsets.all(
-                                                            10.w),
-                                                        child: Container(
-                                                          height: 150.h,
-                                                          width: 350.w,
-                                                          child: Image.file(
-                                                            img ?? File('path'),
-                                                            fit: BoxFit.fill,
-                                                          ),
-                                                        ),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            await _getImageData();
+                                            setState(() {});
+                                          },
+                                          child: img == null
+                                              ? Padding(
+                                                  padding: EdgeInsets.all(10.w),
+                                                  child: Center(
+                                                    child: Container(
+                                                      color: AppColors.grey
+                                                          .withOpacity(0.3),
+                                                      width: 350.w,
+                                                      height: 100.h,
+                                                      child: Icon(Icons
+                                                          .add_a_photo_outlined),
+                                                    ),
+                                                  ),
+                                                )
+                                              : Center(
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.all(10.w),
+                                                    child: Container(
+                                                      height: 150.h,
+                                                      width: 350.w,
+                                                      child: Image.file(
+                                                        img ?? File('path'),
+                                                        fit: BoxFit.fill,
                                                       ),
                                                     ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                RoundedInputField(
-                                                  hintText: 'name'.tr(),
-                                                  width: 160.w,
-                                                  seen: false,
-                                                  controller: _name,
-                                                  hintColor: AppColors.grey
-                                                      .withOpacity(0.4),
-                                                  onChanged: (val) {},
-                                                ),
-                                                SizedBox(
-                                                  width: 15.w,
-                                                ),
-                                                Container(
-                                                  width: 170.w,
-                                                  child: CustomDropDown(
-                                                    hintText: "model".tr(),
-                                                    title: "model".tr(),
-                                                    value: dropdownValue,
-                                                    list: carModel.carModles!
-                                                        .map((e) =>
-                                                            e.name.toString())
-                                                        .toList(),
-                                                    onChange: (p0) {
-                                                      selectedNationality =
-                                                          carModel
-                                                              .carModles!
-                                                              .firstWhere(
-                                                                  (element) =>
-                                                                      element
-                                                                          .name ==
-                                                                      p0)
-                                                              .id
-                                                              .toString();
-                                                      dropdownValue =
-                                                          selectedNationality ??
-                                                              "";
-                                                      _model.text =
-                                                          dropdownValue;
-                                                      setState(() {});
-                                                    },
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                RoundedInputField(
-                                                  hintText: 'color'.tr(),
-                                                  hintColor: AppColors.grey
-                                                      .withOpacity(0.4),
-                                                  seen: false,
-                                                  controller: _color,
-                                                  width: 160.w,
-                                                  onChanged: (val) {},
-                                                ),
-                                                SizedBox(
-                                                  width: 15.h,
-                                                ),
-                                                Container(
-                                                  width: 170.w,
-                                                  child: CustomDropDown(
-                                                    hintText: "size".tr(),
-                                                    title: "النوع",
-                                                    value: sizedropdownValue,
-                                                    list: sizeModel.carSizes!
-                                                        .map((e) =>
-                                                            e.name.toString())
-                                                        .toList(),
-                                                    onChange: (p0) {
-                                                      var selectedSize =
-                                                          sizeModel.carSizes!
-                                                              .firstWhere(
-                                                                  (element) {
-                                                        return element.name ==
-                                                            p0;
-                                                      });
-                                                      sizedropdownValue =
-                                                          selectedSize.id
-                                                                  .toString() ??
-                                                              "";
-                                                      _size.text =
-                                                          sizedropdownValue;
-                                                      setState(() {});
-                                                    },
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
                                             RoundedInputField(
-                                              width: 340.w,
-                                              hintText: 'number'.tr(),
-                                              controller: _number,
+                                              hintText: 'name'.tr(),
+                                              width: 160.w,
                                               seen: false,
+                                              controller: _name,
                                               hintColor: AppColors.grey
                                                   .withOpacity(0.4),
                                               onChanged: (val) {},
                                             ),
                                             SizedBox(
-                                              height: 5.h,
+                                              width: 10.w,
                                             ),
-                                            RaisedGradientButton(
-                                              text: 'حفظ ',
-                                              color: AppColors.scadryColor,
-                                              height: 48.h,
-                                              width: 340.w,
-                                              circular: 10.w,
-                                              onPressed: () async {
-                                                loadingDialog(context);
+                                            Container(
+                                              width: 170.w,
+                                              child: CustomDropDown(
+                                                hintText: "model".tr(),
+                                                title: "model".tr(),
+                                                value: dropdownValue,
+                                                list: carModel.carModles
+                                                    ?.map((e) =>
+                                                        e.name.toString())
+                                                    .toList(),
+                                                onChange: (p0) async {
+                                                  widthh = 160.w;
+                                                  selectedNationality = carModel
+                                                      .carModles
+                                                      ?.firstWhere((element) =>
+                                                          element.name == p0)
+                                                      .id
+                                                      .toString();
 
-                                                if (selectedNationality
-                                                        ?.isEmpty ??
-                                                    true) {
-                                                  UIHelper.showNotification(
-                                                      "aaaa");
+                                                  dropdownValue = carModel
+                                                          .carModles
+                                                          ?.firstWhere(
+                                                              (element) =>
+                                                                  element
+                                                                      .name ==
+                                                                  p0)
+                                                          .name
+                                                          .toString() ??
+                                                      "";
+                                                  _model.text = dropdownValue;
+                                                  id2 = carModel.carModles
+                                                          ?.firstWhere(
+                                                              (element) =>
+                                                                  element
+                                                                      .name ==
+                                                                  p0)
+                                                          .id ??
+                                                      0;
+                                                  //    _fetchedModelTypesRequest = _getModelTypesData();
 
-                                                  return;
-                                                }
-                                                log("img ${img?.path ?? ""}");
-                                                await changCarModel
-                                                    .addCarRequset(data: {
-                                                  "name": _name.text,
-                                                  "color": _color.text,
-                                                  "car_number": _number.text,
-                                                  "car_model_id":
-                                                      selectedNationality,
-                                                  "car_size_id":
-                                                      sizedropdownValue
-                                                }, file: img);
-                                                setState(() {
-                                                  _fetchedMyRequest =
-                                                      _getContentData();
+                                                  final prov =
+                                                      ref.read(staticsProvider);
+                                                  //   carModelTaypesModel = CarModelTaypesModel();
 
-                                                  _color.text = '';
-                                                  _model.text = '';
-                                                  _name.text = '';
-                                                  _number.text = '';
-                                                  selectedNationality = '';
-                                                  sizedropdownValue = '';
-                                                  // _image2 = null;
-                                                  _size.text = '';
-                                                });
-                                                Navigator.of(context,
-                                                        rootNavigator: true)
-                                                    .pop();
-                                                Navigator.pop(context);
-                                              },
+                                                  await prov
+                                                      .getCarModelTypesDataRequset(
+                                                          id: id2)
+                                                      .then((value) {
+                                                    //_carModelTypesList
+                                                  });
+                                                  carModelTaypesModel = ref
+                                                      .read(staticsProvider)
+                                                      .getCarModelTypesDataList;
+                                                  carModelTaypesModel
+                                                      ?.carModles = ref
+                                                          .read(staticsProvider)
+                                                          .getCarModelTypesDataList
+                                                          ?.carModles ??
+                                                      [];
+                                                  setState(() {});
+
+                                                  log("carModelTaypesModel?.carModles?. ${carModelTaypesModel?.carModles?.length ?? 0}");
+                                                },
+                                              ),
                                             ),
                                           ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            RoundedInputField(
+                                              hintText: 'color'.tr(),
+                                              hintColor: AppColors.grey
+                                                  .withOpacity(0.4),
+                                              seen: false,
+                                              controller: _color,
+                                              width: widthh ?? 340.w,
+                                              onChanged: (val) {},
+                                            ),
+                                            SizedBox(
+                                              width: 10.h,
+                                            ),
+                                            if (carModelTaypesModel
+                                                    ?.carModles?.isNotEmpty ??
+                                                false)
+                                              Container(
+                                                width: 170.w,
+                                                child: CustomDropDown(
+                                                  hintText: "model_type".tr(),
+                                                  title: "model_type".tr(),
+                                                  list: carModelTaypesModel
+                                                      ?.carModles
+                                                      ?.map((e) =>
+                                                          e.title.toString())
+                                                      .toList(),
+                                                  onChange: (p0) async {
+                                                    subModelId =
+                                                        carModelTaypesModel
+                                                            ?.carModles
+                                                            ?.firstWhere(
+                                                                (element) =>
+                                                                    element
+                                                                        .title ==
+                                                                    p0)
+                                                            .id
+                                                            .toString();
+
+                                                    id2 = carModelTaypesModel
+                                                            ?.carModles
+                                                            ?.firstWhere(
+                                                                (element) =>
+                                                                    element
+                                                                        .title ==
+                                                                    p0)
+                                                            .id ??
+                                                        0;
+                                                    await _getSizesData();
+                                                    sizeModel = ref
+                                                            .watch(
+                                                                staticsProvider)
+                                                            .getSizessDataList ??
+                                                        SizesModel();
+                                                    if (sizeModel.carSizes
+                                                            ?.isNotEmpty ??
+                                                        false)
+                                                      sizedropdownValue =
+                                                          sizeModel.carSizes
+                                                                  ?.first.name
+                                                                  .toString() ??
+                                                              '';
+
+                                                    setState(() {
+                                                      sizeId = sizeModel
+                                                              .carSizes
+                                                              ?.first
+                                                              .id ??
+                                                          0;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                        if (sizeModel.carSizes?.isNotEmpty ??
+                                            false)
+                                          Center(
+                                            child: Container(
+                                              width: 340.w,
+                                              child: CustomDropDown(
+                                                hintText: "size".tr(),
+                                                title: "size".tr(),
+                                                value: sizedropdownValue,
+                                                list: sizeModel.carSizes
+                                                    ?.map((e) =>
+                                                        e.name.toString())
+                                                    .toList(),
+                                                onChange: (p0) {
+                                                  var selectedsize = sizeModel
+                                                      .carSizes
+                                                      ?.firstWhere((element) {
+                                                    return element.name == p0;
+                                                  });
+                                                  sizedropdownValue =
+                                                      selectedsize?.name
+                                                              .toString() ??
+                                                          "";
+                                                  carSizes = selectedsize;
+                                                  _size.text =
+                                                      sizedropdownValue;
+                                                  setState(() {});
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        Center(
+                                          child: RoundedInputField(
+                                            width: 340.w,
+                                            hintText: 'number'.tr(),
+                                            controller: _number,
+                                            keyboardType: TextInputType.number,
+                                            seen: false,
+                                            maxLingth: 9,
+                                            hintColor:
+                                                AppColors.grey.withOpacity(0.4),
+                                            onChanged: (val) {},
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5.h,
+                                        ),
+                                        Center(
+                                          child: RaisedGradientButton(
+                                            text: 'حفظ ',
+                                            color: AppColors.scadryColor,
+                                            height: 48.h,
+                                            width: 340.w,
+                                            circular: 10.w,
+                                            onPressed: () async {
+                                              loadingDialog(context);
+
+                                              if (selectedNationality
+                                                      ?.isEmpty ??
+                                                  true) {
+                                                UIHelper.showNotification(
+                                                    "aaaa");
+
+                                                return;
+                                              }
+                                              log("img ${img?.path ?? ""}");
+                                              await changCarModel
+                                                  .addCarRequset(data: {
+                                                "name": _name.text,
+                                                "color": _color.text,
+                                                "car_number": _number.text,
+                                                "car_model_id":
+                                                    selectedNationality,
+                                                "car_model_type_id": subModelId,
+                                                "car_size_id": sizeId ?? 0
+                                              }, file: img);
+                                              setState(() {
+                                                _fetchedMyRequest =
+                                                    _getContentData();
+
+                                                _color.text = '';
+                                                _model.text = '';
+                                                _name.text = '';
+                                                _number.text = '';
+                                                selectedNationality = '';
+                                                sizedropdownValue = '';
+                                                // _image2 = null;
+                                                _size.text = '';
+                                              });
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop();
+                                              Navigator.pop(context);
+                                            },
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1105,6 +1351,7 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                           );
                         },
                         child: Icon(Icons.add),
+                        backgroundColor: AppColors.orange,
                       ),
                     );
                   }

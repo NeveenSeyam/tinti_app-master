@@ -5,9 +5,11 @@ import 'package:tinti_app/Models/single_company.dart';
 import 'package:tinti_app/Models/statics/cites_model.dart';
 import '../Models/companies/comany_model.dart';
 import '../Models/statics/car_model.dart';
+import '../Models/statics/car_model_types_model.dart';
 import '../Models/statics/regions_model.dart';
 import '../Models/statics/sizes.dart';
 import '../apis/car model and size/car_api.dart';
+import '../apis/car model and size/car_model_types_api.dart';
 import '../apis/car model and size/size_api.dart';
 import '../apis/companies/get_companies.dart';
 import '../apis/companies/get_single_companies.dart';
@@ -29,6 +31,15 @@ class StaticsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  CarModelTaypesModel? _carModelTypesList = CarModelTaypesModel();
+//! create get method for the data object
+  CarModelTaypesModel? get getCarModelTypesDataList => _carModelTypesList;
+  void setCarModelTypesDataList(CarModelTaypesModel carModelTypes) {
+    _carModelTypesList = carModelTypes;
+
+    notifyListeners();
+  }
+
   Future getCarsDataRequset() async {
     //! we create this object to set new data to the data object
     CarModel2? carList = CarModel2();
@@ -44,6 +55,26 @@ class StaticsProvider extends ChangeNotifier {
       setDataList(carList);
 
       return carList;
+    } on Failure catch (f) {
+      return f;
+    }
+  }
+
+  Future getCarModelTypesDataRequset({required id}) async {
+    //! we create this object to set new data to the data object
+    CarModelTaypesModel? carModelTypesList = CarModelTaypesModel();
+
+    try {
+      //! here we call the api and get the data using the Fetch method
+      final response = await GetCarModelTypesDataApi(id: id).fetch();
+      log("response $response");
+
+      //! use FormJson method to convert the data to the data object
+      carModelTypesList = CarModelTaypesModel.fromJson(response);
+      //! set the new data to the data object
+      setCarModelTypesDataList(carModelTypesList);
+
+      return carModelTypesList;
     } on Failure catch (f) {
       return f;
     }
@@ -116,13 +147,13 @@ class StaticsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future getSizesDataRequset() async {
+  Future getSizesDataRequset({required id}) async {
     //! we create this object to set new data to the data object
     SizesModel? sizesList = SizesModel();
 
     try {
       //! here we call the api and get the data using the Fetch method
-      final response = await GetSizeDataApi().fetch();
+      final response = await GetSizeDataApi(id: id).fetch();
       log("response $response");
 
       //! use FormJson method to convert the data to the data object

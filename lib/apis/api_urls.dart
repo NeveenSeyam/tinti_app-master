@@ -41,6 +41,7 @@ class ApiUrls {
 
   //api/orders
   static String ordersPage = '${baseUrl}api/orders';
+  static String addOrders = '${baseUrl}api/orders';
   static String showOrder() => '${baseUrl}api/orders}';
   static String addFav = '${baseUrl}api/favorites';
 
@@ -84,7 +85,10 @@ class ApiUrls {
 
 // cars and size
   static String car_models = '${baseUrl}api/car_models';
-  static String car_sizes = '${baseUrl}api/car_sizes';
+  static String car_types({required id}) =>
+      '${baseUrl}api/car_types/${id.toString()}';
+  static String car_sizes({required id}) =>
+      '${baseUrl}api/car_sizes/${id.toString()}';
   static String regions = '${baseUrl}api/regions';
   static String cities({required id}) =>
       '${baseUrl}api/cities/${id.toString()}';

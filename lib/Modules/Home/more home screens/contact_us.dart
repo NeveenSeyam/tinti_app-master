@@ -261,6 +261,13 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () {
+                                                      _emailController.text =
+                                                          "";
+                                                      _addriesController.text =
+                                                          "";
+                                                      _nameController.text = '';
+                                                      _textEditingController
+                                                          .text = '';
                                                       showBottomSheet(
                                                           context,
                                                           Padding(
@@ -470,49 +477,51 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Container(
             width: 380.w,
-            height: 40.h,
+            height: 45.h,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.w),
                 color: AppColors.scadryColor.withOpacity(0.7)),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 150.w,
-                    child: CustomText(
-                      title,
-                      color: AppColors.white,
-                      fontFamily: 'DINNextLTArabic',
-                    ),
-                  ),
-                  // Container(
-                  //   width: 180.w,
-                  //   child: CustomText(
-                  //     data ?? '',
-                  //     textAlign: TextAlign.end,
-                  //     color: AppColors.white,
-                  //     fontSize: 14.sp,
-                  //     fontFamily: 'DINNextLTArabic',
-                  //   ),
-                  // ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w),
-                    child: Center(
-                      child: SizedBox(
-                        width: 5.w,
-                        child: IconButton(
-                            onPressed: onPress,
-                            icon: const Icon(
-                              Icons.arrow_forward_ios,
-                              color: AppColors.white,
-                            )),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 150.w,
+                      child: CustomText(
+                        title,
+                        color: AppColors.white,
+                        fontFamily: 'DINNextLTArabic',
                       ),
                     ),
-                  ),
-                ],
+                    // Container(
+                    //   width: 180.w,
+                    //   child: CustomText(
+                    //     data ?? '',
+                    //     textAlign: TextAlign.end,
+                    //     color: AppColors.white,
+                    //     fontSize: 14.sp,
+                    //     fontFamily: 'DINNextLTArabic',
+                    //   ),
+                    // ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: Center(
+                        child: SizedBox(
+                          width: 5.w,
+                          child: IconButton(
+                              onPressed: onPress,
+                              icon: const Icon(
+                                Icons.arrow_forward_ios,
+                                color: AppColors.white,
+                              )),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             )),
       ),

@@ -185,8 +185,11 @@
 "dont add any":"No services have been requested yet! You can request it now.",
 "show product":"Show product",
 "need login":"You must login to enjoy all the features of the application.",
-"enter contry":"Please enter your address"
+"enter contry":"Please enter your address",
+"model_type":"Car Model type",
+"emailormobile":"Enter your email or mobile number ",
 
+"payment":"Payment Data "
 
 
 }

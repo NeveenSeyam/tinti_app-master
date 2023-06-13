@@ -30,6 +30,7 @@ class CarModles {
   String? color;
   String? carNumber;
   String? carModelName;
+  String? carModelTypeName;
   String? carSizeName;
   String? image;
 
@@ -39,6 +40,7 @@ class CarModles {
       this.color,
       this.carNumber,
       this.carModelName,
+      this.carModelTypeName,
       this.carSizeName,
       this.image});
 
@@ -48,6 +50,7 @@ class CarModles {
     color = json['color'];
     carNumber = json['car_number'];
     carModelName = json['car_model_name'];
+    carModelTypeName = json['car_model_type_name'];
     carSizeName = json['car_size_name'];
     image = json['image'];
   }
@@ -59,6 +62,7 @@ class CarModles {
     data['color'] = this.color;
     data['car_number'] = this.carNumber;
     data['car_model_name'] = this.carModelName;
+    data['car_model_type_name'] = this.carModelTypeName;
     data['car_size_name'] = this.carSizeName;
     data['image'] = this.image;
     return data;

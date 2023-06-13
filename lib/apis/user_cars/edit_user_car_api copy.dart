@@ -9,16 +9,26 @@ class EditUserCar extends BaseDioApi {
   String color;
   String car_number;
   dynamic image;
+  dynamic car_model_type_id;
 
-  EditUserCar({
-    required this.name,
-    required this.car_model_id,
-    required this.car_size_id,
-    required this.color,
-    required this.car_number,
-    required this.image,
-    required this.id,
-  }) : super(ApiUrls.editCars(id: id));
+/*"id": 74,
+        "name": "test",
+        "color": "#00000",
+        "car_number": "123123122",
+        "car_model_name": "AMC",
+        "car_model_type_name": "Vigor",
+        "car_size_name": "كبيرة",
+        "image": "http://sayyarte.com/img/demo_car.png" */
+  EditUserCar(
+      {required this.name,
+      required this.car_model_id,
+      required this.car_size_id,
+      required this.color,
+      required this.car_number,
+      required this.image,
+      required this.id,
+      required this.car_model_type_id})
+      : super(ApiUrls.editCars(id: id));
 
   @override
   body() {

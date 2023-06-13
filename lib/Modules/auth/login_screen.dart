@@ -98,7 +98,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return SafeArea(
         child: Scaffold(
       backgroundColor: AppColors.scadryColor,
-      body: Column(
+      body: ListView(
+        physics: NeverScrollableScrollPhysics(),
         children: [
           Padding(
             padding: EdgeInsets.all(20.h),
@@ -152,7 +153,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           height: 20.h,
                         ),
                         RoundedInputField(
-                          hintText: 'email'.tr(),
+                          hintText: 'emailormobile'.tr(),
                           onChanged: (value) {},
                           keyboardType: TextInputType.emailAddress,
                           hintColor: AppColors.hint,

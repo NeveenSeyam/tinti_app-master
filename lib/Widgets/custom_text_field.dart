@@ -21,6 +21,7 @@ class RoundedInputField extends StatefulWidget {
   TextEditingController? controller;
   final ValueChanged<String> onChanged;
   bool? seen;
+  int? maxLingth;
   RoundedInputField(
       {required this.hintText,
       this.hintColor,
@@ -36,7 +37,8 @@ class RoundedInputField extends StatefulWidget {
       this.borderColor,
       this.circuler,
       this.icon,
-      this.linght});
+      this.linght,
+      this.maxLingth});
 
   @override
   State<RoundedInputField> createState() => _RoundedInputFieldState();
@@ -57,6 +59,7 @@ class _RoundedInputFieldState extends State<RoundedInputField> {
         obscureText: _isObscure,
         controller: widget.controller,
         maxLines: widget.linght ?? 1,
+        maxLength: widget.maxLingth ?? null,
         keyboardType: widget.keyboardType ?? TextInputType.name,
         validator: widget.validator ??
             (value) {

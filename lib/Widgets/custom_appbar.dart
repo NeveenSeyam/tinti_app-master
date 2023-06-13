@@ -10,7 +10,7 @@ import 'package:tinti_app/Util/theme/app_colors.dart';
 
 import '../Modules/auth/login_screen.dart';
 
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+class CustomAppBar extends StatefulWidget with PreferredSizeWidget {
   @override
   final Size preferredSize;
   bool? isHome;
@@ -30,6 +30,11 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         super(key: key);
 
   @override
+  State<CustomAppBar> createState() => _CustomAppBarState();
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 30.w),
@@ -38,9 +43,9 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
           width: 50.w,
           child: GestureDetector(
             onTap: () {
-              isHome == true
+              widget.isHome == true
                   ? Navigator.of(context).pop()
-                  : isProfile == false
+                  : widget.isProfile == false
                       ? Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -51,11 +56,11 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             child: SizedBox(
                 width: 50.w,
                 height: 50.h,
-                child: isHome == true
+                child: widget.isHome == true
                     ? Constants.lang == 'ar'
                         ? Icon(
                             Icons.arrow_back_ios_rounded,
-                            textDirection: TextDirection.ltr,
+                            textDirection: TextDirection.rtl,
                           )
                         : Icon(Icons.arrow_back_ios_rounded,
                             textDirection: TextDirection.ltr)
@@ -66,18 +71,23 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         ),
         actions: [
           Constants.isQuest == false
-              ? isNotification == false
-                  ? GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const NotificationScreen()),
-                        );
-                      },
-                      child: SvgPicture.asset(
-                        'assets/Bell.svg', width: 50.w,
-                        // fit: BoxFit.fill,
+              ? widget.isNotification == false
+                  ? Padding(
+                      padding:
+                          EdgeInsetsDirectional.symmetric(horizontal: 15.w),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const NotificationScreen()),
+                          );
+                        },
+                        child: SvgPicture.asset(
+                          'assets/images/notii.svg', width: 18.w,
+                          // fit: BoxFit.fill,
+                        ),
                       ),
                     )
                   : Container()
@@ -100,7 +110,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         elevation: 0.0,
         toolbarHeight: 100.h,
         title: Text(
-          title,
+          widget.title,
           style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w300,

@@ -53,210 +53,207 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
         isHome: true,
         isNotification: false,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            RoundedInputField(
-              hintText: 'search'.tr(),
-              seen: false,
-              hintColor: AppColors.scadryColor,
-              onChanged: (val) {},
-              icon: const Icon(
-                Icons.search,
-                color: AppColors.scadryColor,
-              ),
+      body: ListView(
+        physics: BouncingScrollPhysics(),
+        children: [
+          RoundedInputField(
+            hintText: 'search'.tr(),
+            seen: false,
+            hintColor: AppColors.scadryColor,
+            onChanged: (val) {},
+            icon: const Icon(
+              Icons.search,
+              color: AppColors.scadryColor,
             ),
-            Container(
-              alignment: Alignment.centerRight,
-              padding: EdgeInsetsDirectional.only(
-                  start: 18.w, bottom: 12.h, top: 20.h, end: 18.w),
-              child: CustomText(
-                'companys'.tr(),
-                color: AppColors.scadryColor,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'DINNextLTArabic',
-                fontSize: 18.sp,
-              ),
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            padding: EdgeInsetsDirectional.only(
+                start: 18.w, bottom: 12.h, top: 20.h, end: 18.w),
+            child: CustomText(
+              'companys'.tr(),
+              color: AppColors.scadryColor,
+              fontWeight: FontWeight.w400,
+              fontFamily: 'DINNextLTArabic',
+              fontSize: 18.sp,
             ),
-            Consumer(
-              builder: (context, ref, child) => FutureBuilder(
-                future: _fetchedMyRequest,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SizedBox(
-                      height: 70.h,
-                      child: const Center(
-                        child: LoaderWidget(),
-                      ),
-                    );
+          ),
+          Consumer(
+            builder: (context, ref, child) => FutureBuilder(
+              future: _fetchedMyRequest,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return SizedBox(
+                    height: 70.h,
+                    child: const Center(
+                      child: LoaderWidget(),
+                    ),
+                  );
+                }
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                }
+                if (snapshot.hasData) {
+                  if (snapshot.data is Failure) {
+                    return Center(child: TextWidget(snapshot.data.toString()));
                   }
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  }
-                  if (snapshot.hasData) {
-                    if (snapshot.data is Failure) {
-                      return Center(
-                          child: TextWidget(snapshot.data.toString()));
-                    }
-                    //
-                    //  print("snapshot data is ${snapshot.data}");
-                    var comanyModel =
-                        ref.watch(companyProvider).getCompanyDataList ??
-                            CompanyModel();
-                    print('lingth ${comanyModel.companies?.length}');
-                    return Column(
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 370.w,
-                          height: 180.h,
-                          child: ListView.builder(
-                              physics: const ClampingScrollPhysics(),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: comanyModel.companies?.length ?? 0,
-                              itemBuilder: (BuildContext context, int index) =>
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                CompanyProfile(
-                                                  name: comanyModel
-                                                          .companies?[index]
-                                                          .name ??
-                                                      '',
-                                                  about: comanyModel
-                                                          .companies?[index]
-                                                          .about ??
-                                                      '',
-                                                  id: comanyModel
-                                                          .companies?[index]
-                                                          .id ??
-                                                      0,
-                                                  img: comanyModel
-                                                          .companies?[index]
+                  //
+                  //  print("snapshot data is ${snapshot.data}");
+                  var comanyModel =
+                      ref.watch(companyProvider).getCompanyDataList ??
+                          CompanyModel();
+                  print('lingth ${comanyModel.companies?.length}');
+                  return Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 370.w,
+                        height: 190.h,
+                        child: ListView.builder(
+                            physics: const ClampingScrollPhysics(),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: comanyModel.companies?.length ?? 0,
+                            itemBuilder: (BuildContext context, int index) =>
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CompanyProfile(
+                                                name: comanyModel
+                                                        .companies?[index]
+                                                        .name ??
+                                                    '',
+                                                about: comanyModel
+                                                        .companies?[index]
+                                                        .about ??
+                                                    '',
+                                                id: comanyModel
+                                                        .companies?[index].id ??
+                                                    0,
+                                                img: comanyModel
+                                                        .companies?[index]
+                                                        .image ??
+                                                    '',
+                                              )),
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      width: 140.w,
+                                      height: 190.h,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.w),
+                                          color: AppColors.orange
+                                              .withOpacity(0.5)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.w),
+                                                child: Image.network(
+                                                  comanyModel.companies?[index]
                                                           .image ??
-                                                      '',
-                                                )),
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 140.w,
-                                        height: 170.h,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.w),
-                                            color: AppColors.orange
-                                                .withOpacity(0.5)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.w),
-                                                  child: Image.network(
-                                                    comanyModel
-                                                            .companies?[index]
-                                                            .image ??
-                                                        'assets/images/sa1.jpeg',
-                                                    width: 120.w,
-                                                    height: 70.h,
-                                                    fit: BoxFit.fill,
-                                                  ),
+                                                      'assets/images/sa1.jpeg',
+                                                  width: 90.w,
+                                                  height: 90.h,
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
-                                              CustomText(
-                                                comanyModel.companies?[index]
-                                                        .name ??
-                                                    'نانو سيراميك',
-                                                color: AppColors.scadryColor,
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: 'DINNextLTArabic',
-                                                fontSize: 10.sp,
-                                              ),
-                                              CustomText(
-                                                comanyModel.companies?[index]
-                                                        .about ??
-                                                    'نانو سيراميك',
-                                                color: AppColors.grey,
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'DINNextLTArabic',
-                                                maxLines: 2,
-                                                fontSize: 8.sp,
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                            CustomText(
+                                              comanyModel
+                                                      .companies?[index].name ??
+                                                  'نانو سيراميك',
+                                              color: AppColors.scadryColor,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'DINNextLTArabic',
+                                              fontSize: 12.sp,
+                                            ),
+                                            CustomText(
+                                              comanyModel.companies?[index]
+                                                      .about ??
+                                                  'نانو سيراميك',
+                                              color: AppColors.grey,
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'DINNextLTArabic',
+                                              maxLines: 2,
+                                              fontSize: 10.sp,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  )),
-                        ),
-                      ],
-                    );
-                  }
-                  return Container();
-                },
-              ),
-            ),
-            Container(
-              alignment: Alignment.centerRight,
-              padding: EdgeInsetsDirectional.only(
-                  start: 18.w, bottom: 12.h, top: 20.h, end: 18.w),
-              child: CustomText(
-                'services'.tr(),
-                color: AppColors.scadryColor,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'DINNextLTArabic',
-                fontSize: 18.sp,
-              ),
-            ),
-            Consumer(
-              builder: (context, ref, child) => FutureBuilder(
-                future: _fetchedAllProductsRequest,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SizedBox(
-                      height: 70.h,
-                      child: const Center(
-                        child: LoaderWidget(),
+                                  ),
+                                )),
                       ),
-                    );
+                    ],
+                  );
+                }
+                return Container();
+              },
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            padding: EdgeInsetsDirectional.only(
+                start: 18.w, bottom: 12.h, top: 20.h, end: 18.w),
+            child: CustomText(
+              'services'.tr(),
+              color: AppColors.scadryColor,
+              fontWeight: FontWeight.w400,
+              fontFamily: 'DINNextLTArabic',
+              fontSize: 18.sp,
+            ),
+          ),
+          Consumer(
+            builder: (context, ref, child) => FutureBuilder(
+              future: _fetchedAllProductsRequest,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return SizedBox(
+                    height: 70.h,
+                    child: const Center(
+                      child: LoaderWidget(),
+                    ),
+                  );
+                }
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                }
+                if (snapshot.hasData) {
+                  if (snapshot.data is Failure) {
+                    return Center(child: TextWidget(snapshot.data.toString()));
                   }
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  }
-                  if (snapshot.hasData) {
-                    if (snapshot.data is Failure) {
-                      return Center(
-                          child: TextWidget(snapshot.data.toString()));
-                    }
-                    //
-                    //  print("snapshot data is ${snapshot.data}");
-                    var productsModel =
-                        ref.watch(productsProvider).getProductsDataList;
-                    print('lingth ${productsModel!.success?.items?.length}');
-                    return SizedBox(
-                      width: 370.w,
-                      height: 400.h,
+                  //
+                  //  print("snapshot data is ${snapshot.data}");
+                  var productsModel =
+                      ref.watch(productsProvider).getProductsDataList;
+                  print('lingth ${productsModel!.success?.items?.length}');
+                  return SizedBox(
+                    width: 370.w,
+                    height: 400.h,
+                    child: Padding(
+                      padding: EdgeInsets.all(10.w),
                       child: GridView.builder(
+                          physics: BouncingScrollPhysics(),
                           gridDelegate:
                               const SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 150,
+                                  maxCrossAxisExtent: 200,
                                   childAspectRatio: 2 / 2,
                                   crossAxisSpacing: 10,
                                   mainAxisSpacing: 10),
@@ -325,14 +322,14 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                               ),
                             );
                           }),
-                    );
-                  }
-                  return Container();
-                },
-              ),
+                    ),
+                  );
+                }
+                return Container();
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

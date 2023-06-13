@@ -65,14 +65,14 @@ class _CartPageState extends ConsumerState<CartPage> {
                   builder: (context, ref, child) => FutureBuilder(
                     future: _fetchedOrderRequest,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return SizedBox(
-                          height: 70.h,
-                          child: const Center(
-                            child: LoaderWidget(),
-                          ),
-                        );
-                      }
+                      // if (snapshot.connectionState == ConnectionState.waiting) {
+                      //   return SizedBox(
+                      //     height: 70.h,
+                      //     child: const Center(
+                      //       child: LoaderWidget(),
+                      //     ),
+                      //   );
+                      // }
                       if (snapshot.hasError) {
                         return Padding(
                           padding: EdgeInsets.all(20.w),
@@ -89,9 +89,11 @@ class _CartPageState extends ConsumerState<CartPage> {
                                   ],
                                   borderRadius: BorderRadius.circular(20.w),
                                   color: AppColors.white.withOpacity(0.9)),
-                              width: 320.w,
+                              // width: 320.w,
                               height: 500.h,
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Image.asset('assets/images/nullstate.png'),
                                   SizedBox(
@@ -100,7 +102,12 @@ class _CartPageState extends ConsumerState<CartPage> {
                                   Container(
                                     width: 300.w,
                                     child: CustomText(
-                                      'contact support'.tr(),
+                                      '${snapshot.error}' ==
+                                              'No Internet connection'
+                                          ? Constants.lang == 'ar'
+                                              ? 'انت غير متصل بالانترنت حاول مرة اخرى'
+                                              : 'You don\'t connect with internet try again'
+                                          : 'contact support'.tr(),
                                       color: AppColors.orange,
                                       // fontWeight: FontWeight.bold,
                                       fontFamily: 'DINNEXTLTARABIC',
@@ -113,23 +120,27 @@ class _CartPageState extends ConsumerState<CartPage> {
                                     height: 60.h,
                                   ),
                                   RaisedGradientButton(
-                                    text: 'contact us'.tr(),
+                                    text: Constants.lang == 'ar'
+                                        ? ' حاول مرة اخرى'
+                                        : ' try again',
                                     color: AppColors.scadryColor,
                                     height: 48.h,
                                     width: 320.w,
                                     circular: 10.w,
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ContactUsScreen()),
-                                      );
+                                      setState(() {
+                                        _fetchedOrderRequest = _getordersData();
+                                      });
                                     },
                                   ),
                                 ],
                               )),
                         );
+
+                        // Center(
+                        //   // child: Text('Error: ${snapshot.error}'),
+
+                        // );
                       }
                       if (snapshot.hasData) {
                         if (snapshot.data is Failure) {

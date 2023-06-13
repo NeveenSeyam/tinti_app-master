@@ -67,6 +67,7 @@ dependencies:
   intl_phone_number_input: ^0.7.1
   webview_flutter: ^4.2.0
   easy_localization: ^3.0.2
+  my_fatoorah: ^3.2.0
 
 dev_dependencies:
   flutter_test:
