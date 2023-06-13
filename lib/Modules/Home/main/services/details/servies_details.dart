@@ -455,8 +455,13 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            RequestServieses()),
+                                        builder: (context) => RequestServieses(
+                                              price: productDetailsModel
+                                                  ?.product?.price
+                                                  .toString(),
+                                              serviceid: productDetailsModel
+                                                  ?.product?.id,
+                                            )),
                                   );
                                 }
                               : () {},
