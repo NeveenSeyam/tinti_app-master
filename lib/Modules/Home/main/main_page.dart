@@ -532,7 +532,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                                             'assets/images/cardtile.png',
                                             productModel?.success?.items?[index]
                                                     .price ??
-                                                '460\$',
+                                                '460 ر.س',
                                             productModel?.success?.items?[index]
                                                     .is_favorite ??
                                                 0,

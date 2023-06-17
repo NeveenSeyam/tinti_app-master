@@ -38,35 +38,36 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.immersive,
     );
-    Future.delayed(const Duration(seconds: 3))
-        .then((value) => setState(() async {
-              SharedPreferences? _prefs = await SharedPreferences.getInstance();
+    Future.delayed(const Duration(seconds: 3)).then((value) async {
+      SharedPreferences? _prefs = await SharedPreferences.getInstance();
+      var AuthProvider = ref.read(accountProvider);
 
-              isLoaded = true;
-              if (_prefs.getString(Keys.hasSaveUserData) == null) {
-                Constants.isQuest = true;
-                Constants.logo = "assets/images/logol2.png";
-                Constants.blackLogo = "assets/images/bllo.png";
-                Navigator.popAndPushNamed(context, '/poard_screen');
-              } else {
-                var AuthProvider = ref.read(accountProvider);
-                Constants.isQuest = false;
+      setState(() {
+        isLoaded = true;
+        if (_prefs.getString(Keys.hasSaveUserData) == null) {
+          Constants.isQuest = true;
+          Constants.logo = "assets/images/logol2.png";
+          Constants.blackLogo = "assets/images/bllo.png";
+          Navigator.popAndPushNamed(context, '/poard_screen');
+        } else {
+          Constants.isQuest = false;
 
-                Constants.token = _prefs.getString(Keys.hasSaveUserData);
-                Constants.lang = _prefs.getString('lang');
+          Constants.token = _prefs.getString(Keys.hasSaveUserData);
+          Constants.lang = _prefs.getString('lang');
 
-                await AuthProvider.getUserProfileRequset();
-                if (Constants.lang == 'ar') {
-                  Constants.logo = "assets/images/logol2.png";
-                  Constants.blackLogo = "assets/images/blacklogo.png";
-                } else {
-                  Constants.logo = "assets/images/logol.png";
-                  Constants.blackLogo = "assets/images/bllo.png";
-                }
+          AuthProvider.getUserProfileRequset();
+          if (Constants.lang == 'ar') {
+            Constants.logo = "assets/images/logol2.png";
+            Constants.blackLogo = "assets/images/blacklogo.png";
+          } else {
+            Constants.logo = "assets/images/logol.png";
+            Constants.blackLogo = "assets/images/bllo.png";
+          }
 
-                Navigator.popAndPushNamed(context, '/navegaitor_screen');
-              }
-            }));
+          Navigator.popAndPushNamed(context, '/navegaitor_screen');
+        }
+      });
+    });
   }
 
   @override

@@ -103,7 +103,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
     _fetchedModelTypesRequest = _getModelTypesData();
 
     // TODO, don't forget to init the MyFatoorah Plugin with the following line
-    MFSDK.init(mAPIKey, MFCountry.KUWAIT, MFEnvironment.TEST);
+    MFSDK.init(mAPIKey, MFCountry.SAUDI_ARABIA, MFEnvironment.TEST);
 
     initiatePayment();
     initiateSession();

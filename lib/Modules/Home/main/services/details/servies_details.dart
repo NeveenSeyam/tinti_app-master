@@ -15,6 +15,7 @@ import '../../../../../Widgets/gradint_button.dart';
 import '../../../../../Widgets/loader_widget.dart';
 import '../../../../../Widgets/page_view_indicator_Home.dart';
 import '../../../../../Widgets/servies_images.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 import '../../../../../Widgets/text_widget.dart';
 import '../../../../../provider/favorites_provider.dart';
@@ -95,113 +96,42 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
               var addToFavModel = ref.watch(favsProvider);
               // var removeFavModel = ref.watch(favsProvider);
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Center(
+                    child: SizedBox(
+                      width: 370.w,
+                      height: 200.h,
+                      child: SizedBox(
+                        child: CarouselSlider.builder(
+                          itemCount: productDetailsModel
+                                  ?.product?.productImages?.length ??
+                              0,
+                          itemBuilder: (BuildContext context, int itemIndex,
+                                  int pageViewIndex) =>
+                              ServiesImages(
+                            image: productDetailsModel?.product
+                                    ?.productImages?[itemIndex].image ??
+                                'http://sayyarte.com/img/1676279090.jpg',
+                          ),
+                          options: CarouselOptions(
+                            autoPlay: true,
+                            enlargeCenterPage: true,
+                            viewportFraction: 01,
+                            aspectRatio: 2.0,
+                            initialPage: 1,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15.w),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          // width: 350.w,
-                          height: 200.h,
-                          child: SizedBox(
-                            height: 250.h,
-                            child:
-                                //    PageView.builder(
-                                //     padEnds: false,
-                                //     controller: _pageController,
-                                //     itemBuilder: (context, index) {
-                                //       return Opacity(
-                                //         opacity: 1,
-                                //         child: ServiesImages(
-                                //           image: productDetailsModel?.product
-                                //                   ?.productImages?[index] ??
-                                //               'sa2',
-                                //         ),
-                                //       );
-                                //     },
-                                //     itemCount: productDetailsModel
-                                //             ?.product?.productImages?.length ??
-                                //         0,
-                                //   ),
-                                // ),
-
-                                PageView(
-                              scrollDirection: Axis.horizontal,
-                              // controller: _pageController,
-                              physics: const BouncingScrollPhysics(),
-                              onPageChanged: (int currentPage) {
-                                setState(() => _currentPage = currentPage);
-                              },
-                              children: [
-                                ServiesImages(
-                                  image: productDetailsModel?.product?.image ??
-                                      'http://sayyarte.com/img/1676279090.jpg',
-                                ),
-                                ServiesImages(
-                                  image: productDetailsModel
-                                          ?.product?.productImages?[1] ??
-                                      'http://sayyarte.com/img/1676279090.jpg',
-                                ),
-                                ServiesImages(
-                                  image: productDetailsModel
-                                          ?.product?.productImages?[2] ??
-                                      'http://sayyarte.com/img/1676279090.jpg',
-                                ),
-                                ServiesImages(
-                                  image: productDetailsModel
-                                          ?.product?.productImages?[3] ??
-                                      'http://sayyarte.com/img/1676279090.jpg',
-                                ),
-                                ServiesImages(
-                                  image: productDetailsModel
-                                          ?.product?.productImages?[4] ??
-                                      'http://sayyarte.com/img/1676279090.jpg',
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Visibility(
-                                visible: _currentPage < 5,
-                                maintainSize: true,
-                                maintainState: true,
-                                maintainAnimation: true,
-                                child: Row(
-                                  children: [
-                                    PageViewIndicatorCustomHome(
-                                      isCurrentPage: _currentPage == 0,
-                                      // marginEnd: 1.w,
-                                    ),
-                                    PageViewIndicatorCustomHome(
-                                      isCurrentPage: _currentPage == 1,
-                                      // marginEnd: 1.w,
-                                    ),
-                                    PageViewIndicatorCustomHome(
-                                      // marginEnd: 1.w,
-                                      isCurrentPage: _currentPage == 2,
-                                    ),
-                                    PageViewIndicatorCustomHome(
-                                      // marginEnd: 1.w,
-                                      isCurrentPage: _currentPage == 3,
-                                    ),
-                                    PageViewIndicatorCustomHome(
-                                      // marginEnd: 1.w,
-                                      isCurrentPage: _currentPage == 4,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -447,7 +377,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                           color: Constants.isQuest == false
                               ? AppColors.scadryColor
                               : AppColors.grey,
-                          width: 280.w,
+                          width: 260.w,
                           height: 48.h,
                           circular: 10.w,
                           onPressed: Constants.isQuest == false
@@ -457,7 +387,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                     MaterialPageRoute(
                                         builder: (context) => RequestServieses(
                                               price: productDetailsModel
-                                                  ?.product?.price
+                                                  ?.product?.salePrice
                                                   .toString(),
                                               serviceid: productDetailsModel
                                                   ?.product?.id,
@@ -491,10 +421,10 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                               ],
                               borderRadius: BorderRadius.circular(10.w)),
                           child: CustomText(
-                            '\$ ${productDetailsModel?.product?.price}' ??
-                                '\$ 100 ',
+                            'ر.س ${productDetailsModel?.product?.salePrice}' ??
+                                'ر.س 100 ',
                             color: AppColors.orange,
-                            fontSize: 14.sp,
+                            fontSize: 12.sp,
                             fontFamily: 'DINNextLTArabic',
                             textAlign: TextAlign.start,
                           ),

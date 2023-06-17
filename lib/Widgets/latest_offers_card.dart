@@ -104,7 +104,7 @@ class _latestOffersCardState extends ConsumerState<latestOffersCard> {
                     ),
                   ),
                   Text(
-                    '${widget.price}\$',
+                    '${widget.price} ر.س',
                     style: TextStyle(
                       // fontWeight: FontWeight.bold,
                       fontSize: 13.sp,

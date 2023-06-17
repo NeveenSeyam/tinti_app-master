@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tinti_app/Models/product/sales_products_model.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/custom_text_field.dart';
 import 'package:tinti_app/Widgets/wish_list_card.dart';
@@ -35,7 +36,7 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
   TextEditingController _search = TextEditingController();
   ScrollController _scrollController = ScrollController();
   bool isSearch = false;
-  var productList;
+  dynamic productList;
   var addProductList;
   Future _getContentData() async {
     final prov = ref.read(servicesProvider);
@@ -91,7 +92,7 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
     final prov = ref.read(productsProvider);
     productList = ref.watch(productsProvider).getProductsSellsDataList;
     addProductList = await prov.getSalesProductDataRequset(page: page + 1);
-    if (addProductList < 10) {}
+    // if (addProductList.length < 10) {}
     productList.addAll(addProductList);
   }
 
@@ -271,69 +272,54 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
                                                   childAspectRatio: 2 / 2.3,
                                                   crossAxisSpacing: 10,
                                                   mainAxisSpacing: 10),
-                                          itemCount: length + 1,
+                                          itemCount: length,
                                           controller: _scrollController,
                                           itemBuilder:
                                               (BuildContext ctx, index) {
-                                            return index < length
-                                                ? GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ServiceDetailsScreen(
-                                                                  id: productModel
-                                                                          ?.success?[
-                                                                              index]
-                                                                          .id ??
-                                                                      0,
-                                                                  row_id: productModel
-                                                                          ?.success?[
-                                                                              index]
-                                                                          .id ??
-                                                                      0,
-                                                                  isFavorite: 0,
-                                                                )),
-                                                      );
-                                                      // print(
-                                                      //     ' sssssssss ${productByServiceModel.success?.items?.length}');
-                                                    },
-                                                    child: ServicesCard(
-                                                        // productByServiceModel.Products.length ??
-                                                        productModel
-                                                                ?.success?[
-                                                                    index]
-                                                                .image ??
-                                                            'assets/images/sa1.jpeg',
-                                                        productModel
-                                                                ?.success?[
-                                                                    index]
-                                                                .name ??
-                                                            ' تظليل',
-                                                        productModel
-                                                                ?.success?[
-                                                                    index]
-                                                                .description ??
-                                                            'شركة جونسون اد جونسون.',
-                                                        productModel
-                                                                ?.success?[
-                                                                    index]
-                                                                .price ??
-                                                            '355',
-                                                        '',
-                                                        '',
-                                                        0,
-                                                        productModel
-                                                                ?.success?[
-                                                                    index]
-                                                                .id ??
-                                                            0),
-                                                  )
-                                                : Center(
-                                                    child:
-                                                        CircularProgressIndicator(),
-                                                  );
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ServiceDetailsScreen(
+                                                            id: productModel
+                                                                    ?.success?[
+                                                                        index]
+                                                                    .id ??
+                                                                0,
+                                                            row_id: productModel
+                                                                    ?.success?[
+                                                                        index]
+                                                                    .id ??
+                                                                0,
+                                                            isFavorite: 0,
+                                                          )),
+                                                );
+                                                // print(
+                                                //     ' sssssssss ${productByServiceModel.success?.items?.length}');
+                                              },
+                                              child: ServicesCard(
+                                                  // productByServiceModel.Products.length ??
+                                                  productModel?.success?[index]
+                                                          .image ??
+                                                      'assets/images/sa1.jpeg',
+                                                  productModel?.success?[index]
+                                                          .name ??
+                                                      ' تظليل',
+                                                  productModel?.success?[index]
+                                                          .description ??
+                                                      'شركة جونسون اد جونسون.',
+                                                  productModel?.success?[index]
+                                                          .price ??
+                                                      '355',
+                                                  '',
+                                                  '',
+                                                  0,
+                                                  productModel?.success?[index]
+                                                          .id ??
+                                                      0),
+                                            );
                                           }),
                                     ),
                                   ),
@@ -445,9 +431,17 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
                                                   //
                                                   //  print("snapshot data is ${snapshot.data}");
 
-                                                  var productByServiceModel = ref
+                                                  productList = ref
                                                       .watch(productsProvider)
                                                       .getProductsSellsDataList;
+                                                  var lenght = ref
+                                                          .watch(
+                                                              productsProvider)
+                                                          .getProductsSellsDataList
+                                                          ?.success
+                                                          ?.items
+                                                          ?.length ??
+                                                      0;
                                                   return Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
@@ -461,79 +455,58 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
                                                           // physics: BouncingScrollPhysics(),
                                                           shrinkWrap: false,
                                                           itemCount:
-                                                              productByServiceModel
-                                                                      ?.success
-                                                                      ?.items
-                                                                      ?.length ??
-                                                                  0,
+                                                              lenght + 1 ?? 0,
+                                                          controller:
+                                                              _scrollController,
                                                           itemBuilder:
                                                               (BuildContext ctx,
                                                                   index) {
-                                                            return Container(
-                                                              width: double
-                                                                  .infinity,
-                                                              child:
-                                                                  GestureDetector(
-                                                                onTap: () {
-                                                                  Navigator
-                                                                      .push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) =>
-                                                                            ServiceDetailsScreen(
-                                                                              id: productByServiceModel?.success?.items?[index].id ?? 0,
-                                                                              row_id: 0,
-                                                                              isFavorite: productByServiceModel?.success?.items?[index].is_favorite ?? 1,
-                                                                            )),
+                                                            return index <
+                                                                    lenght
+                                                                ? Container(
+                                                                    width: double
+                                                                        .infinity,
+                                                                    child:
+                                                                        GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        Navigator
+                                                                            .push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => ServiceDetailsScreen(
+                                                                                    id: productList?.success?.items?[index].id ?? 0,
+                                                                                    row_id: 0,
+                                                                                    isFavorite: productList?.success?.items?[index].is_favorite ?? 1,
+                                                                                  )),
+                                                                        );
+                                                                      },
+                                                                      child:
+                                                                          SaelsScreenCardCard(
+                                                                        details:
+                                                                            productList?.success?.items?[index].description ??
+                                                                                '',
+                                                                        isFavorite:
+                                                                            productList?.success?.items?[index].is_favorite ??
+                                                                                0,
+                                                                        image: productList?.success?.items?[index].image ??
+                                                                            '',
+                                                                        lastPrice:
+                                                                            productList?.success?.items?[index].price ??
+                                                                                '',
+                                                                        price: productList?.success?.items?[index].salePrice ??
+                                                                            '',
+                                                                        title: productList?.success?.items?[index].name ??
+                                                                            '',
+                                                                        id: productList?.success?.items?[index].id ??
+                                                                            0,
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(),
                                                                   );
-                                                                },
-                                                                child:
-                                                                    SaelsScreenCardCard(
-                                                                  details: productByServiceModel
-                                                                          ?.success
-                                                                          ?.items?[
-                                                                              index]
-                                                                          .description ??
-                                                                      '',
-                                                                  isFavorite: productByServiceModel
-                                                                          ?.success
-                                                                          ?.items?[
-                                                                              index]
-                                                                          .is_favorite ??
-                                                                      0,
-                                                                  image: productByServiceModel
-                                                                          ?.success
-                                                                          ?.items?[
-                                                                              index]
-                                                                          .image ??
-                                                                      '',
-                                                                  lastPrice: productByServiceModel
-                                                                          ?.success
-                                                                          ?.items?[
-                                                                              index]
-                                                                          .salePrice ??
-                                                                      '',
-                                                                  price: productByServiceModel
-                                                                          ?.success
-                                                                          ?.items?[
-                                                                              index]
-                                                                          .price ??
-                                                                      '',
-                                                                  title: productByServiceModel
-                                                                          ?.success
-                                                                          ?.items?[
-                                                                              index]
-                                                                          .name ??
-                                                                      '',
-                                                                  id: productByServiceModel
-                                                                          ?.success
-                                                                          ?.items?[
-                                                                              index]
-                                                                          .id ??
-                                                                      0,
-                                                                ),
-                                                              ),
-                                                            );
                                                           }),
                                                     ),
                                                   );

@@ -33,7 +33,7 @@ class Product {
   String? ratingCount;
   String? image;
   List<ProductRating>? productRating;
-  List<Null>? productImages;
+  List<ProductImages>? productImages;
 
   Product(
       {this.id,
@@ -68,6 +68,12 @@ class Product {
         productRating!.add(new ProductRating.fromJson(v));
       });
     }
+    if (json['product_images'] != null) {
+      productImages = <ProductImages>[];
+      json['product_images'].forEach((v) {
+        productImages!.add(new ProductImages.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -87,7 +93,10 @@ class Product {
       data['product_rating'] =
           this.productRating!.map((v) => v.toJson()).toList();
     }
-
+    if (this.productImages != null) {
+      data['product_images'] =
+          this.productImages!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -95,7 +104,7 @@ class Product {
 class ProductRating {
   int? id;
   String? rating;
-  String? comments;
+  Null? comments;
   String? user;
 
   ProductRating({this.id, this.rating, this.comments, this.user});
@@ -113,6 +122,25 @@ class ProductRating {
     data['rating'] = this.rating;
     data['comments'] = this.comments;
     data['user'] = this.user;
+    return data;
+  }
+}
+
+class ProductImages {
+  int? id;
+  String? image;
+
+  ProductImages({this.id, this.image});
+
+  ProductImages.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    image = json['image'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['image'] = this.image;
     return data;
   }
 }

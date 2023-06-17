@@ -101,7 +101,7 @@ class _ServicesCardState extends ConsumerState<ServicesCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomText(
-                        '${widget.price}\$',
+                        '${widget.price} ر.س',
 
                         // fontWeight: FontWeight.bold,
                         fontSize: 13.sp, overflow: TextOverflow.ellipsis,

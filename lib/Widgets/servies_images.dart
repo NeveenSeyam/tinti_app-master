@@ -18,7 +18,7 @@ class ServiesImages extends StatelessWidget {
       child: Row(
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
@@ -26,12 +26,14 @@ class ServiesImages extends StatelessWidget {
                     padding: EdgeInsets.only(top: 10.w),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
-                        image,
-                        alignment: Alignment.center,
-                        fit: BoxFit.fill,
-                        width: 360.w,
-                        height: 180.h,
+                      child: Center(
+                        child: Image.network(
+                          image,
+                          alignment: Alignment.center,
+                          fit: BoxFit.fill,
+                          width: 360.w,
+                          height: 180.h,
+                        ),
                       ),
                     ),
                   ),
