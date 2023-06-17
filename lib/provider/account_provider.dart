@@ -8,6 +8,7 @@ import 'package:tinti_app/Models/state_model.dart';
 import 'package:tinti_app/Modules/auth/activate.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/apis/auth/activate.dart';
+import 'package:tinti_app/apis/sms_verify.dart';
 import '../Apis/api_urls.dart';
 import '../Apis/auth/login_api.dart';
 import '../Helpers/failure.dart';
@@ -15,10 +16,12 @@ import '../Models/auth/profile_model.dart';
 import '../Models/auth/user_model.dart';
 import '../Models/change.dart';
 import '../Models/forget_pass.dart';
+import '../Models/sms_result.dart';
 import '../Util/constants/constants.dart';
 import '../apis/auth/add_user_api.dart';
 import '../apis/auth/change_password_api.dart';
 import '../apis/auth/forget_password.dart';
+import '../apis/sms.dart';
 import '../apis/user_profile/get_user_profile.dart';
 import '../helpers/ui_helper.dart';
 
@@ -31,6 +34,7 @@ class AccountProvider with ChangeNotifier {
   var confirmPass = '';
   var userEmail = '';
   var userPhoneNumber = '';
+  var msgId = 0;
   LoginModel? userAuthModel;
 // * ===== State List =====
   List<StateModel>? _stateMdoelList;
@@ -69,6 +73,13 @@ class AccountProvider with ChangeNotifier {
 
   setChangePassModel(changePasswordDataModel change) {
     _changeData = change;
+  }
+
+  SMSResultModel? _smsResultModel;
+  SMSResultModel? get getSmsResultModel => _smsResultModel;
+
+  setSmsResultModel(SMSResultModel sms) {
+    _smsResultModel = sms;
   }
 
 // * ===== State List =====
@@ -167,18 +178,35 @@ class AccountProvider with ChangeNotifier {
     }
   }
 
-  // Future getUserProfileRequset() async {
-  //   try {
-  //     final response = await GetUserProfile().fetch();
+  Future verifySmsOtp({
+    required String lang,
+    required String userName,
+    required String apiKey,
+    required dynamic code,
+    required dynamic id,
+    required String userSender,
+  }) async {
+    try {
+      final response = await VerifySmsOtp(
+              lang: lang,
+              userName: userName,
+              apiKey: apiKey,
+              userSender: userSender,
+              code: code,
+              id: id)
+          .fetch();
+      if (response['code'] == 1) {
+        UIHelper.showNotification(response['message'],
+            backgroundColor: AppColors.green);
+      }
+      log("response $response");
 
-  //     setProfileModel(ProfileModel.fromJson(response));
-
-  //     return response;
-  //   } on Failure catch (f) {
-  //     UIHelper.showNotification(f.message);
-  //     return false;
-  //   }
-  // }
+      return response['message'];
+    } on Failure catch (f) {
+      log("message ${f.message}");
+      return f.message;
+    }
+  }
 
   Future getUserProfileRequset() async {
     //! we create this object to set new data to the data object
@@ -196,7 +224,7 @@ class AccountProvider with ChangeNotifier {
 
       return response;
     } on Failure catch (f) {
-      return f;
+      return false;
     }
   }
 
@@ -441,4 +469,69 @@ class AccountProvider with ChangeNotifier {
       return Failure;
     }
   }
+
+  Future SentOtp({
+/*  "lang": lang,
+      "userName": userName,
+      "apiKey": apiKey,
+      "number": number,
+      "userSender": userSender */
+
+    required String lang,
+    required String userName,
+    required String apiKey,
+    required String number,
+    required String userSender,
+  }) async {
+    SMSResultModel? smsResultModel = SMSResultModel();
+
+    try {
+      final response = await SentSmsOtp(
+              lang: lang,
+              userName: userName,
+              apiKey: apiKey,
+              number: number,
+              userSender: userSender)
+          .fetch();
+
+      log("sent sms $response");
+      // setForgetPassModel(forgetList);
+      smsResultModel = SMSResultModel.fromJson(response);
+      //! set the new data to the data object
+      setSmsResultModel(smsResultModel);
+
+      // setActiveOffers(storeOffers);
+      return response;
+    } on Failure catch (f) {
+      log("message ${f.message}");
+      return false;
+    }
+  }
+
+  // Future SentOtp() async //required String image
+  // {
+  //   try {
+  //     Dio dio = Dio();
+
+  //     var response = await SentSmsOtp()
+  //     if (response.statusCode == 200) {
+  //       UIHelper.showNotification('تم تفعيل الحساب بنجاح',
+  //           backgroundColor: AppColors.green);
+  //     } else {
+  //       UIHelper.showNotification('خطأ', backgroundColor: AppColors.red);
+  //     }
+  //     log("response $response");
+
+  //     return response.data;
+  //   } on DioError catch (e) {
+  //     var message;
+  //     e.response?.data['message'] != 'Validation Error.'
+  //         ? message = 'تم التفعيل بنجاح'
+  //         : message = 'خطأ';
+  //     UIHelper.showNotification(message);
+
+  //     log(' e.mmm  ${e.message} ${e.response?.data['message']}');
+  //     return Failure;
+  //   }
+  // }
 }

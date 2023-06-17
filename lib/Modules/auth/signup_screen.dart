@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +9,7 @@ import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:regexpattern/regexpattern.dart';
+import 'package:tinti_app/apis/sms_verify.dart';
 import 'package:tinti_app/provider/account_provider.dart';
 import '../../Helpers/failure.dart';
 import '../../Util/constants/constants.dart';
@@ -82,9 +82,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   var mob = '';
   TextEditingController otpController = TextEditingController();
 
-  FirebaseAuth auth = FirebaseAuth.instance;
   bool otpVerfied = false;
-  User? user;
 
   String? validateConfiremPassword(String? value) {
     if (_cpasswordController.text == _passwordController.text) {
@@ -139,7 +137,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     if (_Key.currentState!.validate()) {
       _Key.currentState!.save();
-      loginWithPhone();
       loadingDialog(context);
       //await AuthProvider.loginOut();
       // get fcm tokenhld,gdjv
@@ -212,7 +209,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         SizedBox(
                           width: 335.w,
                           child: Pinput(
-                            length: 6,
+                            length: 4,
                             // pinContentAlignment: Alignment.center,
                             obscureText: true,
                             defaultPinTheme: defaultPinTheme,
@@ -231,9 +228,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           color: AppColors.scadryColor,
                           height: 48.h,
                           circular: 10.w,
-                          onPressed: () async {
-                            verifyOTP(ref);
-                          },
+                          onPressed: () async {},
                         ),
                         SizedBox(
                           height: 16.h,
@@ -257,9 +252,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                 width: 5.w,
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  loginWithPhone();
-                                },
+                                onTap: () {},
                                 child: CustomText(
                                   'اعادة الارسال ',
                                   textAlign: TextAlign.start,
@@ -291,27 +284,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         border: Border.all(color: AppColors.lightgrey),
         color: AppColors.lightgrey),
   );
-  Future _verficationFun(BuildContext context, WidgetRef ref) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-
-    await auth.verifyPhoneNumber(
-      phoneNumber: _mobileController.text,
-      codeSent: (String verificationId, int? resendToken) async {
-        // Update the UI - wait for the user to enter the SMS code
-        String smsCode = 'xxxx';
-
-        // Create a PhoneAuthCredential with the code
-        PhoneAuthCredential credential = PhoneAuthProvider.credential(
-            verificationId: verificationId, smsCode: smsCode);
-
-        // Sign the user in (or link) with the credential
-        await auth.signInWithCredential(credential);
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-      verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {},
-      verificationFailed: (FirebaseAuthException error) {},
-    );
-  }
 
   var logo = Constants.logo;
 
@@ -557,145 +529,232 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                       //    Navigator.pop(context);
                                       return;
                                     }
-                                    loginWithPhone();
+                                    final smsSending =
+                                        await AuthProvider.SentOtp(
+                                      lang: Constants.lang ?? 'ar',
+                                      number: _mobileController.text,
+                                      userName: 'mycar',
+                                      apiKey:
+                                          '91e86fe240dccf44aeaa51563ed0c03c',
+                                      userSender: 'sayyarte|سيارتي',
+                                    ).onError((error, stackTrace) {
+                                      Navigator.pop(context);
+                                    }).then((value) async {
+                                      if (value is! Failure) {
+                                        if (value == null) {
+                                          UIHelper.showNotification(
+                                              'reqister error'.tr());
+                                          //    Navigator.pop(context);
+                                          return;
+                                        }
+                                        Navigator.pop(context);
 
-                                    Constants.token = value["data"]["token"];
-                                    SharedPreferences? _prefs =
-                                        await SharedPreferences.getInstance();
-                                    _prefs.setString(Keys.hasSaveUserData,
-                                        value["data"]["token"]);
-                                    await AuthProvider.getUserProfileRequset();
-                                    Navigator.pop(context);
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                              insetPadding: EdgeInsets.all(8.0),
-                                              title: CustomText(
-                                                'active'.tr(),
-                                                fontSize: 24.sp,
-                                                textAlign: TextAlign.center,
-                                                fontFamily: 'DINNEXTLTARABIC',
-                                                color: AppColors.scadryColor,
-                                              ),
-                                              content: Container(
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20.w)),
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      100,
-                                                  height: 300.h,
-                                                  child: Column(
-                                                    children: [
-                                                      CustomText(
-                                                        'activate msg'.tr(),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        fontFamily:
-                                                            'DINNEXTLTARABIC',
-                                                        fontSize: 16.sp,
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 22.h,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 335.w,
-                                                        child: Pinput(
-                                                          length: 6,
-                                                          // pinContentAlignment: Alignment.center,
-                                                          obscureText: true,
-                                                          defaultPinTheme:
-                                                              defaultPinTheme,
+                                        // Constants.token =
+                                        //     value["data"]["token"];
+                                        // SharedPreferences? _prefs =
+                                        //     await SharedPreferences
+                                        //         .getInstance();
+                                        // _prefs.setString(Keys.hasSaveUserData,
+                                        //     value["data"]["token"]);
+                                        // await AuthProvider
+                                        //     .getUserProfileRequset();
+                                        var smsId = await AuthProvider
+                                            .getSmsResultModel?.id;
+                                        print('smsId $smsId');
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                  insetPadding:
+                                                      EdgeInsets.all(8.0),
+                                                  title: CustomText(
+                                                    'active'.tr(),
+                                                    fontSize: 24.sp,
+                                                    textAlign: TextAlign.center,
+                                                    fontFamily:
+                                                        'DINNEXTLTARABIC',
+                                                    color:
+                                                        AppColors.scadryColor,
+                                                  ),
+                                                  content: Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20.w)),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width -
+                                                              100,
+                                                      height: 300.h,
+                                                      child: Column(
+                                                        children: [
+                                                          CustomText(
+                                                            'activate msg'.tr(),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            fontFamily:
+                                                                'DINNEXTLTARABIC',
+                                                            fontSize: 16.sp,
+                                                            fontWeight:
+                                                                FontWeight.w300,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 22.h,
+                                                          ),
+                                                          SizedBox(
+                                                            width: 335.w,
+                                                            child: Pinput(
+                                                              length: 4,
+                                                              // pinContentAlignment: Alignment.center,
+                                                              obscureText: true,
+                                                              defaultPinTheme:
+                                                                  defaultPinTheme,
 
-                                                          closeKeyboardWhenCompleted:
-                                                              true,
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .next,
-                                                          controller:
-                                                              otpController,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 22.h,
-                                                      ),
-                                                      RaisedGradientButton(
-                                                        text: 'next'.tr(),
-                                                        width: 340.w,
-                                                        color: AppColors
-                                                            .scadryColor,
-                                                        height: 48.h,
-                                                        circular: 10.w,
-                                                        onPressed: () async {
-                                                          await verifyOTP(ref);
-                                                        },
-                                                      ),
-                                                      SizedBox(
-                                                        height: 16.h,
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          // Navigator.pushNamed(
-                                                          //     context,
-                                                          //     '/navegaitor_screen');
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            CustomText(
-                                                              'not confirm'
-                                                                  .tr(),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .start,
-                                                              fontSize: 16.sp,
-                                                              fontFamily:
-                                                                  'DINNEXTLTARABIC',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: AppColors
-                                                                  .orange,
+                                                              closeKeyboardWhenCompleted:
+                                                                  true,
+                                                              textInputAction:
+                                                                  TextInputAction
+                                                                      .next,
+                                                              controller:
+                                                                  otpController,
                                                             ),
-                                                            SizedBox(
-                                                              width: 5.w,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 22.h,
+                                                          ),
+                                                          RaisedGradientButton(
+                                                            text: 'next'.tr(),
+                                                            width: 340.w,
+                                                            color: AppColors
+                                                                .scadryColor,
+                                                            height: 48.h,
+                                                            circular: 10.w,
+                                                            onPressed:
+                                                                () async {
+                                                              final verifySmsOtp = await ref
+                                                                  .read(
+                                                                      accountProvider)
+                                                                  .verifySmsOtp(
+                                                                      lang: Constants
+                                                                              .lang ??
+                                                                          'ar',
+                                                                      id: smsId,
+                                                                      userName:
+                                                                          'mycar',
+                                                                      apiKey:
+                                                                          '91e86fe240dccf44aeaa51563ed0c03c',
+                                                                      userSender:
+                                                                          'sayyarte|سيارتي',
+                                                                      code: otpController
+                                                                          .text)
+                                                                  .then(
+                                                                      (value) {
+                                                                print(
+                                                                    'lang ${Constants.lang},id ${smsId},code ${otpController.text} ');
+                                                                if (value
+                                                                    is! Failure) {
+                                                                  if (value ==
+                                                                      null) {
+                                                                    // UIHelper.showNotification(
+                                                                    //     'reqister error'
+                                                                    //         .tr());
+                                                                    //    Navigator.pop(context);
+                                                                    return;
+                                                                  }
+                                                                  if (value !=
+                                                                      false) {
+                                                                    _activeFun(
+                                                                        context,
+                                                                        ref);
+                                                                    Navigator.pushNamed(
+                                                                        context,
+                                                                        '/navegaitor_screen');
+                                                                  } else {
+                                                                    UIHelper.showNotification(
+                                                                        'هناك خطأ ما');
+                                                                  }
+                                                                }
+                                                              });
+                                                            },
+                                                          ),
+                                                          SizedBox(
+                                                            height: 16.h,
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              // Navigator.pushNamed(
+                                                              //     context,
+                                                              //     '/navegaitor_screen');
+                                                            },
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                CustomText(
+                                                                  'not confirm'
+                                                                      .tr(),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .start,
+                                                                  fontSize:
+                                                                      16.sp,
+                                                                  fontFamily:
+                                                                      'DINNEXTLTARABIC',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .orange,
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 5.w,
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {},
+                                                                  child:
+                                                                      CustomText(
+                                                                    'resent'
+                                                                        .tr(),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .start,
+                                                                    fontSize:
+                                                                        16.sp,
+                                                                    fontFamily:
+                                                                        'DINNEXTLTARABIC',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                loginWithPhone();
-                                                              },
-                                                              child: CustomText(
-                                                                'resent'.tr(),
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .start,
-                                                                fontSize: 16.sp,
-                                                                fontFamily:
-                                                                    'DINNEXTLTARABIC',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    ],
-                                                  )));
-                                        });
-                                    //134092
+                                                          )
+                                                        ],
+                                                      )));
+                                            });
+                                        //134092
+                                      } else {
+                                        Navigator.pop(context);
+                                      }
+                                    });
                                   } else {
                                     Navigator.pop(context);
                                   }
                                 });
                                 log("response $response");
+                                var otpMsg = await ref
+                                    .watch(accountProvider)
+                                    .getSmsResultModel;
+
+/////////////////////smsSending
+                                ///
+                                ///
+                                ///
+                                ///
 
                                 FocusScope.of(context).unfocus();
                                 // ignore: use_build_context_synchronously
@@ -871,70 +930,5 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         ],
       ),
     ));
-  }
-
-  void loginWithPhone() async {
-    print('aaaaa,${mob.replaceAll('-', '')}');
-    auth.verifyPhoneNumber(
-      phoneNumber: mob.replaceAll('-', ''),
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential).then((value) {
-          print("You are logged in successfully");
-          Navigator.popAndPushNamed(context, '/navegaitor_screen');
-        });
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        print(e.message);
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        otpVerfied = true;
-        verificationID = verificationId;
-        setState(() {});
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
-  }
-
-  verifyOTP(WidgetRef ref) async {
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationID, smsCode: otpController.text);
-    await auth.signInWithCredential(credential).then(
-      (value) {
-        setState(() {
-          user = FirebaseAuth.instance.currentUser;
-        });
-      },
-    ).whenComplete(
-      () {
-        if (user != null) {
-          Fluttertoast.showToast(
-            msg: "done regster".tr(),
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
-          otpVerfied = true;
-          // ref.read(accountProvider).getActivateModel;
-          _activeFun(context, ref);
-
-          Navigator.popAndPushNamed(context, '/navegaitor_screen');
-          // activateFun();
-        } else {
-          Fluttertoast.showToast(
-            msg: "dont done regster".tr(),
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
-          otpVerfied = false;
-        }
-      },
-    );
   }
 }

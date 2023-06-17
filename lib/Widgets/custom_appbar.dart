@@ -99,9 +99,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           builder: (context) => const LoginScreen()),
                     );
                   },
-                  child: Image.asset(
-                    'assets/images/login-.png', width: 50.w,
-                    // fit: BoxFit.fill,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.w),
+                    child: SvgPicture.asset(
+                      'assets/images/log-in.svg', color: AppColors.white,
+                      width: 23.w,
+                      // fit: BoxFit.fill,
+                    ),
                   ),
                 ),
         ],

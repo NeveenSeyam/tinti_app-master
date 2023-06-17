@@ -87,5 +87,9 @@ class ApiUrls {
   static String regions = '${baseUrl}api/regions';
   static String cities({required id}) =>
       '${baseUrl}api/cities/${id.toString()}';
+
+//sms
+  static String sent_otp = 'https://www.msegat.com/gw/sendOTPCode.php';
+  static String verify_otp = 'https://www.msegat.com/gw/verifyOTPCode.php';
 }
 // {{Base_URL}}api/contactUs?email=nevveev@test.com	&name=neveen&title=verfication my account&mcontent=it's not activate
