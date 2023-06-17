@@ -52,10 +52,11 @@ class _MainPageState extends ConsumerState<MainPage> {
 
   late Future _fetchedServiceRequest;
 
-  Future _getServicesProductData() async {
+  Future _getServicesProductData(page) async {
     final prov = ref.read(productsProvider);
 
-    return await prov.getProductDataByServisesRequset(id: serviceId);
+    return await prov.getProductDataByServisesRequset(
+        id: serviceId, page: page);
   }
 
   late Future _fetchedServiceProductsRequest;
@@ -68,10 +69,10 @@ class _MainPageState extends ConsumerState<MainPage> {
     return await prov.getCompanyDataRequset();
   }
 
-  Future _getSalesProductContentData() async {
+  Future _getSalesProductContentData(page) async {
     final prov = ref.read(productsProvider);
 
-    return await prov.getSalesProductDataRequset();
+    return await prov.getSalesProductDataRequset(page: page);
   }
 
   late Future _fetchedMyRequest;
@@ -80,9 +81,9 @@ class _MainPageState extends ConsumerState<MainPage> {
   @override
   void initState() {
     _fetchedServiceRequest = _getServicesContentData();
-    _fetchedServiceProductsRequest = _getServicesProductData();
+    _fetchedServiceProductsRequest = _getServicesProductData(0);
     _fetchedMyRequest = _getContentData();
-    _fetchedSalesProductsRequest = _getSalesProductContentData();
+    _fetchedSalesProductsRequest = _getSalesProductContentData(0);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
     super.initState();
@@ -110,8 +111,8 @@ class _MainPageState extends ConsumerState<MainPage> {
           onRefresh: () {
             setState(() {
               _fetchedMyRequest = _getContentData();
-              _fetchedServiceProductsRequest = _getServicesProductData();
-              _fetchedSalesProductsRequest = _getSalesProductContentData();
+              _fetchedServiceProductsRequest = _getServicesProductData(0);
+              _fetchedSalesProductsRequest = _getSalesProductContentData(0);
             });
             return _fetchedMyRequest;
           },
@@ -184,9 +185,9 @@ class _MainPageState extends ConsumerState<MainPage> {
                                 setState(() {
                                   _fetchedMyRequest = _getContentData();
                                   _fetchedServiceProductsRequest =
-                                      _getServicesProductData();
+                                      _getServicesProductData(0);
                                   _fetchedSalesProductsRequest =
-                                      _getSalesProductContentData();
+                                      _getSalesProductContentData(0);
                                   _fetchedServiceRequest =
                                       _getServicesContentData();
                                 });
@@ -802,7 +803,7 @@ class _MainPageState extends ConsumerState<MainPage> {
         setState(() {
           pageIndex = index;
           serviceId = id;
-          _fetchedServiceProductsRequest = _getServicesProductData();
+          _fetchedServiceProductsRequest = _getServicesProductData(0);
         });
       },
       child: pageIndex == index

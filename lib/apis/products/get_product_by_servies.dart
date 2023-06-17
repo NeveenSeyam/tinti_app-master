@@ -3,14 +3,16 @@ import '../base_dio_api.dart';
 
 class GetProductByServisesApi extends BaseDioApi {
   int id;
+  int page;
 
-  GetProductByServisesApi({
-    required this.id,
-  }) : super(ApiUrls.showproductByServises(id: id));
+  GetProductByServisesApi({required this.id, required this.page})
+      : super(ApiUrls.showproductByServises(id: id));
 
   @override
   body() {
-    return {};
+    return {
+      "page": page,
+    };
   }
 
   Future fetch() async {

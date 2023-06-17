@@ -31,17 +31,17 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
   }
 
   late Future _fetchedMyRequest;
-  Future _getAllProductsData() async {
+  Future _getAllProductsData(page) async {
     final prov = ref.read(productsProvider);
 
-    return await prov.getAllProductDataRequset();
+    return await prov.getAllProductDataRequset(page: page);
   }
 
   late Future _fetchedAllProductsRequest;
   @override
   void initState() {
     _fetchedMyRequest = _getContentData();
-    _fetchedAllProductsRequest = _getAllProductsData();
+    _fetchedAllProductsRequest = _getAllProductsData(0);
     super.initState();
   }
 
@@ -56,16 +56,6 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [
-          RoundedInputField(
-            hintText: 'search'.tr(),
-            seen: false,
-            hintColor: AppColors.scadryColor,
-            onChanged: (val) {},
-            icon: const Icon(
-              Icons.search,
-              color: AppColors.scadryColor,
-            ),
-          ),
           Container(
             alignment: Alignment.centerRight,
             padding: EdgeInsetsDirectional.only(
@@ -145,7 +135,7 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Container(
                                       width: 140.w,
-                                      height: 190.h,
+                                      height: 200.h,
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10.w),
@@ -178,9 +168,9 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                                       .companies?[index].name ??
                                                   'نانو سيراميك',
                                               color: AppColors.scadryColor,
-                                              fontWeight: FontWeight.w500,
+                                              fontWeight: FontWeight.w600,
                                               fontFamily: 'DINNextLTArabic',
-                                              fontSize: 12.sp,
+                                              fontSize: 8.sp,
                                             ),
                                             CustomText(
                                               comanyModel.companies?[index]
@@ -253,8 +243,8 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                           physics: BouncingScrollPhysics(),
                           gridDelegate:
                               const SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 200,
-                                  childAspectRatio: 2 / 2,
+                                  maxCrossAxisExtent: 150,
+                                  childAspectRatio: 2 / 2.5,
                                   crossAxisSpacing: 10,
                                   mainAxisSpacing: 10),
                           itemCount: productsModel.success?.items?.length ?? 0,
@@ -310,7 +300,7 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                                     .price ??
                                                 'جدة ',
                                             color: AppColors.orange,
-                                            fontWeight: FontWeight.w400,
+                                            fontWeight: FontWeight.w600,
                                             fontFamily: 'DINNextLTArabic',
                                             fontSize: 10.sp,
                                           ),

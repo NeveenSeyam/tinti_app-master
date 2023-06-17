@@ -31,17 +31,18 @@ class CompanyProfile extends ConsumerStatefulWidget {
 }
 
 class _CompanyProfileState extends ConsumerState<CompanyProfile> {
-  Future _getContentData() async {
+  Future _getContentData(page) async {
     final prov = ref.read(productsProvider);
 
-    return await prov.getProductDataByCompanyRequsett(id: widget.id);
+    return await prov.getProductDataByCompanyRequsett(
+        id: widget.id, page: page);
   }
 
   late Future _fetchedMyRequest;
 
   @override
   void initState() {
-    _fetchedMyRequest = _getContentData();
+    _fetchedMyRequest = _getContentData(0);
 
     super.initState();
   }

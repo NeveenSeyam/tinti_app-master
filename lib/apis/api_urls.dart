@@ -1,11 +1,3 @@
-// class ApiUrls {
-//   static const String baseUrl = 'https://newline.dev/currency/api/v1';
-
-//   // auth
-//   // static const String login = '$baseUrl/auth/login';
-//   // get data
-//   static const String getData = '$baseUrl/currencies/list?';
-// }
 import '../Util/constants/constants.dart';
 
 class ApiUrls {
@@ -18,6 +10,7 @@ class ApiUrls {
   static const changePassword = '${baseUrl}api/changePassword';
   static const logout = '${baseUrl}api/logout';
   static const activate = '${baseUrl}api/activate';
+  static const search = '${baseUrl}api/products_search';
   static const forgetPassword = '${baseUrl}api/frogotPassword';
 
 // user_car
@@ -42,6 +35,8 @@ class ApiUrls {
   //api/orders
   static String ordersPage = '${baseUrl}api/orders';
   static String addOrders = '${baseUrl}api/orders';
+  static String activeOrders({required id}) =>
+      '${baseUrl}api/orders/payment_flag/${id.toString()}';
   static String showOrder() => '${baseUrl}api/orders}';
   static String addFav = '${baseUrl}api/favorites';
 

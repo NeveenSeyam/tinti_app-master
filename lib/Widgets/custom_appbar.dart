@@ -58,11 +58,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 height: 50.h,
                 child: widget.isHome == true
                     ? Constants.lang == 'ar'
-                        ? Icon(
+                        ? const Icon(
                             Icons.arrow_back_ios_rounded,
                             textDirection: TextDirection.rtl,
                           )
-                        : Icon(Icons.arrow_back_ios_rounded,
+                        : const Icon(Icons.arrow_back_ios_rounded,
                             textDirection: TextDirection.ltr)
                     : null
                 // Image.asset("assets/images/prof_photo.png")

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tinti_app/Models/product/service_products_model.dart';
+import 'package:tinti_app/Modules/Home/a.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
+import 'package:tinti_app/Widgets/button_widget.dart';
 import 'package:tinti_app/Widgets/custom_text_field.dart';
 import 'package:tinti_app/Widgets/wish_list_card.dart';
 import 'package:tinti_app/provider/products_provider.dart';
@@ -28,9 +30,12 @@ class ServicesScreen extends ConsumerStatefulWidget {
 }
 
 class _ServicesScreenState extends ConsumerState<ServicesScreen> {
+  TextEditingController _search = TextEditingController();
   int serviceId = 1;
+  bool isSearch = false;
   int pageIndex = 1;
 
+  String? dataSearch;
   Future _getContentData() async {
     final prov = ref.read(servicesProvider);
 
@@ -46,11 +51,16 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
 
   late Future _fetchedMyRequest;
 
-  Future _getProductsData() async {
+  Future _getProductsData(page) async {
     final prov = ref.read(productsProvider);
 
-    return await prov.getProductDataByServisesRequset(
-        id: updateServiceId(serviceId));
+    return await prov.getAllProductDataRequset(page: page);
+  }
+
+  Future _getSearchProductsData(dataSearch2) async {
+    final prov = ref.read(productsProvider);
+
+    return await prov.getSearchRequsett(name: dataSearch2 ?? '');
   }
 
   late Future _fetchedProductRequest;
@@ -58,7 +68,8 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
   @override
   void initState() {
     _fetchedMyRequest = _getContentData();
-    _fetchedProductRequest = _getProductsData();
+    _fetchedProductRequest = _getProductsData(0);
+    isSearch = false;
     super.initState();
   }
 
@@ -75,207 +86,448 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
       body: RefreshIndicator(
         onRefresh: () {
           setState(() {
-            _fetchedProductRequest = _getProductsData();
+            _fetchedProductRequest = _getProductsData(0);
+            _search.text = '';
           });
           return _fetchedProductRequest;
         },
-        child: ListView(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
-              child: RoundedInputField(
-                hintText: 'search'.tr(),
-                hintColor: AppColors.scadryColor,
-                seen: false,
-                onChanged: (val) {},
-                icon: const Icon(
-                  Icons.search,
-                  color: AppColors.scadryColor,
-                ),
-              ),
-            ),
-            Consumer(
-              builder: (context, ref, child) => FutureBuilder(
-                future: _fetchedMyRequest,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SizedBox(
-                      height: 70.h,
-                      child: const Center(
-                        child: LoaderWidget(),
-                      ),
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  }
-                  if (snapshot.hasData) {
-                    if (snapshot.data is Failure) {
-                      return Center(
-                          child: TextWidget(snapshot.data.toString()));
-                    }
-                    //
-                    //  print("snapshot data is ${snapshot.data}");
+        child: Consumer(
+          builder: (context, ref, child) => FutureBuilder(
+            future: _fetchedMyRequest,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return SizedBox(
+                  height: 70.h,
+                  child: const Center(
+                    child: LoaderWidget(),
+                  ),
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text('لا يوجد نتائج مطابقة'),
+                );
+              }
+              if (snapshot.hasData) {
+                if (snapshot.data is Failure) {
+                  return Center(child: TextWidget('لا يوجد نتائج مطابقة'));
+                }
+                //
+                //  print("snapshot data is ${snapshot.data}");
 
-                    var serviecesModel =
-                        ref.watch(servicesProvider).getDataList;
+                var serviecesModel = ref.watch(servicesProvider).getDataList;
 
-                    return Column(
-                      children: [
-                        Center(
-                          child: SizedBox(
-                            width: 370.w,
-                            height: 48.h,
-                            child: Center(
-                              child: ListView.builder(
-                                  physics: const ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: serviecesModel?.services?.length,
-                                  itemBuilder: (BuildContext context,
-                                          int index) =>
-                                      textButtonModel(
-                                          serviecesModel?.services?[index].name,
-                                          serviecesModel?.services?[index].id,
-                                          serviecesModel?.services?[index].id)),
-                            ),
-                          ),
-                        ),
-                        Consumer(
-                          builder: (context, ref, child) => FutureBuilder(
-                            future: _fetchedProductRequest,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return SizedBox(
-                                  height: 70.h,
-                                  child: const Center(
-                                    child: LoaderWidget(),
-                                  ),
-                                );
-                              }
-                              if (snapshot.hasError) {
+                return ListView(
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
+                      child: Consumer(
+                        builder: (context, ref, child) => FutureBuilder(
+                          future: _fetchedMyRequest,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text('لا يوجد نتائج مطابقة'),
+                              );
+                            }
+                            if (snapshot.hasData) {
+                              if (snapshot.data is Failure) {
                                 return Center(
-                                  child: Text('Error: ${snapshot.error}'),
-                                );
+                                    child: TextWidget('لا يوجد نتائج مطابقة'));
                               }
-                              if (snapshot.hasData) {
-                                if (snapshot.data is Failure) {
-                                  return Center(
-                                      child:
-                                          TextWidget(snapshot.data.toString()));
-                                }
-                                //
-                                //  print("snapshot data is ${snapshot.data}");
+                              //
+                              //  print("snapshot data is ${snapshot.data}");
 
-                                var productByServiceModel = ref
-                                        .watch(productsProvider)
-                                        .getProductsSirvesDataList ??
-                                    ServiceProductModel();
-                                return Padding(
-                                  padding: EdgeInsetsDirectional.only(
-                                      start: 15.w,
-                                      end: 15.w,
-                                      top: 5.h,
-                                      bottom: 20.h),
-                                  child: SizedBox(
-                                    height: 620.h,
-                                    child: GridView.builder(
-                                        // physics: BouncingScrollPhysics(),
-                                        shrinkWrap: true,
-                                        gridDelegate:
-                                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                                                maxCrossAxisExtent: 300,
-                                                childAspectRatio: 2 / 2.3,
-                                                crossAxisSpacing: 10,
-                                                mainAxisSpacing: 10),
-                                        itemCount: productByServiceModel
-                                                .success?.items?.length ??
-                                            0,
-                                        itemBuilder: (BuildContext ctx, index) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ServiceDetailsScreen(
-                                                          id: productByServiceModel
+                              var serviecesModel =
+                                  ref.watch(servicesProvider).getDataList;
+
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width: 290.w,
+                                    child: RoundedInputField(
+                                      hintText: 'search'.tr(),
+                                      hintColor: AppColors.scadryColor,
+                                      seen: false,
+                                      controller: _search,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          isSearch = true;
+                                          _fetchedProductRequest =
+                                              _getSearchProductsData(val);
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.search,
+                                        color: AppColors.scadryColor,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 60.w,
+                                    child: ButtonWidget(
+                                      onPressed: () {
+                                        if (_search.text.isNotEmpty) {
+                                          setState(() {
+                                            _fetchedProductRequest =
+                                                _getSearchProductsData(
+                                                    _search.text);
+                                            // _search.text = '';
+                                          });
+                                        }
+                                      },
+                                      widget: Icon(
+                                        Icons.search,
+                                      ),
+                                      backgroundColor: AppColors.orange,
+                                    ),
+                                  )
+                                ],
+                              );
+                            }
+                            return Container();
+                          },
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: isSearch ? false : true,
+                      child: Consumer(
+                        builder: (context, ref, child) => FutureBuilder(
+                          future: _fetchedProductRequest,
+                          builder: (context, snapshot) {
+                            // if (snapshot.connectionState ==
+                            //     ConnectionState.waiting) {
+                            //   return SizedBox(
+                            //     height: 70.h,
+                            //     child: const Center(
+                            //       child: LoaderWidget(),
+                            //     ),
+                            //   );
+                            // }
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text('لا يوجد نتائج مطابقة'),
+                              );
+                            }
+                            if (snapshot.hasData) {
+                              if (snapshot.data is Failure) {
+                                return Center(
+                                    child: TextWidget('لا يوجد نتائج مطابقة'));
+                              }
+                              //
+                              //  print("snapshot data is ${snapshot.data}");
+
+                              var productModel = ref
+                                  .watch(productsProvider)
+                                  .getProductsDataList;
+                              var searchProductModel =
+                                  ref.watch(productsProvider).getSearchDataList;
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.only(
+                                        start: 15.w,
+                                        end: 15.w,
+                                        top: 5.h,
+                                        bottom: 20.h),
+                                    child: SizedBox(
+                                      height: 620.h,
+                                      child: GridView.builder(
+                                          // physics: BouncingScrollPhysics(),
+                                          shrinkWrap: true,
+                                          gridDelegate:
+                                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                                                  maxCrossAxisExtent: 300,
+                                                  childAspectRatio: 2 / 2.3,
+                                                  crossAxisSpacing: 10,
+                                                  mainAxisSpacing: 10),
+                                          itemCount: searchProductModel
+                                                  ?.success?.length ??
+                                              0,
+                                          itemBuilder:
+                                              (BuildContext ctx, index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ServiceDetailsScreen(
+                                                            id: searchProductModel
+                                                                    ?.success?[
+                                                                        index]
+                                                                    .id ??
+                                                                0,
+                                                            row_id: searchProductModel
+                                                                    ?.success?[
+                                                                        index]
+                                                                    .id ??
+                                                                0,
+                                                            isFavorite: 0,
+                                                          )),
+                                                );
+                                                // print(
+                                                //     ' sssssssss ${productByServiceModel.success?.items?.length}');
+                                              },
+                                              child: ServicesCard(
+                                                  // productByServiceModel.Products.length ??
+                                                  searchProductModel
+                                                          ?.success?[index]
+                                                          .image ??
+                                                      'assets/images/sa1.jpeg',
+                                                  searchProductModel
+                                                          ?.success?[index]
+                                                          .name ??
+                                                      ' تظليل',
+                                                  searchProductModel
+                                                          ?.success?[index]
+                                                          .description ??
+                                                      'شركة جونسون اد جونسون.',
+                                                  searchProductModel
+                                                          ?.success?[index]
+                                                          .price ??
+                                                      '355',
+                                                  '',
+                                                  '',
+                                                  0,
+                                                  searchProductModel
+                                                          ?.success?[index]
+                                                          .id ??
+                                                      0),
+                                            );
+                                          }),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  )
+                                ],
+                              );
+                            }
+                            return Container();
+                          },
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: isSearch ? true : false,
+                      child: Consumer(
+                        builder: (context, ref, child) => FutureBuilder(
+                          future: _fetchedMyRequest,
+                          builder: (context, snapshot) {
+                            // if (snapshot.connectionState ==
+                            //     ConnectionState.waiting) {
+                            //   return SizedBox(
+                            //     height: 70.h,
+                            //     child: const Center(
+                            //       child: LoaderWidget(),
+                            //     ),
+                            //   );
+                            // }
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text('Error: ${snapshot.error}'),
+                              );
+                            }
+                            if (snapshot.hasData) {
+                              if (snapshot.data is Failure) {
+                                return Center(
+                                    child:
+                                        TextWidget(snapshot.data.toString()));
+                              }
+                              //
+                              //  print("snapshot data is ${snapshot.data}");
+
+                              var serviecesModel =
+                                  ref.watch(servicesProvider).getDataList;
+
+                              return Column(
+                                children: [
+                                  Center(
+                                    child: SizedBox(
+                                      width: 370.w,
+                                      height: 48.h,
+                                      child: Center(
+                                        child: ListView.builder(
+                                            physics:
+                                                const ClampingScrollPhysics(),
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: serviecesModel
+                                                ?.services?.length,
+                                            itemBuilder: (BuildContext context,
+                                                    int index) =>
+                                                textButtonModel(
+                                                    serviecesModel
+                                                        ?.services?[index].name,
+                                                    serviecesModel
+                                                        ?.services?[index].id,
+                                                    serviecesModel
+                                                        ?.services?[index].id)),
+                                      ),
+                                    ),
+                                  ),
+                                  Consumer(
+                                    builder: (context, ref, child) =>
+                                        FutureBuilder(
+                                      future: _fetchedProductRequest,
+                                      builder: (context, snapshot) {
+                                        // if (snapshot.connectionState ==
+                                        //     ConnectionState.waiting) {
+                                        //   return SizedBox(
+                                        //     height: 70.h,
+                                        //     child: const Center(
+                                        //       child: LoaderWidget(),
+                                        //     ),
+                                        //   );
+                                        // }
+                                        if (snapshot.hasError) {
+                                          return Center(
+                                            child: Text(
+                                                'Error: ${snapshot.error}'),
+                                          );
+                                        }
+                                        if (snapshot.hasData) {
+                                          if (snapshot.data is Failure) {
+                                            return Center(
+                                                child: TextWidget(
+                                                    snapshot.data.toString()));
+                                          }
+                                          //
+                                          //  print("snapshot data is ${snapshot.data}");
+
+                                          var productByServiceModel = ref
+                                                  .watch(productsProvider)
+                                                  .getProductsSirvesDataList ??
+                                              ServiceProductModel();
+                                          return Padding(
+                                            padding: EdgeInsetsDirectional.only(
+                                                start: 15.w,
+                                                end: 15.w,
+                                                top: 5.h,
+                                                bottom: 20.h),
+                                            child: SizedBox(
+                                              height: 620.h,
+                                              child: GridView.builder(
+                                                  // physics: BouncingScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  gridDelegate:
+                                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                                          maxCrossAxisExtent:
+                                                              300,
+                                                          childAspectRatio:
+                                                              2 / 2.3,
+                                                          crossAxisSpacing: 10,
+                                                          mainAxisSpacing: 10),
+                                                  itemCount:
+                                                      productByServiceModel
+                                                              .success
+                                                              ?.items
+                                                              ?.length ??
+                                                          0,
+                                                  itemBuilder:
+                                                      (BuildContext ctx,
+                                                          index) {
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ServiceDetailsScreen(
+                                                                    id: productByServiceModel
+                                                                            .success
+                                                                            ?.items?[index]
+                                                                            .id ??
+                                                                        0,
+                                                                    row_id: productByServiceModel
+                                                                            .success
+                                                                            ?.items?[index]
+                                                                            .id ??
+                                                                        0,
+                                                                    isFavorite: productByServiceModel
+                                                                            .success
+                                                                            ?.items?[index]
+                                                                            .is_favorite ??
+                                                                        0,
+                                                                  )),
+                                                        );
+                                                        print(
+                                                            ' sssssssss ${productByServiceModel.success?.items?.length}');
+                                                      },
+                                                      child: ServicesCard(
+                                                          // productByServiceModel.Products.length ??
+                                                          productByServiceModel
+                                                                  .success
+                                                                  ?.items?[
+                                                                      index]
+                                                                  .image ??
+                                                              'assets/images/sa1.jpeg',
+                                                          productByServiceModel
+                                                                  .success
+                                                                  ?.items?[
+                                                                      index]
+                                                                  .name ??
+                                                              ' تظليل',
+                                                          productByServiceModel
+                                                                  .success
+                                                                  ?.items?[
+                                                                      index]
+                                                                  .description ??
+                                                              'شركة جونسون اد جونسون.',
+                                                          productByServiceModel
+                                                                  .success
+                                                                  ?.items?[
+                                                                      index]
+                                                                  .price ??
+                                                              '355',
+                                                          '',
+                                                          '',
+                                                          productByServiceModel
+                                                                  .success
+                                                                  ?.items?[
+                                                                      index]
+                                                                  .is_favorite ??
+                                                              0,
+                                                          productByServiceModel
                                                                   .success
                                                                   ?.items?[
                                                                       index]
                                                                   .id ??
-                                                              0,
-                                                          row_id:
-                                                              productByServiceModel
-                                                                      .success
-                                                                      ?.items?[
-                                                                          index]
-                                                                      .id ??
-                                                                  0,
-                                                          isFavorite:
-                                                              productByServiceModel
-                                                                      .success
-                                                                      ?.items?[
-                                                                          index]
-                                                                      .is_favorite ??
-                                                                  0,
-                                                        )),
-                                              );
-                                              print(
-                                                  ' sssssssss ${productByServiceModel.success?.items?.length}');
-                                            },
-                                            child: ServicesCard(
-                                                // productByServiceModel.Products.length ??
-                                                productByServiceModel.success
-                                                        ?.items?[index].image ??
-                                                    'assets/images/sa1.jpeg',
-                                                productByServiceModel.success
-                                                        ?.items?[index].name ??
-                                                    ' تظليل',
-                                                productByServiceModel
-                                                        .success
-                                                        ?.items?[index]
-                                                        .description ??
-                                                    'شركة جونسون اد جونسون.',
-                                                productByServiceModel.success
-                                                        ?.items?[index].price ??
-                                                    '355',
-                                                '',
-                                                '',
-                                                productByServiceModel
-                                                        .success
-                                                        ?.items?[index]
-                                                        .is_favorite ??
-                                                    0,
-                                                productByServiceModel.success
-                                                        ?.items?[index].id ??
-                                                    0),
+                                                              0),
+                                                    );
+                                                  }),
+                                            ),
                                           );
-                                        }),
+                                        }
+                                        return Container();
+                                      },
+                                    ),
                                   ),
-                                );
-                              }
-                              return Container();
-                            },
-                          ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  )
+                                ],
+                              );
+                            }
+                            return Container();
+                          },
                         ),
-                        SizedBox(
-                          height: 20.h,
-                        )
-                      ],
-                    );
-                  }
-                  return Container();
-                },
-              ),
-            ),
-            SizedBox(
-              height: 20.h,
-            )
-          ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    )
+                  ],
+                );
+              }
+              return Container();
+            },
+          ),
         ),
       ),
     );
@@ -287,7 +539,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
         setState(() {
           pageIndex = index;
           serviceId = id;
-          _fetchedProductRequest = _getProductsData();
+          _fetchedProductRequest = _getProductsData(0);
         });
       },
       child: pageIndex == index

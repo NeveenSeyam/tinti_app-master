@@ -90,10 +90,10 @@ class _CartPageState extends ConsumerState<CartPage> {
                                   borderRadius: BorderRadius.circular(20.w),
                                   color: AppColors.white.withOpacity(0.9)),
                               // width: 320.w,
-                              height: 500.h,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              height: 600.h,
+                              child: ListView(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                // crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Image.asset('assets/images/nullstate.png'),
                                   SizedBox(
@@ -155,7 +155,7 @@ class _CartPageState extends ConsumerState<CartPage> {
 
                         return ordersModel?.orders?.length != 0
                             ? ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: BouncingScrollPhysics(),
                                 shrinkWrap: true,
                                 scrollDirection: Axis.vertical,
                                 itemCount: ordersModel?.orders?.length,

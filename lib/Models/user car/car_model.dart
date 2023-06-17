@@ -32,6 +32,9 @@ class CarModles {
   String? carModelName;
   String? carModelTypeName;
   String? carSizeName;
+  dynamic carModelId;
+  dynamic carModelTypeId;
+  dynamic carSizeId;
   String? image;
 
   CarModles(
@@ -42,6 +45,9 @@ class CarModles {
       this.carModelName,
       this.carModelTypeName,
       this.carSizeName,
+      this.carModelId,
+      this.carModelTypeId,
+      this.carSizeId,
       this.image});
 
   CarModles.fromJson(Map<String, dynamic> json) {
@@ -52,6 +58,9 @@ class CarModles {
     carModelName = json['car_model_name'];
     carModelTypeName = json['car_model_type_name'];
     carSizeName = json['car_size_name'];
+    carModelId = json['car_model_id'];
+    carModelTypeId = json['car_model_type_id'];
+    carSizeId = json['car_size_id'];
     image = json['image'];
   }
 
@@ -64,6 +73,9 @@ class CarModles {
     data['car_model_name'] = this.carModelName;
     data['car_model_type_name'] = this.carModelTypeName;
     data['car_size_name'] = this.carSizeName;
+    data['car_model_id'] = this.carModelId;
+    data['car_model_type_id'] = this.carModelTypeId;
+    data['car_size_id'] = this.carSizeId;
     data['image'] = this.image;
     return data;
   }

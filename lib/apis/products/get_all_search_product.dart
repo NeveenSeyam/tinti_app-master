@@ -1,21 +1,21 @@
 import '../api_urls.dart';
 import '../base_dio_api.dart';
 
-class GetProductsDataApi extends BaseDioApi {
-  int page;
-  GetProductsDataApi({required this.page}) : super(ApiUrls.allProductsPage);
+class GetSearchProductsDataApi extends BaseDioApi {
+  String name;
+  GetSearchProductsDataApi({required this.name}) : super(ApiUrls.search);
 
   @override
   body() {
     return {
-      "page": page,
+      "name": name,
     };
   }
 
   Future fetch() async {
     //* u can  chose the what the request type
     //! Get , Post , Put , Delete
-    final response = await getRequest();
+    final response = await postRequest();
     return response;
   }
 }

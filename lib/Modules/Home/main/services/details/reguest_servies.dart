@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myfatoorah_flutter/embeddedapplepay/MFApplePayButton.dart';
+import 'package:myfatoorah_flutter/embeddedpayment/MFPaymentCardView.dart';
+import 'package:myfatoorah_flutter/model/initpayment/SDKInitiatePaymentResponse.dart';
+import 'package:myfatoorah_flutter/myfatoorah_flutter.dart';
+import 'package:myfatoorah_flutter/utils/MFCountry.dart';
+import 'package:myfatoorah_flutter/utils/MFEnvironment.dart';
 import 'package:tinti_app/Models/statics/cites_model.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/custom_appbar.dart';
@@ -19,6 +26,7 @@ import '../../../../../Models/statics/regions_model.dart';
 import '../../../../../Models/statics/sizes.dart';
 import '../../../../../Models/user car/car_model.dart';
 import '../../../../../Widgets/Custom_dropDown.dart';
+import '../../../../../Widgets/button_widget.dart';
 import '../../../../../Widgets/custom_text.dart';
 import '../../../../../Widgets/gradint_button.dart';
 import 'package:my_fatoorah/my_fatoorah.dart';
@@ -27,6 +35,7 @@ import '../../../../../Widgets/loader_widget.dart';
 import '../../../../../Widgets/loading_dialog.dart';
 import '../../../../../Widgets/text_widget.dart';
 import '../../../../../helpers/ui_helper.dart';
+import '../../../../../main.dart';
 import '../../../../../provider/order_provider.dart';
 import '../../../../../provider/statics_provider.dart';
 
@@ -34,7 +43,16 @@ import '../../../../../provider/statics_provider.dart';
 class RequestServieses extends ConsumerStatefulWidget {
   dynamic serviceid;
   String? price;
-  RequestServieses({super.key, required this.price, required this.serviceid});
+  String? name;
+  String? company_name;
+  String? rate;
+  RequestServieses(
+      {super.key,
+      required this.price,
+      required this.serviceid,
+      required this.company_name,
+      required this.name,
+      required this.rate});
 
   @override
   _RequestServiesesState createState() {
@@ -42,7 +60,518 @@ class RequestServieses extends ConsumerStatefulWidget {
   }
 }
 
+final String mAPIKey =
+    "rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL";
+
 class _RequestServiesesState extends ConsumerState<RequestServieses> {
+  String? _response = '';
+  String _loading = "Loading...";
+
+  List<PaymentMethods> paymentMethods = [];
+  List<bool> isSelected = [];
+  int selectedPaymentMethodIndex = -1;
+
+  String amount = "0.010";
+  String cardNumber = "5453010000095489";
+  String expiryMonth = "5";
+  String expiryYear = "21";
+  String securityCode = "100";
+  String cardHolderName = "Mahmoud Ibrahim";
+  bool visibilityObs = false;
+  var ordersModel;
+  MFPaymentCardView? mfPaymentCardView;
+  MFApplePayButton? mfApplePayButton;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (mAPIKey.isEmpty) {
+      setState(() {
+        _response =
+            "Missing API Token Key.. You can get it from here: https://myfatoorah.readme.io/docs/test-token";
+      });
+      return;
+    }
+    _fetchedRegioRequest = _getRigonsData();
+
+    _fetchedCitiesRequest = _getCitiesData();
+    _fetchedCarsRequest = _getCarsData();
+    _fetchedMyRequest = _getContentModelData();
+
+    _fetchedSizesRequest = _getSizesData();
+    _fetchedModelTypesRequest = _getModelTypesData();
+
+    // TODO, don't forget to init the MyFatoorah Plugin with the following line
+    MFSDK.init(mAPIKey, MFCountry.KUWAIT, MFEnvironment.TEST);
+
+    initiatePayment();
+    initiateSession();
+  }
+
+  void sendPayment() {
+    var request = MFSendPaymentRequest(
+        invoiceValue: double.parse(widget.price ?? '0'),
+        customerName: "Customer name",
+        notificationOption: MFNotificationOption.LINK);
+
+    MFSDK.sendPayment(
+        context,
+        MFAPILanguage.EN,
+        request,
+        (MFResult<MFSendPaymentResponse> result) => {
+              if (result.isSuccess())
+                {
+                  setState(() {
+                    print(result.response?.toJson());
+                    _response = result.response?.toJson().toString();
+                  })
+                }
+              else
+                {
+                  setState(() {
+                    print(result.error?.toJson());
+                    _response = result.error?.message;
+                  })
+                }
+            });
+
+    setState(() {
+      _response = _loading;
+    });
+  }
+
+  void initiatePayment() {
+    var request = MFInitiatePaymentRequest(
+        double.parse(widget.price ?? '0'), MFCurrencyISO.SAUDI_ARABIA_SAR);
+
+    MFSDK.initiatePayment(
+        request,
+        MFAPILanguage.EN,
+        (MFResult<MFInitiatePaymentResponse> result) => {
+              if (result.isSuccess())
+                {
+                  setState(() {
+                    print(result.response?.toJson());
+                    _response = ""; //result.response?.toJson().toString();
+                    paymentMethods.addAll(result.response!.paymentMethods!);
+                    for (int i = 0; i < paymentMethods.length; i++)
+                      isSelected.add(false);
+                  })
+                }
+              else
+                {
+                  setState(() {
+                    print(result.error?.toJson());
+                    _response = result.error?.message;
+                  })
+                }
+            });
+
+    setState(() {
+      _response = _loading;
+    });
+  }
+
+  Future executeRegularPayment(int paymentMethodId) async {
+    var request = MFExecutePaymentRequest(
+        paymentMethodId, double.parse(widget.price ?? '0'));
+
+    await MFSDK.executePayment(context, request, MFAPILanguage.EN,
+        onInvoiceCreated: (String invoiceId) =>
+            {print("invoiceId: " + invoiceId)},
+        onPaymentResponse: (String invoiceId,
+                MFResult<MFPaymentStatusResponse> result) async =>
+            {
+              if (result.isSuccess())
+                {
+                  print('oooooooo'),
+                  ordersModel = await ref
+                      .watch(ordersProvider)
+                      .activeOrderRequset(id: order_id)
+                      .then((value) {
+                    if (value is! Failure) {
+                      if (value == null) {
+                        UIHelper.showNotification(value.toString());
+                        print(value);
+                        print('oooooooo2');
+                      }
+                      if (value != false) {
+                        print('oooooooo3');
+                        // UIHelper.showNotification(value.toString());
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (context) {
+                        //     return AlertDialog(
+                        //       title: Text('شكرا '),
+                        //       content: Column(
+                        //         children: [
+                        //           ButtonWidget(
+                        //             title: 'تمت',
+                        //             onPressed: () {},
+                        //           )
+                        //         ],
+                        //       ),
+                        //     );
+                        //   },
+                        // );
+                        Navigator.popAndPushNamed(
+                            context, '/navegaitor_screen');
+
+                        // Navigator.of(context).pop();
+                        print(value);
+                      }
+                    }
+
+                    return isAvailble;
+                  }),
+                  setState(() {
+                    print(invoiceId);
+                    print(result.response?.toJson());
+                    _response = result.response?.toJson().toString();
+                    isAvailble = false;
+                  })
+                }
+              else
+                {
+                  setState(() {
+                    print(invoiceId);
+                    print(result.error?.toJson());
+                    _response = result.error?.message;
+                  })
+                }
+            });
+
+    setState(() {
+      _response = _loading;
+      isAvailble = false;
+    });
+  }
+
+  void executeDirectPayment(int paymentMethodId) {
+    var request = MFExecutePaymentRequest(
+        paymentMethodId, double.parse(widget.price ?? '0'));
+
+    var mfCardInfo = MFCardInfo(
+        cardNumber: cardNumber,
+        expiryMonth: expiryMonth,
+        expiryYear: expiryYear,
+        securityCode: securityCode,
+        cardHolderName: cardHolderName,
+        bypass3DS: false,
+        saveToken: false);
+
+    MFSDK.executeDirectPayment(
+        context,
+        request,
+        mfCardInfo,
+        MFAPILanguage.EN,
+        (String invoiceId, MFResult<MFDirectPaymentResponse> result) async => {
+              if (result.isSuccess())
+                {
+                  await ordersModel
+                      .activeOrderRequset(id: order_id)
+                      .then((value) {
+                    if (value is! Failure) {
+                      if (value == null) {
+                        UIHelper.showNotification(value.toString());
+                        print(value);
+                      }
+                      if (value != false) {
+                        UIHelper.showNotification(value.status.toString());
+                        print(value);
+                      }
+                    }
+
+                    return isAvailble;
+                  }),
+                  setState(() {
+                    print(invoiceId);
+                    print(result.response?.toJson());
+                    _response = result.response?.toJson().toString();
+                  })
+                }
+              else
+                {
+                  setState(() {
+                    print(invoiceId);
+                    print(result.error?.toJson());
+                    _response = result.error?.message;
+                  })
+                }
+            });
+
+    setState(() {
+      _response = _loading;
+    });
+  }
+
+  // void executeDirectPaymentWithRecurring() {
+  //   int paymentMethod = 20;
+
+  //   var request = MFExecutePaymentRequest(
+  //       paymentMethod, double.parse(widget.price ?? '0'));
+
+  //   var mfCardInfo = MFCardInfo(
+  //       cardNumber: cardNumber,
+  //       expiryMonth: expiryMonth,
+  //       expiryYear: expiryYear,
+  //       securityCode: securityCode,
+  //       bypass3DS: true,
+  //       saveToken: true);
+
+  //   MFSDK.executeRecurringDirectPayment(
+  //       context,
+  //       request,
+  //       mfCardInfo,
+  //       MFRecurringType.monthly,
+  //       MFAPILanguage.EN,
+  //       (String invoiceId, MFResult<MFDirectPaymentResponse> result) async => {
+  //             if (result.isSuccess())
+  //               {
+  //                 await ordersModel
+  //                     .activeOrderRequset(id: order_id)
+  //                     .then((value) {
+  //                   if (value is! Failure) {
+  //                     if (value == null) {
+  //                       UIHelper.showNotification(value.toString());
+  //                       print(value);
+  //                     }
+  //                     if (value != false) {
+  //                       UIHelper.showNotification(value.status.toString());
+  //                       print(value);
+  //                     }
+  //                   }
+
+  //                   return isAvailble;
+  //                 }),
+  //                 setState(() {
+  //                   print(invoiceId);
+  //                   print(result.response?.toJson());
+  //                   _response = result.response?.toJson().toString();
+  //                 })
+  //               }
+  //             else
+  //               {
+  //                 setState(() {
+  //                   print(invoiceId);
+  //                   print(result.error?.toJson());
+  //                   _response = result.error?.message;
+  //                 })
+  //               }
+  //           });
+
+  //   setState(() {
+  //     _response = _loading;
+  //   });
+  // }
+
+  /*
+    Payment Enquiry
+   */
+  void getPaymentStatus() {
+    var request = MFPaymentStatusRequest(invoiceId: "12345");
+
+    MFSDK.getPaymentStatus(
+        MFAPILanguage.EN,
+        request,
+        (MFResult<MFPaymentStatusResponse> result) async => {
+              if (result.isSuccess())
+                {
+                  await ordersModel
+                      .activeOrderRequset(id: order_id)
+                      .then((value) {
+                    if (value is! Failure) {
+                      if (value == null) {
+                        UIHelper.showNotification(value.toString());
+                        print(value);
+                      }
+                      if (value != false) {
+                        UIHelper.showNotification(value.status.toString());
+                        print(value);
+                      }
+                    }
+
+                    return isAvailble;
+                  }),
+                  setState(() {
+                    print(result.response?.toJson());
+                    _response = result.response?.toJson().toString();
+                  })
+                }
+              else
+                {
+                  setState(() {
+                    print(result.error?.toJson());
+                    _response = result.error?.message;
+                  })
+                }
+            });
+
+    setState(() {
+      _response = _loading;
+    });
+  }
+
+  /*
+    Cancel Token
+   */
+  void cancelToken() {
+    MFSDK.cancelToken(
+        "Put your token here",
+        MFAPILanguage.EN,
+        (MFResult<bool> result) => {
+              if (result.isSuccess())
+                {
+                  setState(() {
+                    print(result.response.toString());
+                    _response = result.response.toString();
+                  })
+                }
+              else
+                {
+                  setState(() {
+                    print(result.error?.toJson());
+                    _response = result.error?.message;
+                  })
+                }
+            });
+
+    setState(() {
+      _response = _loading;
+    });
+  }
+
+  /*
+    Cancel Recurring Payment
+   */
+  void cancelRecurringPayment() {
+    MFSDK.cancelRecurringPayment(
+        "Put RecurringId here",
+        MFAPILanguage.EN,
+        (MFResult<bool> result) => {
+              if (result.isSuccess())
+                {
+                  setState(() {
+                    print(result.response.toString());
+                    _response = result.response.toString();
+                  })
+                }
+              else
+                {
+                  setState(() {
+                    print(result.error?.toJson());
+                    _response = result.error?.message;
+                  })
+                }
+            });
+
+    setState(() {
+      _response = _loading;
+    });
+  }
+
+  void setPaymentMethodSelected(int index, bool value) {
+    for (int i = 0; i < isSelected.length; i++) {
+      if (i == index) {
+        isSelected[i] = value;
+        if (value) {
+          selectedPaymentMethodIndex = index;
+          visibilityObs = paymentMethods[index].isDirectPayment!;
+        } else {
+          selectedPaymentMethodIndex = -1;
+          visibilityObs = false;
+        }
+      } else
+        isSelected[i] = false;
+    }
+  }
+
+  void initiateSession() {
+    MFSDK.initiateSession(null, (MFResult<MFInitiateSessionResponse> result) {
+      if (result.isSuccess()) {
+        // This for embedded payment view
+        mfPaymentCardView?.load(result.response!,
+            onCardBinChanged: (String bin) => {print("Bin: " + bin)});
+
+        /// This for Apple pay button
+        if (Platform.isIOS) {
+          loadApplePay(result.response!);
+        }
+      } else {
+        setState(() {
+          var errorJson = result.error?.toJson();
+          print("Error: " + errorJson.toString());
+          _response = errorJson?.toString();
+        });
+      }
+    });
+  }
+
+  /// This for Apple pay button
+  void loadApplePay(MFInitiateSessionResponse mfInitiateSessionResponse) {
+    var request = MFExecutePaymentRequest.constructorForApplyPay(
+        0.100, MFCurrencyISO.SAUDI_ARABIA_SAR);
+    mfApplePayButton?.loadWithStartLoading(
+        mfInitiateSessionResponse,
+        request,
+        MFAPILanguage.EN,
+        () => {
+              setState(() {
+                _response = "Loading...";
+              })
+            },
+        (String invoiceId, MFResult<MFPaymentStatusResponse> result) => {
+              if (result.isSuccess())
+                {
+                  setState(() {
+                    print("invoiceId: " + invoiceId);
+                    _response = result.response?.toJson().toString();
+                    print("Response: " + _response!);
+                  })
+                }
+              else
+                {
+                  setState(() {
+                    print("invoiceId: " + invoiceId);
+                    print("Error: " + (result.error?.toJson() as String));
+                    _response = result.error?.message;
+                  })
+                }
+            });
+  }
+
+  void payWithEmbeddedPayment() {
+    var request = MFExecutePaymentRequest.constructor(0.010);
+
+    mfPaymentCardView?.pay(
+        request,
+        MFAPILanguage.EN,
+        (String invoiceId, MFResult<MFPaymentStatusResponse> result) => {
+              if (result.isSuccess())
+                {
+                  setState(() {
+                    print("invoiceId: " + invoiceId);
+                    _response = result.response?.toJson().toString();
+                    print("Response: " + _response!);
+                  })
+                }
+              else
+                {
+                  setState(() {
+                    print("invoiceId: " + invoiceId);
+                    var errorJson = result.error?.toJson();
+                    print("Error: " + errorJson.toString());
+                    _response = errorJson?.toString();
+                  })
+                }
+            });
+
+    setState(() {
+      _response = _loading;
+    });
+  }
+
   TextEditingController _name = TextEditingController();
   TextEditingController _model = TextEditingController();
   TextEditingController _size = TextEditingController();
@@ -78,6 +607,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
   var id2 = 0;
 
   bool isFav = true;
+  dynamic order_id = 0;
   bool isVisible1 = false;
   bool isAvailble = false;
   bool isVisible2 = false;
@@ -132,21 +662,6 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
   late Future _fetchedModelTypesRequest;
 
   @override
-  void initState() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    _fetchedRegioRequest = _getRigonsData();
-
-    _fetchedCitiesRequest = _getCitiesData();
-    _fetchedCarsRequest = _getCarsData();
-    _fetchedMyRequest = _getContentModelData();
-
-    _fetchedSizesRequest = _getSizesData();
-    _fetchedModelTypesRequest = _getModelTypesData();
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
@@ -157,51 +672,6 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: ListView(
           children: [
-            // Row(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   children: [
-            //     Container(
-            //       padding:
-            //           EdgeInsets.symmetric(horizontal: 20.w, vertical: 60.w),
-            //       decoration: BoxDecoration(
-            //           color: AppColors.orange,
-            //           borderRadius: BorderRadius.circular(10.w)),
-            //       child: Icon(
-            //         Icons.add,
-            //         color: AppColors.white,
-            //         size: 40.w,
-            //       ),
-            //     ),
-            //     Container(
-            //       width: 280.w,
-            //       height: 200.h,
-            //       child: SizedBox(
-            //         // width: 350.w,
-            //         child: PageView(
-            //           scrollDirection: Axis.horizontal,
-            //           // controller: _pageController,
-            //           physics: const BouncingScrollPhysics(),
-            //           onPageChanged: (int currentPage) {
-            //             // setState(() => _currentPage = currentPage);
-            //           },
-            //           children: const [
-            //             CachImage(
-            //               image: 'credit-card-1',
-            //             ),
-            //             CachImage(
-            //               image: 'credit-card-2',
-            //             ),
-            //             CachImage(
-            //               image: 'credit-card',
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-
             Consumer(
               builder: (context, ref, child) => FutureBuilder(
                 future: _fetchedRegioRequest,
@@ -323,9 +793,9 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                             ],
                           ),
                           Container(
-                            height: 70.h,
+                            // height: 70.h,
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Container(
                                     width: 300.w,
@@ -353,7 +823,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                     )),
                                 Container(
                                   width: 50.w,
-                                  height: 40.h,
+                                  // height: 40.h,
                                   child: Consumer(
                                     builder: (context, ref, child) =>
                                         FutureBuilder(
@@ -407,11 +877,19 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10.w)),
-                                              padding: EdgeInsets.all(7.w),
-                                              child: CustomText(
-                                                '  +  ',
-                                                color: AppColors.orange,
-                                                fontSize: 24.sp,
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 12.w),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.directions_car_rounded,
+                                                  size: 30.w,
+                                                  color: AppColors.white,
+                                                ),
+                                                //  CustomText(
+                                                //   '+',
+                                                //   color: AppColors.orange,
+                                                //   fontSize: 30.sp,
+                                                // ),
                                               ),
                                             ),
                                             onTap: () {
@@ -530,7 +1008,13 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                                                           height:
                                                                               100.h,
                                                                           child:
-                                                                              Icon(Icons.add_a_photo_outlined),
+                                                                              Icon(
+                                                                            Icons.directions_car_rounded,
+                                                                            color:
+                                                                                AppColors.scadryColor,
+                                                                            size:
+                                                                                40.w,
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     )
@@ -899,7 +1383,6 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                 },
               ),
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -908,14 +1391,14 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      'نانو سيراميك',
+                      widget.name ?? 'نانو سيراميك',
                       color: AppColors.scadryColor,
                       fontSize: 18.sp,
                       fontFamily: 'DINNextLTArabic',
                       textAlign: TextAlign.start,
                     ),
                     CustomText(
-                      'جونسون اند جونسون ',
+                      widget.company_name ?? 'جونسون اند جونسون ',
                       color: AppColors.orange,
                       fontSize: 14.sp,
                       fontFamily: 'DINNextLTArabic',
@@ -923,33 +1406,59 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                     ),
                   ],
                 ),
-                Row(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                      child: isFav == true
-                          ? Icon(
-                              Icons.star_rate_rounded,
-                              color: AppColors.orange,
-                              size: 32.w,
-                            )
-                          : Icon(
-                              Icons.star_rate_rounded,
-                              color: AppColors.orange,
-                              size: 32.w,
-                            ),
-                      onTap: () {
-                        setState(() {
-                          isFav == true ? isFav = false : isFav = true;
-                        });
-                      },
+                    Row(
+                      children: [
+                        CustomText(
+                          widget.rate ?? ' 4.2  ',
+                          color: AppColors.scadryColor,
+                          fontSize: 18.sp,
+                          fontFamily: 'DINNextLTArabic',
+                          textAlign: TextAlign.start,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        GestureDetector(
+                          child: isFav == true
+                              ? Icon(
+                                  Icons.star_rate_rounded,
+                                  color: AppColors.orange,
+                                  size: 32.w,
+                                )
+                              : Icon(
+                                  Icons.star_rate_rounded,
+                                  color: AppColors.orange,
+                                  size: 32.w,
+                                ),
+                          onTap: () {
+                            setState(() {
+                              isFav == true ? isFav = false : isFav = true;
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                    CustomText(
-                      ' 4.2  ',
-                      color: AppColors.scadryColor,
-                      fontSize: 18.sp,
-                      fontFamily: 'DINNextLTArabic',
-                      textAlign: TextAlign.start,
-                      fontWeight: FontWeight.w500,
+                    Row(
+                      children: [
+                        CustomText(
+                          '${widget.price}' ?? '',
+                          fontSize: 18.sp,
+                          color: AppColors.scadryColor,
+                          fontFamily: 'DINNextLTArabic',
+                          textAlign: TextAlign.start,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        CustomText(
+                          ' ر.س',
+                          fontSize: 18.sp,
+                          color: AppColors.orange,
+                          fontFamily: 'DINNextLTArabic',
+                          textAlign: TextAlign.start,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -963,99 +1472,305 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
             ),
             SizedBox(
               height: 500.h,
-              child: ListView(
-                children: [
-                  isVisible1 == false
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RaisedGradientButton(
-                              color: AppColors.scadryColor,
-                              textColor: AppColors.white,
-                              onPressed: () {
-                                var ordersModel = ref.watch(ordersProvider);
-                                ordersModel.addOrderRequset(data: {
-                                  "region_id": selectedRigonId,
-                                  "city_id": selectedCityId,
-                                  "car_id": selectedCarId,
-                                  "product_id": widget.serviceid,
-                                  "payment_flag": 1,
-                                }).then((value) {
-                                  if (value is! Failure) {
-                                    if (value != null) {
-                                      UIHelper.showNotification("error".tr());
-                                      //    Navigator.pop(context);
-                                      setState(() {
-                                        // isAvailble=true;
-                                        isVisible1 = true;
-                                      });
-                                    }
-                                  }
+              child: isVisible1 == false
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        RaisedGradientButton(
+                          color: AppColors.scadryColor,
+                          textColor: AppColors.white,
+                          onPressed: () async {
+                            var ordersModel = ref.watch(ordersProvider);
 
-                                  return isAvailble;
-                                });
-                              },
-                              text: 'تنفيذ',
-                              circular: 10.w,
-                              width: 260.w,
+                            if (selectedCarId != null &&
+                                selectedCityId != null &&
+                                selectedRigonId != null) {
+                              final response =
+                                  await ordersModel.addOrderRequset(data: {
+                                "region_id": selectedRigonId,
+                                "city_id": selectedCityId,
+                                "car_id": selectedCarId,
+                                "product_id": widget.serviceid,
+                                "payment_flag": 1,
+                              }).then((value) async {
+                                if (value is! Failure) {
+                                  if (value == null) {
+                                    setState(() {
+                                      isVisible1 = false;
+                                    });
+                                  }
+                                  if (value != false) {
+                                    order_id = await ref
+                                            .read(ordersProvider)
+                                            .order_id
+                                            .toString() ??
+                                        '';
+                                    setState(() {
+                                      print(order_id);
+
+                                      isVisible1 = true;
+                                    });
+                                  }
+                                }
+
+                                return isAvailble;
+                              });
+                            } else {
+                              UIHelper.showNotification(
+                                  'يجب اختار المنطقة والمدينة والسيارة المراد تنفيذ الخدمة عليها ');
+                            }
+                          },
+                          text: 'تنفيذ',
+                          circular: 10.w,
+                          width: 240.w,
+                        ),
+                        Container(
+                          width: 100.w,
+                          height: 48,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12.w, horizontal: 2.h),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.w),
+                            color: AppColors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 185, 184, 184)
+                                    .withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: const Offset(
+                                    0, 1), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: CustomText(
+                              '${widget.price} ر.س' ?? ' 100 ر.س',
+                              color: AppColors.orange,
+                              fontSize: 14.sp,
+                              fontFamily: 'DINNextLTArabic',
+                              textAlign: TextAlign.start,
                             ),
-                            Container(
-                              width: 90.w,
-                              padding: EdgeInsets.all(10.w),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.w),
-                                color: AppColors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color.fromARGB(255, 185, 184, 184)
-                                        .withOpacity(0.5),
-                                    spreadRadius: 1,
-                                    blurRadius: 5,
-                                    offset: const Offset(
-                                        0, 1), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: CustomText(
-                                '${widget.price} \$' ?? ' 100 \$',
-                                color: AppColors.orange,
-                                fontSize: 16.sp,
-                                fontFamily: 'DINNextLTArabic',
-                                textAlign: TextAlign.start,
-                              ),
-                            )
-                          ],
+                          ),
                         )
-                      : isVisible1 == true
-                          ? MyFatoorah(
-                              onResult: (response) {
-                                print(response.status);
-                              },
-                              request: MyfatoorahRequest.test(
-                                currencyIso: Country.SaudiArabia,
-                                successUrl: 'https://www.facebook.com',
-                                errorUrl: 'https://www.google.com',
-                                invoiceAmount:
-                                    double.parse(widget.price ?? '0'),
-                                language: ApiLanguage.Arabic,
-                                token:
-                                    "rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL",
-                              ),
-                              buildAppBar: (context) {
-                                return CustomAppBar(
-                                  "payment".tr(),
-                                  isProfile: false,
-                                  isNotification: false,
-                                );
-                              },
-                            )
-                          : Container(),
-                ],
-              ),
+                      ],
+                    )
+                  : isVisible1 == true
+                      ? Flex(direction: Axis.vertical, children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    // ElevatedButton(
+                                    //   onPressed: sendPayment,
+                                    //   child: const Text('Send Payment'),
+                                    // ),
+                                    const Padding(
+                                      padding: EdgeInsets.all(5.0),
+                                    ),
+                                    const Text("Select payment method"),
+                                    const Padding(
+                                      padding: EdgeInsets.all(5.0),
+                                    ),
+                                    SizedBox(
+                                      height: 160.h,
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: paymentMethods.length,
+                                          itemBuilder:
+                                              (BuildContext ctxt, int index) {
+                                            return Padding(
+                                              padding: EdgeInsets.all(8.w),
+                                              child: Container(
+                                                  // width: 60,
+                                                  height: 80.h,
+                                                  decoration: BoxDecoration(
+                                                      color: AppColors.orange
+                                                          .withOpacity(0.3),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.w)),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10.h),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: <Widget>[
+                                                      Image.network(
+                                                          paymentMethods[index]
+                                                              .imageUrl!,
+                                                          width: 90.w,
+                                                          height: 90.h),
+                                                      Checkbox(
+                                                          value:
+                                                              isSelected[index],
+                                                          onChanged:
+                                                              (bool? value) {
+                                                            setState(() {
+                                                              setPaymentMethodSelected(
+                                                                  index,
+                                                                  value!);
+                                                            });
+                                                          })
+                                                    ],
+                                                  )),
+                                            );
+                                          }),
+                                    ),
+                                    // visibilityObs
+                                    //     ? Column(
+                                    //         children: <Widget>[
+                                    //           const Padding(
+                                    //             padding: EdgeInsets.all(5.0),
+                                    //           ),
+                                    //           TextField(
+                                    //             keyboardType:
+                                    //                 TextInputType.number,
+                                    //             decoration:
+                                    //                 const InputDecoration(
+                                    //                     labelText:
+                                    //                         "Card Number"),
+                                    //             controller:
+                                    //                 TextEditingController(
+                                    //                     text: cardNumber),
+                                    //             onChanged: (value) {
+                                    //               cardNumber = value;
+                                    //             },
+                                    //           ),
+                                    //           TextField(
+                                    //             keyboardType:
+                                    //                 TextInputType.number,
+                                    //             decoration:
+                                    //                 const InputDecoration(
+                                    //                     labelText:
+                                    //                         "Expiry Month"),
+                                    //             controller:
+                                    //                 TextEditingController(
+                                    //                     text: expiryMonth),
+                                    //             onChanged: (value) {
+                                    //               expiryMonth = value;
+                                    //             },
+                                    //           ),
+                                    //           TextField(
+                                    //             keyboardType:
+                                    //                 TextInputType.number,
+                                    //             decoration:
+                                    //                 const InputDecoration(
+                                    //                     labelText:
+                                    //                         "Expiry Year"),
+                                    //             controller:
+                                    //                 TextEditingController(
+                                    //                     text: expiryYear),
+                                    //             onChanged: (value) {
+                                    //               expiryYear = value;
+                                    //             },
+                                    //           ),
+                                    //           TextField(
+                                    //             keyboardType:
+                                    //                 TextInputType.number,
+                                    //             decoration:
+                                    //                 const InputDecoration(
+                                    //                     labelText:
+                                    //                         "Security Code"),
+                                    //             controller:
+                                    //                 TextEditingController(
+                                    //                     text: securityCode),
+                                    //             onChanged: (value) {
+                                    //               securityCode = value;
+                                    //             },
+                                    //           ),
+                                    //           TextField(
+                                    //             keyboardType:
+                                    //                 TextInputType.name,
+                                    //             decoration:
+                                    //                 const InputDecoration(
+                                    //                     labelText:
+                                    //                         "Card Holder Name"),
+                                    //             controller:
+                                    //                 TextEditingController(
+                                    //                     text: cardHolderName),
+                                    //             onChanged: (value) {
+                                    //               cardHolderName = value;
+                                    //             },
+                                    //           ),
+                                    //         ],
+                                    //       )
+                                    //     : Column(),
+                                    Padding(
+                                      padding: EdgeInsets.all(5.w),
+                                    ),
+                                    ButtonWidget(
+                                      onPressed: () async {
+                                        // pay();
+                                        if (selectedPaymentMethodIndex == -1) {
+                                          setState(() {
+                                            _response =
+                                                "Please select payment method first";
+                                          });
+                                        } else {
+                                          if (amount.isEmpty) {
+                                            setState(() {
+                                              _response = "Set the amount";
+                                            });
+                                          } else if (paymentMethods[
+                                                  selectedPaymentMethodIndex]
+                                              .isDirectPayment!) {
+                                            if (cardNumber.isEmpty ||
+                                                expiryMonth.isEmpty ||
+                                                expiryYear.isEmpty ||
+                                                securityCode.isEmpty)
+                                              setState(() {
+                                                _response =
+                                                    "Fill all the card fields";
+                                              });
+                                            else {
+                                              executeDirectPayment(paymentMethods[
+                                                      selectedPaymentMethodIndex]
+                                                  .paymentMethodId!);
+                                              // UIHelper.showNotification(_response!);
+                                            }
+                                          } else {
+                                            await executeRegularPayment(
+                                                paymentMethods[
+                                                        selectedPaymentMethodIndex]
+                                                    .paymentMethodId!);
+                                            setState(() {
+                                              isAvailble = false;
+                                              isVisible2 = false;
+                                            });
+                                          }
+                                        }
+                                      },
+                                      title: 'Pay',
+                                      textColor: AppColors.white,
+                                      backgroundColor: AppColors.scadryColor,
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.all(5.0),
+                                    ),
+                                    if (Platform.isIOS) createApplePayButton(),
+                                  ]),
+                            ),
+                          ),
+                        ])
+                      : Container(),
             ),
           ],
         ),
       ),
     );
+  }
+
+  createApplePayButton() {
+    mfApplePayButton = MFApplePayButton(height: 50.0);
+    return mfApplePayButton;
   }
 }

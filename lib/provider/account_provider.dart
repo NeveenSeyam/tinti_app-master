@@ -111,12 +111,12 @@ class AccountProvider with ChangeNotifier {
   }
 
   Future postLogin({
-    required String email,
+    required String username,
     required String password,
   }) async {
     try {
       final response = await LoginApi(
-        email: email,
+        username: username,
         password: password,
       ).fetch();
 

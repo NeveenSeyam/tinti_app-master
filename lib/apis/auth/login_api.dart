@@ -2,18 +2,18 @@ import '../api_urls.dart';
 import '../base_dio_api.dart';
 
 class LoginApi extends BaseDioApi {
-  String email;
+  String username;
   String password;
 
   LoginApi({
-    required this.email,
+    required this.username,
     required this.password,
   }) : super(ApiUrls.login);
 
   @override
   body() {
     return {
-      "email": email,
+      "username": username,
       "password": password,
     };
   }

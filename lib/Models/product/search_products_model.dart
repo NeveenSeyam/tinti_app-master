@@ -1,26 +1,30 @@
-class SingleProductModel {
-  Product? product;
+class SearchModel {
+  List<Success>? success;
   String? message;
 
-  SingleProductModel({this.product, this.message});
+  SearchModel({this.success, this.message});
 
-  SingleProductModel.fromJson(Map<String, dynamic> json) {
-    product =
-        json['product'] != null ? new Product.fromJson(json['product']) : null;
+  SearchModel.fromJson(Map<String, dynamic> json) {
+    if (json['Success'] != null) {
+      success = <Success>[];
+      json['Success'].forEach((v) {
+        success!.add(new Success.fromJson(v));
+      });
+    }
     message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.product != null) {
-      data['product'] = this.product!.toJson();
+    if (this.success != null) {
+      data['Success'] = this.success!.map((v) => v.toJson()).toList();
     }
     data['message'] = this.message;
     return data;
   }
 }
 
-class Product {
+class Success {
   int? id;
   String? name;
   String? description;
@@ -33,9 +37,9 @@ class Product {
   String? ratingCount;
   String? image;
   List<ProductRating>? productRating;
-  List<Null>? productImages;
+  List<ProductImages>? productImages;
 
-  Product(
+  Success(
       {this.id,
       this.name,
       this.description,
@@ -50,7 +54,7 @@ class Product {
       this.productRating,
       this.productImages});
 
-  Product.fromJson(Map<String, dynamic> json) {
+  Success.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     description = json['description'];
@@ -66,6 +70,12 @@ class Product {
       productRating = <ProductRating>[];
       json['product_rating'].forEach((v) {
         productRating!.add(new ProductRating.fromJson(v));
+      });
+    }
+    if (json['product_images'] != null) {
+      productImages = <ProductImages>[];
+      json['product_images'].forEach((v) {
+        productImages!.add(new ProductImages.fromJson(v));
       });
     }
   }
@@ -87,7 +97,10 @@ class Product {
       data['product_rating'] =
           this.productRating!.map((v) => v.toJson()).toList();
     }
-
+    if (this.productImages != null) {
+      data['product_images'] =
+          this.productImages!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -113,6 +126,25 @@ class ProductRating {
     data['rating'] = this.rating;
     data['comments'] = this.comments;
     data['user'] = this.user;
+    return data;
+  }
+}
+
+class ProductImages {
+  int? id;
+  String? image;
+
+  ProductImages({this.id, this.image});
+
+  ProductImages.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    image = json['image'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['image'] = this.image;
     return data;
   }
 }

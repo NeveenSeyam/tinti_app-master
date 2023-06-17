@@ -461,6 +461,15 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                                   .toString(),
                                               serviceid: productDetailsModel
                                                   ?.product?.id,
+                                              name: productDetailsModel
+                                                  ?.product?.name
+                                                  .toString(),
+                                              rate: productDetailsModel
+                                                  ?.product?.rating
+                                                  .toString(),
+                                              company_name: productDetailsModel
+                                                  ?.product?.compnay
+                                                  .toString(),
                                             )),
                                   );
                                 }

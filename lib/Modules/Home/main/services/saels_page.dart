@@ -8,9 +8,12 @@ import 'package:tinti_app/Widgets/wish_list_card.dart';
 import 'package:tinti_app/provider/services_provider.dart';
 
 import '../../../../Helpers/failure.dart';
+import '../../../../Models/product/service_products_model.dart';
+import '../../../../Widgets/button_widget.dart';
 import '../../../../Widgets/custom_appbar.dart';
 import '../../../../Widgets/loader_widget.dart';
 import '../../../../Widgets/saels_screen_card.dart';
+import '../../../../Widgets/servieses_card.dart';
 import '../../../../Widgets/text_widget.dart';
 import '../../../../Widgets/type.dart';
 import '../../../../provider/products_provider.dart';
@@ -26,11 +29,24 @@ class SaelsScreen extends ConsumerStatefulWidget {
 class _SaelsScreenState extends ConsumerState<SaelsScreen> {
   int serviceId = 1;
   int pageIndex = 1;
+  int currentPage = 0;
+  // int currentPage = 0;
 
+  TextEditingController _search = TextEditingController();
+  ScrollController _scrollController = ScrollController();
+  bool isSearch = false;
+  var productList;
+  var addProductList;
   Future _getContentData() async {
     final prov = ref.read(servicesProvider);
 
     return await prov.getServiecesDataRequset();
+  }
+
+  Future _getSearchProductsData(dataSearch2) async {
+    final prov = ref.read(productsProvider);
+
+    return await prov.getSearchRequsett(name: dataSearch2 ?? '');
   }
 
   int updateServiceId(int service) {
@@ -42,10 +58,10 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
 
   late Future _fetchedMyRequest;
 
-  Future _getProductsData() async {
+  Future _getProductsData(page) async {
     final prov = ref.read(productsProvider);
 
-    return await prov.getSalesProductDataRequset();
+    return await prov.getSalesProductDataRequset(page: page);
   }
 
   late Future _fetchedProductRequest;
@@ -53,8 +69,30 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
   @override
   void initState() {
     _fetchedMyRequest = _getContentData();
-    _fetchedProductRequest = _getProductsData();
+    _fetchedProductRequest = _getProductsData(0);
+    isSearch = false;
+    _search.text = '';
+    _scrollController.addListener(() {
+      if (_scrollController.position.maxScrollExtent ==
+          _scrollController.offset) {
+        fetch(currentPage);
+      }
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future fetch(page) async {
+    final prov = ref.read(productsProvider);
+    productList = ref.watch(productsProvider).getProductsSellsDataList;
+    addProductList = await prov.getSalesProductDataRequset(page: page + 1);
+    if (addProductList < 10) {}
+    productList.addAll(addProductList);
   }
 
   @override
@@ -70,55 +108,122 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
       body: RefreshIndicator(
         onRefresh: () {
           setState(() {
-            _fetchedProductRequest = _getProductsData();
+            _fetchedProductRequest = _getProductsData(0);
           });
           return _fetchedProductRequest;
         },
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
-                child: RoundedInputField(
-                  hintText: 'search'.tr(),
-                  hintColor: AppColors.scadryColor,
-                  seen: false,
-                  onChanged: (val) {},
-                  icon: const Icon(
-                    Icons.search,
-                    color: AppColors.scadryColor,
+        child: Consumer(
+          builder: (context, ref, child) => FutureBuilder(
+            future: _fetchedMyRequest,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return SizedBox(
+                  height: 70.h,
+                  child: const Center(
+                    child: LoaderWidget(),
                   ),
-                ),
-              ),
-              Consumer(
-                builder: (context, ref, child) => FutureBuilder(
-                  future: _fetchedMyRequest,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return SizedBox(
-                        height: 70.h,
-                        child: const Center(
-                          child: LoaderWidget(),
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text('لا يوجد نتائج مطابقة'),
+                );
+              }
+              if (snapshot.hasData) {
+                if (snapshot.data is Failure) {
+                  return Center(child: TextWidget('لا يوجد نتائج مطابقة'));
+                }
+                //
+                //  print("snapshot data is ${snapshot.data}");
+
+                var serviecesModel = ref.watch(servicesProvider).getDataList;
+
+                return ListView(
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
+                      child: Consumer(
+                        builder: (context, ref, child) => FutureBuilder(
+                          future: _fetchedMyRequest,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text('لا يوجد نتائج مطابقة'),
+                              );
+                            }
+                            if (snapshot.hasData) {
+                              if (snapshot.data is Failure) {
+                                return Center(
+                                    child: TextWidget('لا يوجد نتائج مطابقة'));
+                              }
+                              //
+                              //  print("snapshot data is ${snapshot.data}");
+
+                              var serviecesModel =
+                                  ref.watch(servicesProvider).getDataList;
+
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width: 290.w,
+                                    child: RoundedInputField(
+                                      hintText: 'search'.tr(),
+                                      hintColor: AppColors.scadryColor,
+                                      seen: false,
+                                      controller: _search,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          isSearch = true;
+                                          _fetchedProductRequest =
+                                              _getSearchProductsData(val);
+                                        });
+                                      },
+                                      // icon: const Icon(
+                                      //   Icons.search,
+                                      //   color: AppColors.scadryColor,
+                                      // ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 60.w,
+                                    child: ButtonWidget(
+                                      onPressed: () {
+                                        if (_search.text.isNotEmpty) {
+                                          setState(() {
+                                            _fetchedProductRequest =
+                                                _getSearchProductsData(
+                                                    _search.text);
+                                            isSearch = true;
+                                            // _search.text = '';
+                                          });
+                                        } else {
+                                          setState(() {
+                                            _fetchedProductRequest =
+                                                _getProductsData(0);
+                                            isSearch = false;
+                                          });
+                                        }
+                                      },
+                                      widget: Icon(
+                                        Icons.search,
+                                      ),
+                                      backgroundColor: AppColors.orange,
+                                    ),
+                                  )
+                                ],
+                              );
+                            }
+                            return Container();
+                          },
                         ),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    }
-                    if (snapshot.hasData) {
-                      if (snapshot.data is Failure) {
-                        return Center(
-                            child: TextWidget(snapshot.data.toString()));
-                      }
-                      //
-                      //  print("snapshot data is ${snapshot.data}");
-
-                      var serviecesModel =
-                          ref.watch(servicesProvider).getDataList;
-
-                      return Consumer(
+                      ),
+                    ),
+                    Visibility(
+                      visible: isSearch ? true : false,
+                      child: Consumer(
                         builder: (context, ref, child) => FutureBuilder(
                           future: _fetchedProductRequest,
                           builder: (context, snapshot) {
@@ -133,115 +238,533 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
                             }
                             if (snapshot.hasError) {
                               return Center(
-                                child: Text('Error: ${snapshot.error}'),
+                                child: Text('لا يوجد نتائج مطابقة'),
                               );
                             }
                             if (snapshot.hasData) {
                               if (snapshot.data is Failure) {
                                 return Center(
-                                    child:
-                                        TextWidget(snapshot.data.toString()));
+                                    child: TextWidget('لا يوجد نتائج مطابقة'));
                               }
                               //
                               //  print("snapshot data is ${snapshot.data}");
 
-                              var productByServiceModel = ref
-                                  .watch(productsProvider)
-                                  .getProductsSellsDataList;
-                              return Padding(
-                                padding: EdgeInsetsDirectional.only(
-                                    start: 15.w, end: 15.w, top: 5.h),
-                                child: SizedBox(
-                                  height: 680.h,
-                                  child: ListView.builder(
-                                      // physics: BouncingScrollPhysics(),
-                                      shrinkWrap: false,
-                                      itemCount: productByServiceModel
-                                              ?.success?.items?.length ??
-                                          0,
-                                      itemBuilder: (BuildContext ctx, index) {
-                                        return Container(
-                                          width: double.infinity,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ServiceDetailsScreen(
-                                                          id: productByServiceModel
-                                                                  ?.success
-                                                                  ?.items?[
-                                                                      index]
-                                                                  .id ??
-                                                              0,
-                                                          row_id: 0,
-                                                          isFavorite:
-                                                              productByServiceModel
-                                                                      ?.success
-                                                                      ?.items?[
-                                                                          index]
-                                                                      .is_favorite ??
-                                                                  1,
-                                                        )),
-                                              );
-                                            },
-                                            child: SaelsScreenCardCard(
-                                              details: productByServiceModel
-                                                      ?.success
-                                                      ?.items?[index]
-                                                      .description ??
-                                                  '',
-                                              isFavorite: productByServiceModel
-                                                      ?.success
-                                                      ?.items?[index]
-                                                      .is_favorite ??
-                                                  0,
-                                              image: productByServiceModel
-                                                      ?.success
-                                                      ?.items?[index]
-                                                      .image ??
-                                                  '',
-                                              lastPrice: productByServiceModel
-                                                      ?.success
-                                                      ?.items?[index]
-                                                      .salePrice ??
-                                                  '',
-                                              price: productByServiceModel
-                                                      ?.success
-                                                      ?.items?[index]
-                                                      .price ??
-                                                  '',
-                                              title: productByServiceModel
-                                                      ?.success
-                                                      ?.items?[index]
-                                                      .name ??
-                                                  '',
-                                              id: productByServiceModel?.success
-                                                      ?.items?[index].id ??
-                                                  0,
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                                ),
+                              var productModel =
+                                  ref.watch(productsProvider).getSearchDataList;
+                              var length = productModel?.success?.length ?? 0;
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.only(
+                                        start: 15.w,
+                                        end: 15.w,
+                                        top: 5.h,
+                                        bottom: 20.h),
+                                    child: SizedBox(
+                                      height: 620.h,
+                                      child: GridView.builder(
+                                          // physics: BouncingScrollPhysics(),
+                                          shrinkWrap: true,
+                                          gridDelegate:
+                                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                                                  maxCrossAxisExtent: 300,
+                                                  childAspectRatio: 2 / 2.3,
+                                                  crossAxisSpacing: 10,
+                                                  mainAxisSpacing: 10),
+                                          itemCount: length + 1,
+                                          controller: _scrollController,
+                                          itemBuilder:
+                                              (BuildContext ctx, index) {
+                                            return index < length
+                                                ? GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ServiceDetailsScreen(
+                                                                  id: productModel
+                                                                          ?.success?[
+                                                                              index]
+                                                                          .id ??
+                                                                      0,
+                                                                  row_id: productModel
+                                                                          ?.success?[
+                                                                              index]
+                                                                          .id ??
+                                                                      0,
+                                                                  isFavorite: 0,
+                                                                )),
+                                                      );
+                                                      // print(
+                                                      //     ' sssssssss ${productByServiceModel.success?.items?.length}');
+                                                    },
+                                                    child: ServicesCard(
+                                                        // productByServiceModel.Products.length ??
+                                                        productModel
+                                                                ?.success?[
+                                                                    index]
+                                                                .image ??
+                                                            'assets/images/sa1.jpeg',
+                                                        productModel
+                                                                ?.success?[
+                                                                    index]
+                                                                .name ??
+                                                            ' تظليل',
+                                                        productModel
+                                                                ?.success?[
+                                                                    index]
+                                                                .description ??
+                                                            'شركة جونسون اد جونسون.',
+                                                        productModel
+                                                                ?.success?[
+                                                                    index]
+                                                                .price ??
+                                                            '355',
+                                                        '',
+                                                        '',
+                                                        0,
+                                                        productModel
+                                                                ?.success?[
+                                                                    index]
+                                                                .id ??
+                                                            0),
+                                                  )
+                                                : Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  );
+                                          }),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  )
+                                ],
                               );
                             }
                             return Container();
                           },
                         ),
-                      );
-                    }
-                    return Container();
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              )
-            ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: isSearch ? false : true,
+                      child: Consumer(
+                        builder: (context, ref, child) => FutureBuilder(
+                          future: _fetchedMyRequest,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return SizedBox(
+                                height: 70.h,
+                                child: const Center(
+                                  child: LoaderWidget(),
+                                ),
+                              );
+                            }
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text('لا يوجد نتائج مطابقة'),
+                              );
+                            }
+                            if (snapshot.hasData) {
+                              if (snapshot.data is Failure) {
+                                return Center(
+                                    child: TextWidget('لا يوجد نتائج مطابقة'));
+                              }
+                              //
+                              //  print("snapshot data is ${snapshot.data}");
+
+                              var serviecesModel =
+                                  ref.watch(servicesProvider).getDataList;
+
+                              return Column(
+                                children: [
+                                  Consumer(
+                                    builder: (context, ref, child) =>
+                                        FutureBuilder(
+                                      future: _fetchedMyRequest,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return SizedBox(
+                                            height: 70.h,
+                                            child: const Center(
+                                              child: LoaderWidget(),
+                                            ),
+                                          );
+                                        }
+                                        if (snapshot.hasError) {
+                                          return Center(
+                                            child: Text(
+                                                'Error: ${snapshot.error}'),
+                                          );
+                                        }
+                                        if (snapshot.hasData) {
+                                          if (snapshot.data is Failure) {
+                                            return Center(
+                                                child: TextWidget(
+                                                    snapshot.data.toString()));
+                                          }
+                                          //
+                                          //  print("snapshot data is ${snapshot.data}");
+
+                                          var serviecesModel = ref
+                                              .watch(servicesProvider)
+                                              .getDataList;
+
+                                          return Consumer(
+                                            builder: (context, ref, child) =>
+                                                FutureBuilder(
+                                              future: _fetchedProductRequest,
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return SizedBox(
+                                                    height: 70.h,
+                                                    child: const Center(
+                                                      child: LoaderWidget(),
+                                                    ),
+                                                  );
+                                                }
+                                                if (snapshot.hasError) {
+                                                  return Center(
+                                                    child: Text(
+                                                        'Error: ${snapshot.error}'),
+                                                  );
+                                                }
+                                                if (snapshot.hasData) {
+                                                  if (snapshot.data
+                                                      is Failure) {
+                                                    return Center(
+                                                        child: TextWidget(
+                                                            snapshot.data
+                                                                .toString()));
+                                                  }
+                                                  //
+                                                  //  print("snapshot data is ${snapshot.data}");
+
+                                                  var productByServiceModel = ref
+                                                      .watch(productsProvider)
+                                                      .getProductsSellsDataList;
+                                                  return Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .only(
+                                                                start: 15.w,
+                                                                end: 15.w,
+                                                                top: 5.h),
+                                                    child: SizedBox(
+                                                      height: 680.h,
+                                                      child: ListView.builder(
+                                                          // physics: BouncingScrollPhysics(),
+                                                          shrinkWrap: false,
+                                                          itemCount:
+                                                              productByServiceModel
+                                                                      ?.success
+                                                                      ?.items
+                                                                      ?.length ??
+                                                                  0,
+                                                          itemBuilder:
+                                                              (BuildContext ctx,
+                                                                  index) {
+                                                            return Container(
+                                                              width: double
+                                                                  .infinity,
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) =>
+                                                                            ServiceDetailsScreen(
+                                                                              id: productByServiceModel?.success?.items?[index].id ?? 0,
+                                                                              row_id: 0,
+                                                                              isFavorite: productByServiceModel?.success?.items?[index].is_favorite ?? 1,
+                                                                            )),
+                                                                  );
+                                                                },
+                                                                child:
+                                                                    SaelsScreenCardCard(
+                                                                  details: productByServiceModel
+                                                                          ?.success
+                                                                          ?.items?[
+                                                                              index]
+                                                                          .description ??
+                                                                      '',
+                                                                  isFavorite: productByServiceModel
+                                                                          ?.success
+                                                                          ?.items?[
+                                                                              index]
+                                                                          .is_favorite ??
+                                                                      0,
+                                                                  image: productByServiceModel
+                                                                          ?.success
+                                                                          ?.items?[
+                                                                              index]
+                                                                          .image ??
+                                                                      '',
+                                                                  lastPrice: productByServiceModel
+                                                                          ?.success
+                                                                          ?.items?[
+                                                                              index]
+                                                                          .salePrice ??
+                                                                      '',
+                                                                  price: productByServiceModel
+                                                                          ?.success
+                                                                          ?.items?[
+                                                                              index]
+                                                                          .price ??
+                                                                      '',
+                                                                  title: productByServiceModel
+                                                                          ?.success
+                                                                          ?.items?[
+                                                                              index]
+                                                                          .name ??
+                                                                      '',
+                                                                  id: productByServiceModel
+                                                                          ?.success
+                                                                          ?.items?[
+                                                                              index]
+                                                                          .id ??
+                                                                      0,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }),
+                                                    ),
+                                                  );
+                                                }
+                                                return Container();
+                                              },
+                                            ),
+                                          );
+                                        }
+                                        return Container();
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  )
+                                ],
+                              );
+                            }
+                            return Container();
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     if (snapshot.data!['page_number'] <
+                    //         snapshot.data!['total_pages'])
+                    //       OutlinedButton(
+                    //         onPressed: () {
+                    //           setState(() {
+                    //             currentPage++;
+                    //           });
+                    //         },
+                    //         child: Text(
+                    //           "Next",
+                    //         ),
+                    //       ),
+                    //     if (snapshot.data!['page_number'] > 1)
+                    //       OutlinedButton(
+                    //         onPressed: () {
+                    //           setState(() {
+                    //             currentPage--;
+                    //           });
+                    //         },
+                    //         child: Text(
+                    //           "Previous",
+                    //         ),
+                    //       ),
+                    //   ],
+                    // ),
+                  ],
+                );
+              }
+              return Container();
+            },
           ),
         ),
+
+        // SingleChildScrollView(
+        //   child: Column(
+        //     children: [
+        //       Padding(
+        //         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
+        //         child: RoundedInputField(
+        //           hintText: 'search'.tr(),
+        //           hintColor: AppColors.scadryColor,
+        //           seen: false,
+        //           onChanged: (val) {},
+        //           icon: const Icon(
+        //             Icons.search,
+        //             color: AppColors.scadryColor,
+        //           ),
+        //         ),
+        //       ),
+        //       Consumer(
+        //         builder: (context, ref, child) => FutureBuilder(
+        //           future: _fetchedMyRequest,
+        //           builder: (context, snapshot) {
+        //             if (snapshot.connectionState == ConnectionState.waiting) {
+        //               return SizedBox(
+        //                 height: 70.h,
+        //                 child: const Center(
+        //                   child: LoaderWidget(),
+        //                 ),
+        //               );
+        //             }
+        //             if (snapshot.hasError) {
+        //               return Center(
+        //                 child: Text('Error: ${snapshot.error}'),
+        //               );
+        //             }
+        //             if (snapshot.hasData) {
+        //               if (snapshot.data is Failure) {
+        //                 return Center(
+        //                     child: TextWidget(snapshot.data.toString()));
+        //               }
+        //               //
+        //               //  print("snapshot data is ${snapshot.data}");
+
+        //               var serviecesModel =
+        //                   ref.watch(servicesProvider).getDataList;
+
+        //               return Consumer(
+        //                 builder: (context, ref, child) => FutureBuilder(
+        //                   future: _fetchedProductRequest,
+        //                   builder: (context, snapshot) {
+        //                     if (snapshot.connectionState ==
+        //                         ConnectionState.waiting) {
+        //                       return SizedBox(
+        //                         height: 70.h,
+        //                         child: const Center(
+        //                           child: LoaderWidget(),
+        //                         ),
+        //                       );
+        //                     }
+        //                     if (snapshot.hasError) {
+        //                       return Center(
+        //                         child: Text('Error: ${snapshot.error}'),
+        //                       );
+        //                     }
+        //                     if (snapshot.hasData) {
+        //                       if (snapshot.data is Failure) {
+        //                         return Center(
+        //                             child:
+        //                                 TextWidget(snapshot.data.toString()));
+        //                       }
+        //                       //
+        //                       //  print("snapshot data is ${snapshot.data}");
+
+        //                       var productByServiceModel = ref
+        //                           .watch(productsProvider)
+        //                           .getProductsSellsDataList;
+        //                       return Padding(
+        //                         padding: EdgeInsetsDirectional.only(
+        //                             start: 15.w, end: 15.w, top: 5.h),
+        //                         child: SizedBox(
+        //                           height: 680.h,
+        //                           child: ListView.builder(
+        //                               // physics: BouncingScrollPhysics(),
+        //                               shrinkWrap: false,
+        //                               itemCount: productByServiceModel
+        //                                       ?.success?.items?.length ??
+        //                                   0,
+        //                               itemBuilder: (BuildContext ctx, index) {
+        //                                 return Container(
+        //                                   width: double.infinity,
+        //                                   child: GestureDetector(
+        //                                     onTap: () {
+        //                                       Navigator.push(
+        //                                         context,
+        //                                         MaterialPageRoute(
+        //                                             builder: (context) =>
+        //                                                 ServiceDetailsScreen(
+        //                                                   id: productByServiceModel
+        //                                                           ?.success
+        //                                                           ?.items?[
+        //                                                               index]
+        //                                                           .id ??
+        //                                                       0,
+        //                                                   row_id: 0,
+        //                                                   isFavorite:
+        //                                                       productByServiceModel
+        //                                                               ?.success
+        //                                                               ?.items?[
+        //                                                                   index]
+        //                                                               .is_favorite ??
+        //                                                           1,
+        //                                                 )),
+        //                                       );
+        //                                     },
+        //                                     child: SaelsScreenCardCard(
+        //                                       details: productByServiceModel
+        //                                               ?.success
+        //                                               ?.items?[index]
+        //                                               .description ??
+        //                                           '',
+        //                                       isFavorite: productByServiceModel
+        //                                               ?.success
+        //                                               ?.items?[index]
+        //                                               .is_favorite ??
+        //                                           0,
+        //                                       image: productByServiceModel
+        //                                               ?.success
+        //                                               ?.items?[index]
+        //                                               .image ??
+        //                                           '',
+        //                                       lastPrice: productByServiceModel
+        //                                               ?.success
+        //                                               ?.items?[index]
+        //                                               .salePrice ??
+        //                                           '',
+        //                                       price: productByServiceModel
+        //                                               ?.success
+        //                                               ?.items?[index]
+        //                                               .price ??
+        //                                           '',
+        //                                       title: productByServiceModel
+        //                                               ?.success
+        //                                               ?.items?[index]
+        //                                               .name ??
+        //                                           '',
+        //                                       id: productByServiceModel?.success
+        //                                               ?.items?[index].id ??
+        //                                           0,
+        //                                     ),
+        //                                   ),
+        //                                 );
+        //                               }),
+        //                         ),
+        //                       );
+        //                     }
+        //                     return Container();
+        //                   },
+        //                 ),
+        //               );
+        //             }
+        //             return Container();
+        //           },
+        //         ),
+        //       ),
+        //       SizedBox(
+        //         height: 20.h,
+        //       )
+        //     ],
+        //   ),
+        // ),
       ),
     );
   }
@@ -252,7 +775,7 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
         setState(() {
           pageIndex = index;
           serviceId = id;
-          _fetchedProductRequest = _getProductsData();
+          _fetchedProductRequest = _getProductsData(0);
         });
       },
       child: pageIndex == index

@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tinti_app/Models/product/search_products_model.dart';
 import 'package:tinti_app/Models/product/service_products_model.dart';
 import 'package:tinti_app/Models/product/single_product_model.dart';
 import 'package:tinti_app/apis/favorites/add_favorite_api.dart';
+import 'package:tinti_app/apis/products/get_all_search_product.dart';
 import 'package:tinti_app/apis/products/get_sale_product.dart';
 import 'package:tinti_app/apis/products/get_single_product.dart';
 
@@ -71,6 +73,16 @@ class ProductsProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+//-------------------------
+
+  SearchModel? _SearchList = SearchModel();
+//! create get method for the data object
+  SearchModel? get getSearchDataList => _SearchList;
+  void setSearchList(SearchModel searchModel) {
+    _SearchList = searchModel;
+
+    notifyListeners();
+  }
 
 // =========
   SingleProductModel? _singleProductModel = SingleProductModel();
@@ -82,13 +94,15 @@ class ProductsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future getProductDataByServisesRequset({required int id}) async {
+  Future getProductDataByServisesRequset(
+      {required int id, required int page}) async {
     //! we create this object to set new data to the data object
     ServiceProductModel? serviceProductModel = ServiceProductModel();
 
     try {
       //! here we call the api and get the data using the Fetch method
-      final response = await GetProductByServisesApi(id: id).fetch();
+      final response =
+          await GetProductByServisesApi(id: id, page: page).fetch();
       log("response $response");
 
       //! use FormJson method to convert the data to the data object
@@ -102,13 +116,15 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  Future getProductDataByCompanyRequsett({required int id}) async {
+  Future getProductDataByCompanyRequsett(
+      {required int id, required int page}) async {
     //! we create this object to set new data to the data object
     CompanyProductModel? productList = CompanyProductModel();
 
     try {
       //! here we call the api and get the data using the Fetch method
-      final response = await GetProductByCompanyApi(id: id.toString()).fetch();
+      final response =
+          await GetProductByCompanyApi(id: id.toString(), page: page).fetch();
       log("response getProductDataByCompanyRequsett $response");
 
       //! use FormJson method to convert the data to the data object
@@ -122,13 +138,13 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  Future getAllProductDataRequset() async {
+  Future getAllProductDataRequset({required int page}) async {
     //! we create this object to set new data to the data object
     ProductModel? productList = ProductModel();
 
     try {
       //! here we call the api and get the data using the Fetch method
-      final response = await GetProductsDataApi().fetch();
+      final response = await GetProductsDataApi(page: page).fetch();
       log("response $response");
 
       //! use FormJson method to convert the data to the data object
@@ -142,13 +158,13 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  Future getSalesProductDataRequset() async {
+  Future getSalesProductDataRequset({required int page}) async {
     //! we create this object to set new data to the data object
     ProductModel? productList = ProductModel();
 
     try {
       //! here we call the api and get the data using the Fetch method
-      final response = await GetSalesProductsDataApi().fetch();
+      final response = await GetSalesProductsDataApi(page: page).fetch();
       log("GetSalesProductsDataApi $response");
 
       //! use FormJson method to convert the data to the data object
@@ -177,6 +193,26 @@ class ProductsProvider extends ChangeNotifier {
       setSingleProductList(productList);
 
       return response;
+    } on Failure catch (f) {
+      return f;
+    }
+  }
+
+  Future getSearchRequsett({required String name}) async {
+    //! we create this object to set new data to the data object
+    SearchModel? productList = SearchModel();
+
+    try {
+      //! here we call the api and get the data using the Fetch method
+      final response = await GetSearchProductsDataApi(name: name).fetch();
+      log("response get search data  $response");
+
+      //! use FormJson method to convert the data to the data object
+      productList = SearchModel.fromJson(response);
+      //! set the new data to the data object
+      setSearchList(productList);
+
+      return productList;
     } on Failure catch (f) {
       return f;
     }

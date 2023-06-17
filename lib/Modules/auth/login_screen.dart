@@ -61,7 +61,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     //print("token $token");
     var AuthProvider = ref.read(accountProvider);
     final response = await AuthProvider.postLogin(
-      email: _emailController.text,
+      username: _emailController.text,
       password: _passwordController.text,
     ).onError((error, stackTrace) {
       Navigator.pop(context);
@@ -98,8 +98,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return SafeArea(
         child: Scaffold(
       backgroundColor: AppColors.scadryColor,
-      body: ListView(
-        physics: NeverScrollableScrollPhysics(),
+      body: Column(
+        // physics: NeverScrollableScrollPhysics(),
         children: [
           Padding(
             padding: EdgeInsets.all(20.h),

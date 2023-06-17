@@ -68,6 +68,7 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
   CarSizes? carSizes;
   int? sizeId;
   String? selectedNationality;
+  String? selectedTypeId;
   double? widthh;
   Future _getContentData() async {
     final prov = ref.read(carProvider);
@@ -442,6 +443,19 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                                     ' أحمر  ',
                                                                 fontSize: 14.sp,
                                                               ),
+                                                              CustomText(
+                                                                serviceModel
+                                                                        .carModles?[
+                                                                            index]
+                                                                        .carModelTypeId
+                                                                        .toString() ??
+                                                                    '',
+                                                                fontFamily:
+                                                                    'DINNEXTLTARABIC',
+                                                                color: AppColors
+                                                                    .scadryColor,
+                                                                fontSize: 14.sp,
+                                                              ),
                                                             ],
                                                           ),
                                                           Column(
@@ -451,6 +465,11 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                             children: [
                                                               GestureDetector(
                                                                 onTap: () {
+                                                                  selectedTypeId = serviceModel
+                                                                      .carModles?[
+                                                                          index]
+                                                                      .carModelTypeId
+                                                                      .toString();
                                                                   _color
                                                                       .text = serviceModel
                                                                           ?.carModles?[
@@ -737,12 +756,12 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
 
                                                                                       log("img ${img?.path ?? ""}");
                                                                                       await changCarModel.editCarRequset(data: {
-                                                                                        "name": _name.text ?? serviceModel?.carModles?[index].name,
-                                                                                        "color": _color.text ?? serviceModel?.carModles?[index].color,
-                                                                                        "car_number": _number.text ?? serviceModel?.carModles?[index].carNumber,
-                                                                                        "car_model_id": selectedNationality ?? serviceModel?.carModles?[index].carModelName,
-                                                                                        "car_model_type_id": subModelId ?? serviceModel?.carModles?[index].carModelTypeName,
-                                                                                        "car_size_id": carSizes?.id
+                                                                                        "name": _name.text ?? serviceModel.carModles?[index].name,
+                                                                                        "color": _color.text ?? serviceModel.carModles?[index].color,
+                                                                                        "car_number": _number.text ?? serviceModel.carModles?[index].carNumber,
+                                                                                        "car_model_id": selectedNationality ?? serviceModel.carModles?[index].carModelId,
+                                                                                        "car_model_type_id": subModelId ?? selectedTypeId,
+                                                                                        "car_size_id": carSizes?.id ?? serviceModel.carModles?[index].carSizeId,
                                                                                       }, id: serviceModel.carModles?[index].id.toString() ?? '', file: img);
                                                                                       setState(() {
                                                                                         _fetchedMyRequest = _getContentData();
