@@ -709,7 +709,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                   child: CustomDropDown(
                                     hintText: "contrey".tr(),
                                     title: "contrey".tr(),
-                                    value: regionsModel?.regions?[0].name,
+                                    value: '',
                                     list: regionsModel?.regions
                                         ?.map((e) => e.name.toString())
                                         .toList(),
@@ -767,7 +767,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                       child: CustomDropDown(
                                         hintText: "city".tr(),
                                         title: "city".tr(),
-                                        value: citiesModel?.regions?[0].name,
+                                        value: '',
                                         list: citiesModel?.regions
                                             ?.map((e) => e.name.toString())
                                             .toList(),
@@ -802,7 +802,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                     child: CustomDropDown(
                                       hintText: "car".tr(),
                                       title: "car".tr(),
-                                      value: carsModel?.carModles?[0].name,
+                                      value: "",
                                       list: carsModel?.carModles
                                           ?.map((e) => e.name.toString())
                                           .toList(),
@@ -1480,6 +1480,8 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                           color: AppColors.scadryColor,
                           textColor: AppColors.white,
                           onPressed: () async {
+                            await loadingDialog(context);
+
                             var ordersModel = ref.watch(ordersProvider);
 
                             if (selectedCarId != null &&
@@ -1496,6 +1498,8 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                 if (value is! Failure) {
                                   if (value == null) {
                                     setState(() {
+                                      Navigator.of(context).pop();
+
                                       isVisible1 = false;
                                     });
                                   }
@@ -1507,10 +1511,15 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                         '';
                                     setState(() {
                                       print(order_id);
+                                      Navigator.of(context).pop();
 
                                       isVisible1 = true;
                                     });
+                                  } else {
+                                    Navigator.of(context).pop();
                                   }
+                                } else {
+                                  Navigator.of(context).pop();
                                 }
 
                                 return isAvailble;

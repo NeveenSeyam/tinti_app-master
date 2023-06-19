@@ -661,9 +661,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                                                     await ref
                                                                         .watch(
                                                                             accountProvider)
-                                                                        .getotpResultModel;
+                                                                        .getotpResultModel
+                                                                        ?.code;
                                                                 if (verifyResult !=
-                                                                    "1") {
+                                                                    1) {
                                                                   UIHelper
                                                                       .showNotification(
                                                                           "خطأ");

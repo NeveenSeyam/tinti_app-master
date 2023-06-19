@@ -682,7 +682,7 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                                                         child: CustomDropDown(
                                                                                           hintText: "model".tr(),
                                                                                           title: "model".tr(),
-                                                                                          value: serviceModel.carModles?[index].carModelTypeName ?? dropdownValue,
+                                                                                          value: '',
                                                                                           list: carModelTaypesModel?.carModles?.map((e) => e.title.toString()).toList(),
                                                                                           onChange: (p0) async {
                                                                                             subModelId = carModelTaypesModel?.carModles?.firstWhere((element) => element.title == p0).id.toString();
