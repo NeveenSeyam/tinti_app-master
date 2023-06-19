@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:regexpattern/regexpattern.dart';
+import 'package:simple_html_css/simple_html_css.dart';
 import 'package:tinti_app/Widgets/custom_appbar.dart';
 import 'package:tinti_app/provider/app_data_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -108,8 +109,67 @@ class _HowWeAreScreenScreenState extends ConsumerState<HowWeAreScreen> {
                       );
                     }
                     if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
+                      return Padding(
+                        padding: EdgeInsets.all(20.w),
+                        child: Container(
+                            padding: EdgeInsets.all(20.w),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    offset: Offset(0, 7),
+                                    blurRadius: 10,
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(20.w),
+                                color: AppColors.white.withOpacity(0.9)),
+                            // width: 320.w,
+                            height: 500.h,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/nullstate.png'),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Container(
+                                  width: 300.w,
+                                  child: CustomText(
+                                    '${snapshot.error}' ==
+                                            'No Internet connection'
+                                        ? Constants.lang == 'ar'
+                                            ? 'انت غير متصل بالانترنت حاول مرة اخرى'
+                                            : 'You don\'t connect with internet try again'
+                                        : 'contact support'.tr(),
+                                    color: AppColors.orange,
+                                    // fontWeight: FontWeight.bold,
+                                    fontFamily: 'DINNEXTLTARABIC',
+
+                                    textAlign: TextAlign.center,
+                                    fontSize: 18.sp,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 60.h,
+                                ),
+                                RaisedGradientButton(
+                                  text: Constants.lang == 'ar'
+                                      ? ' حاول مرة اخرى'
+                                      : ' try again',
+                                  color: AppColors.scadryColor,
+                                  height: 48.h,
+                                  width: 320.w,
+                                  circular: 10.w,
+                                  onPressed: () {
+                                    setState(() {
+                                      _fetchedIntroRequest = _getIntrosData();
+                                    });
+                                  },
+                                ),
+                              ],
+                            )),
                       );
                     }
                     if (snapshot.hasData) {
@@ -159,13 +219,22 @@ class _HowWeAreScreenScreenState extends ConsumerState<HowWeAreScreen> {
                                   height: 550.h,
                                   child: ListView(
                                     children: [
-                                      CustomText(
-                                        appDataModel?.intros?[1].description ??
-                                            'aboutus'.tr(),
-                                        textAlign: TextAlign.center,
-                                        fontFamily: 'DINNEXTLTARABIC',
-                                        color: AppColors.grey,
+                                      RichText(
+                                        text: HTML.toTextSpan(
+                                            context,
+                                            appDataModel
+                                                    ?.intros?[2].description ??
+                                                'aboutus'.tr()),
+                                        // maxLines: 4,
+                                        //...
                                       ),
+                                      // CustomText(
+                                      //   appDataModel?.intros?[1].description ??
+                                      //       'aboutus'.tr(),
+                                      //   textAlign: TextAlign.center,
+                                      //   fontFamily: 'DINNEXTLTARABIC',
+                                      //   color: AppColors.grey,
+                                      // ),
                                     ],
                                   ),
                                 )

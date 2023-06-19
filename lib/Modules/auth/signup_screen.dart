@@ -7,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_html_css/simple_html_css.dart';
+import 'package:tinti_app/Models/product/company_products_model%20copy.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:regexpattern/regexpattern.dart';
 import 'package:tinti_app/apis/sms_verify.dart';
@@ -100,9 +102,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
   late Future _fetchedIntroRequest;
 
-  Future _activeFun(BuildContext context, WidgetRef ref) async {
-    var ActivateProvider = ref.read(accountProvider);
-    final response = await ActivateProvider.activateUserRequset();
+  Future _activeFun(provider, BuildContext context, WidgetRef ref) async {
+    final response = await provider.activateUserRequset().then((value) {
+      if (value != false) {
+        Constants.isQuest = false;
+
+        Navigator.popAndPushNamed(context, '/navegaitor_screen');
+      }
+    });
     return response;
   }
 
@@ -510,16 +517,17 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                 //await AuthProvider.loginOut();
                                 // get fcm tokenhld,gdjv
                                 //print("token $token");
-                                var AuthProvider = ref.read(accountProvider);
-                                final response =
-                                    await AuthProvider.postRegisterUser(
+                                var authProvider = ref.read(accountProvider);
+                                final response = await authProvider
+                                    .postRegisterUser(
                                   fName: _fNameController.text,
                                   confirmPassword: _cpasswordController.text,
                                   email: _emailController.text,
                                   password: _passwordController.text,
                                   phoneNumber: mob,
                                   lName: _lNameController.text,
-                                ).onError((error, stackTrace) {
+                                )
+                                    .onError((error, stackTrace) {
                                   Navigator.pop(context);
                                 }).then((value) async {
                                   if (value is! Failure) {
@@ -529,10 +537,21 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                       //    Navigator.pop(context);
                                       return;
                                     }
+                                    if (value != false) {
+                                      Constants.token = value["data"]["token"];
+                                      SharedPreferences? _prefs =
+                                          await SharedPreferences.getInstance();
+                                      _prefs.setString(Keys.hasSaveUserData,
+                                          value["data"]["token"]);
+                                      await authProvider
+                                          .getUserProfileRequset();
+                                    }
                                     final smsSending =
-                                        await AuthProvider.SentOtp(
+                                        await authProvider.SentOtp(
                                       lang: Constants.lang ?? 'ar',
-                                      number: _mobileController.text,
+                                      number: mob
+                                          .replaceAll(' ', '')
+                                          .replaceAll('-', ''),
                                       userName: 'mycar',
                                       apiKey:
                                           '91e86fe240dccf44aeaa51563ed0c03c',
@@ -549,18 +568,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                         }
                                         Navigator.pop(context);
 
-                                        // Constants.token =
-                                        //     value["data"]["token"];
-                                        // SharedPreferences? _prefs =
-                                        //     await SharedPreferences
-                                        //         .getInstance();
-                                        // _prefs.setString(Keys.hasSaveUserData,
-                                        //     value["data"]["token"]);
-                                        // await AuthProvider
-                                        //     .getUserProfileRequset();
-                                        var smsId = await AuthProvider
+                                        var smsId = await authProvider
                                             .getSmsResultModel?.id;
                                         print('smsId $smsId');
+                                        // ignore: use_build_context_synchronously
                                         showDialog(
                                             context: context,
                                             builder: (context) {
@@ -625,60 +636,45 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                                             height: 22.h,
                                                           ),
                                                           RaisedGradientButton(
-                                                            text: 'next'.tr(),
-                                                            width: 340.w,
-                                                            color: AppColors
-                                                                .scadryColor,
-                                                            height: 48.h,
-                                                            circular: 10.w,
-                                                            onPressed:
-                                                                () async {
-                                                              final verifySmsOtp = await ref
-                                                                  .read(
-                                                                      accountProvider)
-                                                                  .verifySmsOtp(
-                                                                      lang: Constants
-                                                                              .lang ??
-                                                                          'ar',
-                                                                      id: smsId,
-                                                                      userName:
-                                                                          'mycar',
-                                                                      apiKey:
-                                                                          '91e86fe240dccf44aeaa51563ed0c03c',
-                                                                      userSender:
-                                                                          'sayyarte|سيارتي',
-                                                                      code: otpController
-                                                                          .text)
-                                                                  .then(
-                                                                      (value) {
-                                                                print(
-                                                                    'lang ${Constants.lang},id ${smsId},code ${otpController.text} ');
-                                                                if (value
-                                                                    is! Failure) {
-                                                                  if (value ==
-                                                                      null) {
-                                                                    // UIHelper.showNotification(
-                                                                    //     'reqister error'
-                                                                    //         .tr());
-                                                                    //    Navigator.pop(context);
-                                                                    return;
-                                                                  }
-                                                                  if (value !=
-                                                                      false) {
-                                                                    _activeFun(
-                                                                        context,
-                                                                        ref);
-                                                                    Navigator.pushNamed(
-                                                                        context,
-                                                                        '/navegaitor_screen');
-                                                                  } else {
-                                                                    UIHelper.showNotification(
-                                                                        'هناك خطأ ما');
-                                                                  }
+                                                              text: 'next'.tr(),
+                                                              width: 340.w,
+                                                              color: AppColors
+                                                                  .scadryColor,
+                                                              height: 48.h,
+                                                              circular: 10.w,
+                                                              onPressed:
+                                                                  () async {
+                                                                await authProvider.verifySmsOtp(
+                                                                    lang:
+                                                                        Constants.lang ??
+                                                                            'ar',
+                                                                    id: smsId,
+                                                                    userName:
+                                                                        'mycar',
+                                                                    apiKey:
+                                                                        '91e86fe240dccf44aeaa51563ed0c03c',
+                                                                    userSender:
+                                                                        'sayyarte|سيارتي',
+                                                                    code: otpController
+                                                                        .text);
+                                                                var verifyResult =
+                                                                    await ref
+                                                                        .watch(
+                                                                            accountProvider)
+                                                                        .getotpResultModel;
+                                                                if (verifyResult !=
+                                                                    "1") {
+                                                                  UIHelper
+                                                                      .showNotification(
+                                                                          "خطأ");
+                                                                  return;
+                                                                } else {
+                                                                  await _activeFun(
+                                                                      authProvider,
+                                                                      context,
+                                                                      ref);
                                                                 }
-                                                              });
-                                                            },
-                                                          ),
+                                                              }),
                                                           SizedBox(
                                                             height: 16.h,
                                                           ),
@@ -877,25 +873,40 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                                         children: [
                                                           Container(
                                                             height: 650.h,
-                                                            child: ListView(
-                                                              children: [
-                                                                CustomText(
-                                                                  appDataModel
-                                                                          ?.intros?[
-                                                                              1]
-                                                                          .description ??
-                                                                      'aboutus'
-                                                                          .tr(),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  fontFamily:
-                                                                      'DINNEXTLTARABIC',
-                                                                  color:
-                                                                      AppColors
-                                                                          .black,
-                                                                ),
-                                                              ],
+                                                            child: SizedBox(
+                                                              height: 300.h,
+                                                              width: 300.w,
+                                                              child: ListView(
+                                                                physics:
+                                                                    BouncingScrollPhysics(),
+                                                                children: [
+                                                                  RichText(
+                                                                    text: HTML.toTextSpan(
+                                                                        context,
+                                                                        appDataModel?.intros?[0].description ??
+                                                                            'aboutus'.tr()),
+                                                                    // maxLines: 4,
+                                                                    //...
+                                                                  ),
+
+                                                                  // CustomText(
+                                                                  //   appDataModel
+                                                                  //           ?.intros?[
+                                                                  //               1]
+                                                                  //           .description ??
+                                                                  //       'aboutus'
+                                                                  //           .tr(),
+                                                                  //   textAlign:
+                                                                  //       TextAlign
+                                                                  //           .center,
+                                                                  //   fontFamily:
+                                                                  //       'DINNEXTLTARABIC',
+                                                                  //   color:
+                                                                  //       AppColors
+                                                                  //           .black,
+                                                                  // ),
+                                                                ],
+                                                              ),
                                                             ),
                                                           )
                                                         ],

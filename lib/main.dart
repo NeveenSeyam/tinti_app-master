@@ -6,12 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:tinti_app/Modules/Home/a.dart';
-import 'package:tinti_app/Modules/auth/forgetPassword/final_screen.dart';
 import 'package:tinti_app/Modules/auth/login_screen.dart';
 import 'package:tinti_app/Modules/auth/signup_screen.dart';
 import 'Modules/Home/companys/company_page.dart';
 import 'Modules/OnBoarding/on_boarding_screen.dart';
-import 'Modules/auth/forgetPassword/first_forget_screen.dart';
+import 'Modules/auth/first_forget_screen.dart';
 import 'Modules/auth/splash.dart';
 import 'firebase_options.dart';
 
@@ -72,7 +71,6 @@ class _MyAppState extends State<MyApp> {
                   // '/secound_screen': (context) => const SecoundForgetScreen(),
                   // '/theard_screen': (context) => const TheardForgetScreen(),
                   '/navegaitor_screen': (context) => MyHomePage(),
-                  '/final_screen': (context) => const FinalForgetScreen(),
                   '/campany_screen': (context) => CampanyPage(),
                   // '/company_profile': (context) => CompanyProfile(
                   //       id: 0,

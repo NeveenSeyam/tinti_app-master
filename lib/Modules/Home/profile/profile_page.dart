@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tinti_app/Models/auth/profile_model.dart';
 import 'package:tinti_app/Modules/Home/more%20home%20screens/contact_us.dart';
-import 'package:tinti_app/Modules/auth/forgetPassword/first_forget_screen.dart';
+import 'package:tinti_app/Modules/auth/first_forget_screen.dart';
 import 'package:tinti_app/Util/constants/constants.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/button_widget.dart';

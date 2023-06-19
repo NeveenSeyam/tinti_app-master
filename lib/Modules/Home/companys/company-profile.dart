@@ -202,8 +202,8 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                                                 const ClampingScrollPhysics(),
                                             gridDelegate:
                                                 const SliverGridDelegateWithMaxCrossAxisExtent(
-                                              maxCrossAxisExtent: 250,
-                                              childAspectRatio: 2 / 2.9,
+                                              maxCrossAxisExtent: 240,
+                                              childAspectRatio: 2 / 2.3,
                                               // crossAxisSpacing: 0,
                                               // mainAxisSpacing: 0
                                             ),
@@ -262,6 +262,10 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                                                                         index]
                                                                     .image ??
                                                                 'assets/images/sa1.jpeg',
+                                                            height: 100.h,
+                                                            width:
+                                                                double.infinity,
+                                                            fit: BoxFit.fill,
                                                           ),
                                                         ),
                                                         Padding(
@@ -278,7 +282,7 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                                                                 'تظليل',
                                                             color: AppColors
                                                                 .scadryColor,
-                                                            fontSize: 14.sp,
+                                                            fontSize: 12.sp,
                                                             fontFamily:
                                                                 'DINNextLTArabic',
                                                           ),
@@ -297,7 +301,7 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                                                                 'تلعب العناية المنتظمة بالسيارة دورا كبيرا في المحافظة على ',
                                                             color: AppColors
                                                                 .scadryColor,
-                                                            fontSize: 12.sp,
+                                                            fontSize: 9.sp,
                                                             fontFamily:
                                                                 'DINNextLTArabic',
                                                             fontWeight:

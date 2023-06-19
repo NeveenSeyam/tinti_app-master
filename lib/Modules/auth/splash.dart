@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tbib_splash_screen/splash_screen.dart';
 import 'package:tbib_splash_screen/splash_screen_view.dart';
@@ -78,10 +79,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/llogoo.png',
-              // fit: BoxFit.cover,
-              // width: 120.w,
+            SvgPicture.asset(
+              'assets/images/ssplash.svg', width: 100.w, height: 90.h,
+              // fit: BoxFit.fill,
             ),
           ],
         ),

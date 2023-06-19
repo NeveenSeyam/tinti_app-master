@@ -263,8 +263,8 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                       child: Image.asset(
                                     'assets/images/company_card.png',
                                     fit: BoxFit.fill,
-                                    width: 200.w,
-                                    height: 200.h,
+                                    width: 120.w,
+                                    height: 120.h,
                                   )),
                                   Center(
                                     child: Container(
@@ -276,14 +276,18 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                       ),
                                       child: Column(
                                         children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50.w),
-                                            child: Image.network(
-                                              productsModel.success
-                                                      ?.items?[index].image ??
-                                                  'assets/images/j_and_j.png',
-                                              width: 50.w,
+                                          SizedBox(
+                                            height: 60.h,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.w),
+                                              child: Image.network(
+                                                productsModel.success
+                                                        ?.items?[index].image ??
+                                                    'assets/images/j_and_j.png',
+                                                width: 80.w, fit: BoxFit.fill,
+                                                // height: 70.h,
+                                              ),
                                             ),
                                           ),
                                           CustomText(

@@ -12,6 +12,7 @@ import 'package:tinti_app/apis/sms_verify.dart';
 import '../Apis/api_urls.dart';
 import '../Apis/auth/login_api.dart';
 import '../Helpers/failure.dart';
+import '../Models/auth/otp.dart';
 import '../Models/auth/profile_model.dart';
 import '../Models/auth/user_model.dart';
 import '../Models/change.dart';
@@ -82,6 +83,12 @@ class AccountProvider with ChangeNotifier {
     _smsResultModel = sms;
   }
 
+  OtpResultModel? _otpResultModel;
+  OtpResultModel? get getotpResultModel => _otpResultModel;
+
+  setOtpResultModel(OtpResultModel otp) {
+    _otpResultModel = otp;
+  }
 // * ===== State List =====
 
   Future postRegisterUser({
@@ -186,6 +193,8 @@ class AccountProvider with ChangeNotifier {
     required dynamic id,
     required String userSender,
   }) async {
+    OtpResultModel? smsResultModel = OtpResultModel();
+
     try {
       final response = await VerifySmsOtp(
               lang: lang,
@@ -195,13 +204,15 @@ class AccountProvider with ChangeNotifier {
               code: code,
               id: id)
           .fetch();
-      if (response['code'] == 1) {
+      if (response['message'] == 1) {
         UIHelper.showNotification(response['message'],
             backgroundColor: AppColors.green);
       }
       log("response $response");
-
-      return response['message'];
+      smsResultModel = OtpResultModel.fromJson(response);
+      //! set the new data to the data object
+      setOtpResultModel(smsResultModel);
+      return response['code'];
     } on Failure catch (f) {
       log("message ${f.message}");
       return f.message;
@@ -334,7 +345,7 @@ class AccountProvider with ChangeNotifier {
       UIHelper.showNotification(e.response?.data['message']);
 
       // log(e.message);
-      return Failure;
+      return false;
     }
   }
 

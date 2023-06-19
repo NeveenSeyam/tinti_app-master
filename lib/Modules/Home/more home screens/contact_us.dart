@@ -130,8 +130,68 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                         );
                       }
                       if (snapshot.hasError) {
-                        return Center(
-                          child: Text('Error: ${snapshot.error}'),
+                        return Padding(
+                          padding: EdgeInsets.all(20.w),
+                          child: Container(
+                              padding: EdgeInsets.all(20.w),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      offset: Offset(0, 7),
+                                      blurRadius: 10,
+                                    ),
+                                  ],
+                                  borderRadius: BorderRadius.circular(20.w),
+                                  color: AppColors.white.withOpacity(0.9)),
+                              // width: 320.w,
+                              height: 500.h,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset('assets/images/nullstate.png'),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                  Container(
+                                    width: 300.w,
+                                    child: CustomText(
+                                      '${snapshot.error}' ==
+                                              'No Internet connection'
+                                          ? Constants.lang == 'ar'
+                                              ? 'انت غير متصل بالانترنت حاول مرة اخرى'
+                                              : 'You don\'t connect with internet try again'
+                                          : 'contact support'.tr(),
+                                      color: AppColors.orange,
+                                      // fontWeight: FontWeight.bold,
+                                      fontFamily: 'DINNEXTLTARABIC',
+
+                                      textAlign: TextAlign.center,
+                                      fontSize: 18.sp,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 60.h,
+                                  ),
+                                  RaisedGradientButton(
+                                    text: Constants.lang == 'ar'
+                                        ? ' حاول مرة اخرى'
+                                        : ' try again',
+                                    color: AppColors.scadryColor,
+                                    height: 48.h,
+                                    width: 320.w,
+                                    circular: 10.w,
+                                    onPressed: () {
+                                      setState(() {
+                                        _fetchedContactRequest =
+                                            _getContactsData();
+                                      });
+                                    },
+                                  ),
+                                ],
+                              )),
                         );
                       }
                       if (snapshot.hasData) {
@@ -485,7 +545,7 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: Center(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
@@ -495,6 +555,9 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                         color: AppColors.white,
                         fontFamily: 'DINNextLTArabic',
                       ),
+                    ),
+                    SizedBox(
+                      width: 20.w,
                     ),
                     // Container(
                     //   width: 180.w,

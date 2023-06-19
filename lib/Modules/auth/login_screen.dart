@@ -23,7 +23,7 @@ import '../../Widgets/gradint_button.dart';
 import '../../Widgets/loading_dialog.dart';
 import '../../helpers/ui_helper.dart';
 import '../../provider/account_provider.dart';
-import 'forgetPassword/first_forget_screen.dart';
+import 'first_forget_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -77,7 +77,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Constants.isQuest = false;
           SharedPreferences? _prefs = await SharedPreferences.getInstance();
           _prefs.setString(Keys.hasSaveUserData, value["data"]["token"]);
-          _prefs.setString("lang", Constants.lang!);
+          _prefs.setString("lang", Constants.lang ?? 'ar');
           await AuthProvider.getUserProfileRequset();
 
           Navigator.pop(context);

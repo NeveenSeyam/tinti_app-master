@@ -507,7 +507,7 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
 
                                                                   String?
                                                                       subModelId =
-                                                                      "";
+                                                                      null;
                                                                   // _image2 = null;
                                                                   _size.text =
                                                                       '';
@@ -753,14 +753,14 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
 
                                                                                         return;
                                                                                       }
-
-                                                                                      log("img ${img?.path ?? ""}");
+                                                                                      // log("img ${img?.path ?? ""}");
+                                                                                      log("img ${serviceModel.carModles?[index].carModelTypeId}");
                                                                                       await changCarModel.editCarRequset(data: {
                                                                                         "name": _name.text ?? serviceModel.carModles?[index].name,
                                                                                         "color": _color.text ?? serviceModel.carModles?[index].color,
                                                                                         "car_number": _number.text ?? serviceModel.carModles?[index].carNumber,
                                                                                         "car_model_id": selectedNationality ?? serviceModel.carModles?[index].carModelId,
-                                                                                        "car_model_type_id": subModelId ?? selectedTypeId,
+                                                                                        "car_model_type_id": subModelId ?? serviceModel.carModles?[index].carModelTypeId,
                                                                                         "car_size_id": carSizes?.id ?? serviceModel.carModles?[index].carSizeId,
                                                                                       }, id: serviceModel.carModles?[index].id.toString() ?? '', file: img);
                                                                                       setState(() {
