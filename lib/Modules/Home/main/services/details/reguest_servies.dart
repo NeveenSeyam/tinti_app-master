@@ -1303,7 +1303,9 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                                                           ?.isEmpty ??
                                                                       true) {
                                                                     UIHelper.showNotification(
-                                                                        "aaaa");
+                                                                        "يجب ادخال بيانات ");
+                                                                    Navigator.pop(
+                                                                        context);
 
                                                                     return;
                                                                   }
@@ -1326,10 +1328,13 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                                                                 0
                                                                       },
                                                                           file:
-                                                                              img);
+                                                                              img).then(
+                                                                          (value) {});
                                                                   setState(() {
                                                                     _fetchedMyRequest =
                                                                         _getContentModelData();
+                                                                    _fetchedCarsRequest =
+                                                                        _getCarsData();
 
                                                                     _color.text =
                                                                         '';

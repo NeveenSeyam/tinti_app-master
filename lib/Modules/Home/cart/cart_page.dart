@@ -180,6 +180,8 @@ class _CartPageState extends ConsumerState<CartPage> {
                                   isFavorite: 0,
                                   id: ordersModel?.orders?[index].productId ??
                                       0,
+                                  product_id:
+                                      ordersModel?.orders?[index].id ?? 0,
                                 ),
                               )
                             : Padding(

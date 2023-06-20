@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/custom_text.dart';
 
+import '../Modules/Home/main/services/details/order_details.dart';
 import '../Modules/Home/main/services/details/servies_details.dart';
 import 'button_widget.dart';
 import 'custom_button.dart';
@@ -15,6 +16,7 @@ class OrderListCard extends StatelessWidget {
   String details;
   String price;
   int id;
+  int? product_id;
   int isFavorite;
   String stats;
   OrderListCard({
@@ -27,6 +29,7 @@ class OrderListCard extends StatelessWidget {
     required this.id,
     required this.stats,
     required this.isFavorite,
+    required this.product_id,
   });
 
   @override
@@ -45,7 +48,15 @@ class OrderListCard extends StatelessWidget {
                             isFavorite: isFavorite,
                           )),
                 )
-              : null;
+              : Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OrderDetailsScreen(
+                            id: product_id ?? 0,
+                            row_id: id,
+                            isFavorite: isFavorite,
+                          )),
+                );
         },
         child: Container(
           margin: const EdgeInsets.all(5),

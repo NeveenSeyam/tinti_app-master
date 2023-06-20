@@ -8,9 +8,12 @@ import 'package:tinti_app/Models/orders_model.dart';
 import 'package:tinti_app/apis/orders/get_user_order_data_api.dart';
 
 import '../Apis/api_urls.dart';
+import '../Models/product/single_order_model.dart';
 import '../Util/constants/constants.dart';
 import '../Util/theme/app_colors.dart';
 
+import '../apis/orders/order_api.dart';
+import '../apis/orders/ratting_api.dart';
 import '../helpers/failure.dart';
 import '../helpers/ui_helper.dart';
 
@@ -26,6 +29,15 @@ class OrderProvider extends ChangeNotifier {
   OrdeModel? get getOrdersDataList => _orderSellsList;
   void getDataSellsList(OrdeModel ordeModel) {
     _orderSellsList = ordeModel;
+
+    notifyListeners();
+  }
+
+  OrderDetailsModel? _singleOrderModel = OrderDetailsModel();
+//! create get method for the data object
+  OrderDetailsModel? get getSingleOrder => _singleOrderModel;
+  void setSingleOrderList(OrderDetailsModel singleOrderModel) {
+    _singleOrderModel = singleOrderModel;
 
     notifyListeners();
   }
@@ -145,4 +157,45 @@ class OrderProvider extends ChangeNotifier {
   //     return f;
   //   }
   // }
+
+  Future getSingleOrderDataRequset({required int id}) async {
+    //! we create this object to set new data to the data object
+    OrderDetailsModel? productList = OrderDetailsModel();
+
+    try {
+      //! here we call the api and get the data using the Fetch method
+      final response = await GetSingleOrdersDataApi(id: id.toString()).fetch();
+      log("response getProductDataByCompanyRequsett $response");
+
+      //! use FormJson method to convert the data to the data object
+      productList = OrderDetailsModel.fromJson(response);
+      //! set the new data to the data object
+      setSingleOrderList(productList);
+
+      return response;
+    } on Failure catch (f) {
+      return f;
+    }
+  }
+
+  Future addRateDataRequset(
+      {required id, required comments, required star_rating}) async {
+    //! we create this object to set new data to the data object
+
+    try {
+      //! here we call the api and get the data using the Fetch method
+      final response = await AddRate(
+        order_id: id.toString(),
+        comments: comments,
+        star_rating: star_rating,
+      ).fetch();
+      log("response getProductDataByCompanyRequsett $response");
+
+      //! use FormJson method to convert the data to the data object
+
+      return response;
+    } on Failure catch (f) {
+      return f;
+    }
+  }
 }

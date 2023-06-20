@@ -39,6 +39,9 @@ class ApiUrls {
       '${baseUrl}api/orders/payment_flag/${id.toString()}';
   static String showOrder() => '${baseUrl}api/orders}';
   static String addFav = '${baseUrl}api/favorites';
+  static String showSingleOrder({required id}) =>
+      '${baseUrl}api/orders/${id.toString()}}';
+  static String addRate = '${baseUrl}api/store_rating';
 
   //api/favs
   static String favPage = '${baseUrl}api/favorites';

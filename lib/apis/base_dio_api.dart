@@ -51,7 +51,7 @@ class BaseDioApi {
       debugPrint(e.message);
       debugPrint("${e.response}");
       debugPrint(e.message);
-      UIHelper.showNotification(e.response!.data['message']);
+      UIHelper.showNotification(e.response?.data['message'] ?? 'خطأ');
 
       //   UIHelper.showNotification(e.response!.data['message']);
 
