@@ -38,25 +38,15 @@ class OrderListCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: GestureDetector(
         onTap: () {
-          stats == 'finished'.tr()
-              ? Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ServiceDetailsScreen(
-                            id: id,
-                            row_id: id,
-                            isFavorite: isFavorite,
-                          )),
-                )
-              : Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => OrderDetailsScreen(
-                            id: product_id ?? 0,
-                            row_id: id,
-                            isFavorite: isFavorite,
-                          )),
-                );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OrderDetailsScreen(
+                      id: product_id ?? 0,
+                      row_id: id,
+                      isFavorite: isFavorite,
+                    )),
+          );
         },
         child: Container(
           margin: const EdgeInsets.all(5),

@@ -4,9 +4,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tinti_app/Modules/Home/main/services/details/reguest_servies.dart';
+import 'package:tinti_app/Modules/Home/main/services/details/servies_details.dart';
 import 'package:tinti_app/Util/theme/app_colors.dart';
 import 'package:tinti_app/Widgets/custom_appbar.dart';
 import 'package:tinti_app/Widgets/custom_text.dart';
+import 'package:tinti_app/helpers/ui_helper.dart';
 import 'package:tinti_app/provider/order_provider.dart';
 import 'package:tinti_app/provider/products_provider.dart';
 import '../../../../../Helpers/failure.dart';
@@ -27,6 +29,7 @@ class OrderDetailsScreen extends ConsumerStatefulWidget {
   dynamic row_id;
   int id;
   int isFavorite;
+
   OrderDetailsScreen(
       {super.key,
       required this.id,
@@ -48,7 +51,10 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
   double rate = 0.0;
   double? _rating;
   IconData? _selectedIcon;
-
+  Icon icon = Icon(
+    Icons.sentiment_neutral,
+    color: Colors.amber,
+  );
   Future _getProducDetailsData() async {
     final prov = ref.read(ordersProvider);
 
@@ -103,29 +109,100 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Center(
-                    child: SizedBox(
-                      width: 370.w,
-                      height: 200.h,
-                      child: SizedBox(
-                        child: CarouselSlider.builder(
-                          itemCount: 1,
-                          itemBuilder: (BuildContext context, int itemIndex,
-                                  int pageViewIndex) =>
-                              ServiesImages(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 180.w,
+                        height: 150.h,
+                        child: SizedBox(
+                          child: ServiesImages(
                             image: productDetailsModel?.order?.image ??
                                 'http://sayyarte.com/img/1676279090.jpg',
                           ),
-                          options: CarouselOptions(
-                            autoPlay: true,
-                            enlargeCenterPage: true,
-                            viewportFraction: 01,
-                            aspectRatio: 2.0,
-                            initialPage: 1,
-                          ),
                         ),
                       ),
-                    ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                productDetailsModel?.order?.name ??
+                                    'نانو سيراميك',
+                                color: AppColors.scadryColor,
+                                fontSize: 18.sp,
+                                fontFamily: 'DINNextLTArabic',
+                                textAlign: TextAlign.start,
+                              ),
+                              SizedBox(
+                                height: 10.h,
+                              ),
+                              CustomText(
+                                productDetailsModel?.order?.service ??
+                                    'جونسون اند جونسون ',
+                                color: AppColors.orange,
+                                fontSize: 14.sp,
+                                fontFamily: 'DINNextLTArabic',
+                                textAlign: TextAlign.start,
+                              ),
+                              SizedBox(
+                                height: 10.h,
+                              ),
+                              Row(
+                                children: [
+                                  CustomText(
+                                    "${productDetailsModel?.order?.rating ?? 0}",
+                                    color: AppColors.orange,
+                                    fontSize: 14.sp,
+                                    fontFamily: 'DINNextLTArabic',
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  icon
+                                ],
+                              ),
+                            ],
+                          ),
+
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     setState(() {
+                          //       widget.isFavorite == 0
+                          //           ? widget.isFavorite = 1
+                          //           : widget.isFavorite = 0;
+                          //       var favModel = ref.watch(favsProvider);
+
+                          //       if (widget.isFavorite != 0) {
+                          //         favModel.addFavRequset(id: widget.id);
+                          //       } else {
+                          //         favModel.removeFavRequset(id: widget.id);
+                          //       }
+                          //     });
+                          //   },
+                          //   child: Container(
+                          //     width: 25.w,
+                          //     height: 24.h,
+                          //     decoration: BoxDecoration(
+                          //       color: Colors.grey[300],
+                          //       borderRadius: BorderRadius.circular(3.w),
+                          //       // border: Border.all(color: Colors.grey),
+                          //     ),
+                          //     child: Icon(
+                          //       widget.isFavorite == 0
+                          //           ? Icons.favorite_border
+                          //           : Icons.favorite,
+                          //       color: widget.isFavorite == 0
+                          //           ? AppColors.grey
+                          //           : AppColors.orange,
+                          //     ),
+                          //   ),
+                          // )
+                        ],
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -133,70 +210,6 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomText(
-                                  productDetailsModel?.order?.name ??
-                                      'نانو سيراميك',
-                                  color: AppColors.scadryColor,
-                                  fontSize: 18.sp,
-                                  fontFamily: 'DINNextLTArabic',
-                                  textAlign: TextAlign.start,
-                                ),
-                                SizedBox(
-                                  height: 10.h,
-                                ),
-                                CustomText(
-                                  productDetailsModel?.order?.service ??
-                                      'جونسون اند جونسون ',
-                                  color: AppColors.orange,
-                                  fontSize: 14.sp,
-                                  fontFamily: 'DINNextLTArabic',
-                                  textAlign: TextAlign.start,
-                                ),
-                              ],
-                            ),
-
-                            // GestureDetector(
-                            //   onTap: () {
-                            //     setState(() {
-                            //       widget.isFavorite == 0
-                            //           ? widget.isFavorite = 1
-                            //           : widget.isFavorite = 0;
-                            //       var favModel = ref.watch(favsProvider);
-
-                            //       if (widget.isFavorite != 0) {
-                            //         favModel.addFavRequset(id: widget.id);
-                            //       } else {
-                            //         favModel.removeFavRequset(id: widget.id);
-                            //       }
-                            //     });
-                            //   },
-                            //   child: Container(
-                            //     width: 25.w,
-                            //     height: 24.h,
-                            //     decoration: BoxDecoration(
-                            //       color: Colors.grey[300],
-                            //       borderRadius: BorderRadius.circular(3.w),
-                            //       // border: Border.all(color: Colors.grey),
-                            //     ),
-                            //     child: Icon(
-                            //       widget.isFavorite == 0
-                            //           ? Icons.favorite_border
-                            //           : Icons.favorite,
-                            //       color: widget.isFavorite == 0
-                            //           ? AppColors.grey
-                            //           : AppColors.orange,
-                            //     ),
-                            //   ),
-                            // )
-                          ],
-                        ),
                         SizedBox(
                           height: 10.h,
                         ),
@@ -234,7 +247,51 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                                   : isShoow = true;
                             });
                           },
-                          child: orderCard('التعليقات', "", true),
+                          child: GestureDetector(
+                            // onTap: onPress,
+                            child: Container(
+                                width: 350.w,
+                                height: isShoow == false ? 48.h : 120.h,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.w),
+                                    color: AppColors.orange.withOpacity(0.3)),
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 15.w),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          CustomText(
+                                            "التعليقات",
+                                            color: AppColors.scadryColor,
+                                            fontFamily: 'DINNextLTArabic',
+                                          ),
+                                          IconButton(
+                                              onPressed: null,
+                                              icon: const Icon(
+                                                Icons
+                                                    .arrow_drop_down_circle_outlined,
+                                                color: AppColors.scadryColor,
+                                              )),
+                                        ],
+                                      ),
+                                      if (isShoow ?? false)
+                                        CustomText(
+                                          productDetailsModel
+                                                  ?.order?.ratingComments ??
+                                              'لا يوجد تعليقاتلا يوجد تعليقاتلا يوجد تعليقاتلا يوجد تعليقاتلا يوجد تعليقاتلا يوجد تعليقات',
+                                          maxLines: 3,
+                                        ),
+                                    ],
+                                  ),
+                                )),
+                          ),
                         ),
                         SizedBox(
                           height: 10.h,
@@ -402,238 +459,340 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                         //                   : "bad rat service".tr()),
                         //         ],
                         //       ),
-                        if (isShoow ?? false)
-                          SizedBox(
-                            height: 70.h,
-                            width: 350.w,
-                            child: CarouselSlider.builder(
-                              itemCount: 1,
-                              itemBuilder: (BuildContext context, int itemIndex,
-                                      int pageViewIndex) =>
-                                  Container(
-                                width: double.infinity,
-                                height: 70.h,
-                                color: AppColors.scadryColor.withOpacity(0.2),
-                                child: CustomText(
-                                  productDetailsModel?.order?.ratingComments ??
-                                      'لا يوجد تعليقاتلا يوجد تعليقاتلا يوجد تعليقاتلا يوجد تعليقاتلا يوجد تعليقاتلا يوجد تعليقات',
-                                  maxLines: 3,
-                                ),
-                              ),
-                              options: CarouselOptions(
-                                autoPlay: true,
-                                enlargeCenterPage: true,
-                                viewportFraction: 01,
-                                aspectRatio: 2.0,
-                                initialPage: 1,
-                              ),
-                            ),
-                          ),
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(12.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RaisedGradientButton(
-                          text: 'ratting'.tr(),
-                          color: Constants.isQuest == false
-                              ? AppColors.scadryColor
-                              : AppColors.grey,
-                          width: 200.w,
-                          height: 48.h,
-                          circular: 10.w,
-                          onPressed: Constants.isQuest == false
-                              ? () {
-                                  showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (context) {
-                                        // Future.delayed(
-                                        //     Duration(seconds: 1000), () {
-                                        //   Navigator.of(context).pop(true);
-                                        // });
-                                        return AlertDialog(
-                                            insetPadding: EdgeInsets.all(8.0),
-                                            title: CustomText(
-                                              "ratting".tr(),
-                                              fontSize: 24.sp,
-                                              textAlign: TextAlign.center,
-                                              fontFamily: 'DINNEXTLTARABIC',
-                                              color: AppColors.scadryColor,
-                                            ),
-                                            content: Container(
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20.w)),
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    100,
-                                                height: 300.h,
-                                                child: Column(
-                                                  children: [
-                                                    CustomText(
-                                                      'يمكنك اضافة تعليق الان ',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      fontFamily:
-                                                          'DINNEXTLTARABIC',
-                                                      fontSize: 16.sp,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 22.h,
-                                                    ),
-                                                    RatingBar.builder(
-                                                      initialRating: 3,
-                                                      minRating: 1,
-                                                      direction:
-                                                          Axis.horizontal,
-                                                      allowHalfRating: true,
-                                                      itemCount: 5,
-                                                      itemPadding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 4.0),
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        switch (index) {
-                                                          case 0:
-                                                            return Icon(
-                                                              Icons
-                                                                  .sentiment_very_dissatisfied,
-                                                              color: Colors.red,
-                                                            );
-                                                          case 1:
-                                                            return Icon(
-                                                              Icons
-                                                                  .sentiment_dissatisfied,
-                                                              color: Colors
-                                                                  .redAccent,
-                                                            );
-                                                          case 2:
-                                                            return Icon(
-                                                              Icons
-                                                                  .sentiment_neutral,
-                                                              color:
-                                                                  Colors.amber,
-                                                            );
-                                                          case 3:
-                                                            return Icon(
-                                                              Icons
-                                                                  .sentiment_satisfied,
-                                                              color: Colors
-                                                                  .lightGreen,
-                                                            );
-                                                          case 4:
-                                                            return Icon(
-                                                              Icons
-                                                                  .sentiment_very_satisfied,
-                                                              color:
-                                                                  Colors.green,
-                                                            );
-                                                        }
-                                                        return Icon(
-                                                          Icons
-                                                              .sentiment_very_satisfied,
-                                                          color: Colors.green,
-                                                        );
-                                                      },
-                                                      onRatingUpdate: (rating) {
-                                                        setState(() {
-                                                          rate = rating;
-                                                        });
-                                                        print(rating);
-                                                      },
-                                                    ),
-                                                    SizedBox(
-                                                      height: 30.h,
-                                                    ),
-                                                    RoundedInputField(
-                                                      hintText: 'comment'.tr(),
-                                                      onChanged: (value) {},
-                                                      hintColor: AppColors.hint,
-                                                      color:
-                                                          AppColors.lightgrey,
-                                                      keyboardType:
-                                                          TextInputType.text,
-                                                      maxLingth: 100,
-                                                      circuler: 10.w,
-                                                      height: 48.h,
+                  if (productDetailsModel?.order?.status == 'finnished' ||
+                          productDetailsModel?.order?.status == 'منتهي' ??
+                      false)
+                    Padding(
+                      padding: EdgeInsets.all(12.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RaisedGradientButton(
+                            text: 'ratting'.tr(),
+                            color: Constants.isQuest == false
+                                ? AppColors.scadryColor
+                                : AppColors.grey,
+                            width: 100.w,
+                            height: 48.h,
+                            circular: 10.w,
+                            onPressed: Constants.isQuest == false
+                                ? () {
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) {
+                                          // Future.delayed(
+                                          //     Duration(seconds: 1000), () {
+                                          //   Navigator.of(context).pop(true);
+                                          // });
+                                          return AlertDialog(
+                                              insetPadding: EdgeInsets.all(8.0),
+                                              title: CustomText(
+                                                "ratting".tr(),
+                                                fontSize: 24.sp,
+                                                textAlign: TextAlign.center,
+                                                fontFamily: 'DINNEXTLTARABIC',
+                                                color: AppColors.scadryColor,
+                                              ),
+                                              content: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.w)),
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      100,
+                                                  height: 300.h,
+                                                  child: Column(
+                                                    children: [
+                                                      CustomText(
+                                                        'يمكنك اضافة تعليق الان ',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        fontFamily:
+                                                            'DINNEXTLTARABIC',
+                                                        fontSize: 16.sp,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 22.h,
+                                                      ),
+                                                      RatingBar.builder(
+                                                        initialRating: 3,
+                                                        minRating: 1,
+                                                        direction:
+                                                            Axis.horizontal,
+                                                        allowHalfRating: true,
+                                                        itemCount: 5,
+                                                        itemPadding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    4.0),
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          switch (index) {
+                                                            case 0:
+                                                              return Icon(
+                                                                Icons
+                                                                    .sentiment_very_dissatisfied,
+                                                                color:
+                                                                    Colors.red,
+                                                              );
+                                                            case 1:
+                                                              return Icon(
+                                                                Icons
+                                                                    .sentiment_dissatisfied,
+                                                                color: Colors
+                                                                    .redAccent,
+                                                              );
+                                                            case 2:
+                                                              return Icon(
+                                                                Icons
+                                                                    .sentiment_neutral,
+                                                                color: Colors
+                                                                    .amber,
+                                                              );
+                                                            case 3:
+                                                              return Icon(
+                                                                Icons
+                                                                    .sentiment_satisfied,
+                                                                color: Colors
+                                                                    .lightGreen,
+                                                              );
+                                                            case 4:
+                                                              return Icon(
+                                                                Icons
+                                                                    .sentiment_very_satisfied,
+                                                                color: Colors
+                                                                    .green,
+                                                              );
+                                                          }
+                                                          return Icon(
+                                                            Icons
+                                                                .sentiment_very_satisfied,
+                                                            color: Colors.green,
+                                                          );
+                                                        },
+                                                        onRatingUpdate:
+                                                            (rating) {
+                                                          setState(() {
+                                                            rate = rating;
+                                                            if (rating >= 1) {
+                                                              if (rating >= 2) {
+                                                                if (rating >=
+                                                                    3) {
+                                                                  if (rating >=
+                                                                      4) {
+                                                                    if (rating ==
+                                                                        5) {
+                                                                      icon =
+                                                                          Icon(
+                                                                        Icons
+                                                                            .sentiment_very_satisfied,
+                                                                        color: Colors
+                                                                            .green,
+                                                                      );
+                                                                    }
+                                                                    icon = Icon(
+                                                                      Icons
+                                                                          .sentiment_very_satisfied,
+                                                                      color: Colors
+                                                                          .green,
+                                                                    );
+                                                                  } else
+                                                                    icon = Icon(
+                                                                      Icons
+                                                                          .sentiment_satisfied,
+                                                                      color: Colors
+                                                                          .lightGreen,
+                                                                    );
+                                                                }
+                                                                icon = Icon(
+                                                                  Icons
+                                                                      .sentiment_neutral,
+                                                                  color: Colors
+                                                                      .amber,
+                                                                );
+                                                              } else
+                                                                icon = Icon(
+                                                                  Icons
+                                                                      .sentiment_very_dissatisfied,
+                                                                  color: Colors
+                                                                      .red,
+                                                                );
+                                                            }
+                                                          });
+                                                          print(rating);
+                                                        },
+                                                      ),
+                                                      SizedBox(
+                                                        height: 30.h,
+                                                      ),
+                                                      RoundedInputField(
+                                                        hintText:
+                                                            'comment'.tr(),
+                                                        onChanged: (value) {},
+                                                        hintColor:
+                                                            AppColors.hint,
+                                                        color:
+                                                            AppColors.lightgrey,
+                                                        keyboardType:
+                                                            TextInputType.text,
+                                                        maxLingth: 100,
+                                                        circuler: 10.w,
+                                                        height: 48.h,
 
-                                                      // validator: validateEmail,
-                                                      seen: false,
-                                                      controller: _comment,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 22.h,
-                                                    ),
-                                                    RaisedGradientButton(
-                                                      text: 'التالي',
-                                                      width: 340.w,
-                                                      color:
-                                                          AppColors.scadryColor,
-                                                      height: 48.h,
-                                                      circular: 10.w,
-                                                      onPressed: () async {
-                                                        await ref
-                                                            .read(
-                                                                ordersProvider)
-                                                            .addRateDataRequset(
-                                                              id: productDetailsModel
-                                                                  ?.order?.id,
-                                                              comments:
-                                                                  _comment.text,
-                                                              star_rating: rate,
-                                                            );
-                                                        Navigator.pushNamed(
-                                                            context,
-                                                            '/navegaitor_screen');
-                                                      },
-                                                    ),
-                                                    SizedBox(
-                                                      height: 16.h,
-                                                    ),
-                                                  ],
-                                                )));
-                                      });
-                                }
-                              : () {},
-                        ),
-                        Container(
-                          width: 150.w,
-                          padding: EdgeInsets.all(15.w),
-                          decoration: BoxDecoration(
-                              color: AppColors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromARGB(255, 47, 47, 47)
-                                      .withOpacity(0.05),
-                                  spreadRadius: 4,
-                                  blurRadius: 10,
-                                  offset: const Offset(
-                                      0, 5), // changes position of shadow
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(10.w)),
-                          child: Center(
-                            child: CustomText(
-                              '${productDetailsModel?.order?.price}   ر.س' ??
-                                  'ر.س 100 ',
-                              color: AppColors.orange,
-                              fontSize: 14.sp,
-                              fontFamily: 'DINNextLTArabic',
-                              textAlign: TextAlign.start,
+                                                        // validator: validateEmail,
+                                                        seen: false,
+                                                        controller: _comment,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 22.h,
+                                                      ),
+                                                      RaisedGradientButton(
+                                                        text: 'التالي',
+                                                        width: 340.w,
+                                                        color: AppColors
+                                                            .scadryColor,
+                                                        height: 48.h,
+                                                        circular: 10.w,
+                                                        onPressed: () async {
+                                                          if (productDetailsModel
+                                                                  ?.order
+                                                                  ?.rating
+                                                                  .toString()
+                                                                  .isEmpty ??
+                                                              false)
+                                                            await ref
+                                                                .read(
+                                                                    ordersProvider)
+                                                                .addRateDataRequset(
+                                                                  id: productDetailsModel
+                                                                      ?.order
+                                                                      ?.id,
+                                                                  comments:
+                                                                      _comment
+                                                                          .text,
+                                                                  star_rating:
+                                                                      rate,
+                                                                );
+                                                          UIHelper.showNotification(
+                                                              'تم التقييم مسبقا');
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ),
+                                                      SizedBox(
+                                                        height: 16.h,
+                                                      ),
+                                                    ],
+                                                  )));
+                                        });
+                                  }
+                                : () {},
+                          ),
+                          RaisedGradientButton(
+                            text: 'service details'.tr(),
+                            color: Constants.isQuest == false
+                                ? AppColors.scadryColor
+                                : AppColors.grey,
+                            width: 100.w,
+                            height: 48.h,
+                            circular: 10.w,
+                            onPressed: Constants.isQuest == false
+                                ? () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ServiceDetailsScreen(
+                                                id: productDetailsModel
+                                                        ?.order?.productId ??
+                                                    0,
+                                                row_id: productDetailsModel
+                                                        ?.order?.id ??
+                                                    0,
+                                                isFavorite: 0,
+                                              )),
+                                    );
+                                  }
+                                : () {},
+                          ),
+                          Container(
+                            width: 150.w,
+                            padding: EdgeInsets.all(15.w),
+                            decoration: BoxDecoration(
+                                color: AppColors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromARGB(255, 47, 47, 47)
+                                        .withOpacity(0.05),
+                                    spreadRadius: 4,
+                                    blurRadius: 10,
+                                    offset: const Offset(
+                                        0, 5), // changes position of shadow
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(10.w)),
+                            child: Center(
+                              child: CustomText(
+                                '${productDetailsModel?.order?.price}   ر.س' ??
+                                    'ر.س 100 ',
+                                color: AppColors.orange,
+                                fontSize: 14.sp,
+                                fontFamily: 'DINNextLTArabic',
+                                textAlign: TextAlign.start,
+                              ),
                             ),
                           ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
+                  if (productDetailsModel?.order?.status == 'متقدم' ||
+                          productDetailsModel?.order?.status == 'in progress' ||
+                          productDetailsModel?.order?.status == 'acceptable' ||
+                          productDetailsModel?.order?.status == 'مقبول' ??
+                      false)
+                    Padding(
+                      padding: EdgeInsets.all(15.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 340.w,
+                            padding: EdgeInsets.all(15.w),
+                            decoration: BoxDecoration(
+                                color: AppColors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromARGB(255, 47, 47, 47)
+                                        .withOpacity(0.05),
+                                    spreadRadius: 4,
+                                    blurRadius: 10,
+                                    offset: const Offset(
+                                        0, 5), // changes position of shadow
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(10.w)),
+                            child: Center(
+                              child: CustomText(
+                                '${productDetailsModel?.order?.price}   ر.س' ??
+                                    'ر.س 100 ',
+                                color: AppColors.orange,
+                                fontSize: 14.sp,
+                                fontFamily: 'DINNextLTArabic',
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                 ],
               );
             }
