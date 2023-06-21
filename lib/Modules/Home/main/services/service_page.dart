@@ -175,8 +175,13 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                             _fetchedProductRequest =
                                                 _getSearchProductsData(
                                                     _search.text);
+                                            isSearch = true;
                                             // _search.text = '';
                                           });
+                                        } else {
+                                          isSearch = false;
+                                          _fetchedProductRequest =
+                                              _getProductsData(0);
                                         }
                                       },
                                       widget: Icon(
@@ -194,7 +199,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: isSearch ? false : true,
+                      visible: isSearch ? true : false,
                       child: Consumer(
                         builder: (context, ref, child) => FutureBuilder(
                           future: _fetchedProductRequest,
@@ -314,7 +319,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: isSearch ? true : false,
+                      visible: isSearch ? false : true,
                       child: Consumer(
                         builder: (context, ref, child) => FutureBuilder(
                           future: _fetchedMyRequest,
@@ -346,6 +351,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                   ref.watch(servicesProvider).getDataList;
 
                               return Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Center(
                                     child: SizedBox(

@@ -69,6 +69,8 @@ class ApiUrls {
 
   //api/notifications
   static String notificationsList = '${baseUrl}api/notifications';
+  //fcmToken
+  static String updateToken = '${baseUrl}api/updateToken';
 
   //api/notifications
   static String appData = '${baseUrl}api/page';

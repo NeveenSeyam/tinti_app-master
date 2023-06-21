@@ -47,7 +47,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
   late PageController _pageController;
   int _currentPage = 0;
   late final _ratingController;
-  bool? isShoow;
+  bool? isShoow = false;
   double rate = 0.0;
   double? _rating;
   IconData? _selectedIcon;
@@ -105,21 +105,37 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                   ref.watch(ordersProvider).getSingleOrder;
               var addToFavModel = ref.watch(favsProvider);
               // var removeFavModel = ref.watch(favsProvider);
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
+              return ListView(
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
                         width: 180.w,
                         height: 150.h,
                         child: SizedBox(
-                          child: ServiesImages(
-                            image: productDetailsModel?.order?.image ??
-                                'http://sayyarte.com/img/1676279090.jpg',
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 10.w),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Center(
+                                child: Image.network(
+                                  productDetailsModel?.order?.image ?? '',
+                                  alignment: Alignment.center,
+                                  fit: BoxFit.fill,
+                                  width: 180.w,
+                                  height: 150.h,
+                                ),
+                              ),
+                            ),
                           ),
+
+                          //  ServiesImages(
+                          //   image: productDetailsModel?.order?.image ??
+                          //       'http://sayyarte.com/img/1676279090.jpg',
+                          // ),
                         ),
                       ),
                       Row(
@@ -134,7 +150,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                                 productDetailsModel?.order?.name ??
                                     'نانو سيراميك',
                                 color: AppColors.scadryColor,
-                                fontSize: 18.sp,
+                                fontSize: 16.sp,
                                 fontFamily: 'DINNextLTArabic',
                                 textAlign: TextAlign.start,
                               ),
@@ -166,40 +182,6 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                               ),
                             ],
                           ),
-
-                          // GestureDetector(
-                          //   onTap: () {
-                          //     setState(() {
-                          //       widget.isFavorite == 0
-                          //           ? widget.isFavorite = 1
-                          //           : widget.isFavorite = 0;
-                          //       var favModel = ref.watch(favsProvider);
-
-                          //       if (widget.isFavorite != 0) {
-                          //         favModel.addFavRequset(id: widget.id);
-                          //       } else {
-                          //         favModel.removeFavRequset(id: widget.id);
-                          //       }
-                          //     });
-                          //   },
-                          //   child: Container(
-                          //     width: 25.w,
-                          //     height: 24.h,
-                          //     decoration: BoxDecoration(
-                          //       color: Colors.grey[300],
-                          //       borderRadius: BorderRadius.circular(3.w),
-                          //       // border: Border.all(color: Colors.grey),
-                          //     ),
-                          //     child: Icon(
-                          //       widget.isFavorite == 0
-                          //           ? Icons.favorite_border
-                          //           : Icons.favorite,
-                          //       color: widget.isFavorite == 0
-                          //           ? AppColors.grey
-                          //           : AppColors.orange,
-                          //     ),
-                          //   ),
-                          // )
                         ],
                       ),
                     ],
@@ -468,7 +450,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                     Padding(
                       padding: EdgeInsets.all(12.w),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           RaisedGradientButton(
                             text: 'ratting'.tr(),
@@ -695,6 +677,9 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                                         });
                                   }
                                 : () {},
+                          ),
+                          SizedBox(
+                            width: 10.w,
                           ),
                           RaisedGradientButton(
                             text: 'service details'.tr(),

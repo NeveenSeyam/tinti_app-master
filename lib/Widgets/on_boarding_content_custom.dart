@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class OnBoardingContentCustom extends StatelessWidget {
   final String image;
@@ -22,7 +23,7 @@ class OnBoardingContentCustom extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(16.w),
             width: double.infinity,
-            child: Image.network(
+            child: SvgPicture.network(
               image,
               height: 360.h,
               width: 300,

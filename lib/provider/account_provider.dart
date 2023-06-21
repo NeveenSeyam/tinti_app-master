@@ -23,6 +23,7 @@ import '../apis/auth/add_user_api.dart';
 import '../apis/auth/change_password_api.dart';
 import '../apis/auth/forget_password.dart';
 import '../apis/sms.dart';
+import '../apis/update_token_api.dart';
 import '../apis/user_profile/get_user_profile.dart';
 import '../helpers/ui_helper.dart';
 
@@ -519,30 +520,28 @@ class AccountProvider with ChangeNotifier {
     }
   }
 
-  // Future SentOtp() async //required String image
-  // {
-  //   try {
-  //     Dio dio = Dio();
+  Future updateToken({
+/*  "lang": lang,
+      "userName": userName,
+      "apiKey": apiKey,
+      "number": number,
+      "userSender": userSender */
 
-  //     var response = await SentSmsOtp()
-  //     if (response.statusCode == 200) {
-  //       UIHelper.showNotification('تم تفعيل الحساب بنجاح',
-  //           backgroundColor: AppColors.green);
-  //     } else {
-  //       UIHelper.showNotification('خطأ', backgroundColor: AppColors.red);
-  //     }
-  //     log("response $response");
+    required String device_key,
+  }) async {
+    try {
+      final response = await UpdateTokenApi(
+        device_key: device_key,
+      ).fetch();
 
-  //     return response.data;
-  //   } on DioError catch (e) {
-  //     var message;
-  //     e.response?.data['message'] != 'Validation Error.'
-  //         ? message = 'تم التفعيل بنجاح'
-  //         : message = 'خطأ';
-  //     UIHelper.showNotification(message);
+      log("sent sms $response");
+      // setForgetPassModel(forgetList);
 
-  //     log(' e.mmm  ${e.message} ${e.response?.data['message']}');
-  //     return Failure;
-  //   }
-  // }
+      // setActiveOffers(storeOffers);
+      return response;
+    } on Failure catch (f) {
+      log("message ${f.message}");
+      return false;
+    }
+  }
 }

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -79,6 +80,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           _prefs.setString(Keys.hasSaveUserData, value["data"]["token"]);
           _prefs.setString("lang", Constants.lang ?? 'ar');
           await AuthProvider.getUserProfileRequset();
+          await AuthProvider.updateToken(
+            device_key: await FirebaseMessaging.instance.getToken() ?? '',
+          );
 
           Navigator.pop(context);
           Navigator.popAndPushNamed(context, '/navegaitor_screen');

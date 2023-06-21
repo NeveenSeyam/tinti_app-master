@@ -104,7 +104,7 @@ class Product {
 class ProductRating {
   int? id;
   String? rating;
-  Null? comments;
+  dynamic? comments;
   String? user;
 
   ProductRating({this.id, this.rating, this.comments, this.user});
