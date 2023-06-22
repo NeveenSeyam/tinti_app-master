@@ -482,10 +482,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                     image: DecorationImage(
                                                         image: imageProvider,
                                                         fit: BoxFit.cover,
-                                                        colorFilter:
-                                                            ColorFilter.mode(
-                                                                Colors.red,
-                                                                BlendMode.dst)),
+                                                      ),
                                                   ),
                                                 ),
                                                 placeholder: (context, url) =>

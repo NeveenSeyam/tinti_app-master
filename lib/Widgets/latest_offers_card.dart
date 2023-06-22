@@ -61,8 +61,8 @@ class _latestOffersCardState extends ConsumerState<latestOffersCard> {
                           image: DecorationImage(
                               image: imageProvider,
                               fit: BoxFit.fill,
-                              colorFilter:
-                                  ColorFilter.mode(Colors.red, BlendMode.dst)),
+                              colorFilter: ColorFilter.mode(
+                                  Colors.white, BlendMode.dst)),
                         ),
                       ),
                       placeholder: (context, url) =>

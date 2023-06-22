@@ -66,8 +66,8 @@ class _SaelsScreenCardCardState extends ConsumerState<SaelsScreenCardCard> {
                           image: DecorationImage(
                               image: imageProvider,
                               fit: BoxFit.fill,
-                              colorFilter:
-                                  ColorFilter.mode(Colors.red, BlendMode.dst)),
+                              colorFilter: ColorFilter.mode(
+                                  Colors.white, BlendMode.dst)),
                         ),
                       ),
                       placeholder: (context, url) =>

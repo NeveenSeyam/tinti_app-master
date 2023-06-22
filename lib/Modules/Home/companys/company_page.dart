@@ -155,6 +155,8 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                                 borderRadius:
                                                     BorderRadius.circular(10.w),
                                                 child: CachedNetworkImage(
+                                                  width: 100.w,
+                                                  height: 80.h,
                                                   imageUrl: comanyModel
                                                           .companies?[index]
                                                           .image ??
@@ -164,13 +166,9 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                                       Container(
                                                     decoration: BoxDecoration(
                                                       image: DecorationImage(
-                                                          image: imageProvider,
-                                                          fit: BoxFit.cover,
-                                                          colorFilter:
-                                                              ColorFilter.mode(
-                                                                  Colors.red,
-                                                                  BlendMode
-                                                                      .colorBurn)),
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     ),
                                                   ),
                                                   placeholder: (context, url) =>
@@ -313,13 +311,9 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                                         Container(
                                                   decoration: BoxDecoration(
                                                     image: DecorationImage(
-                                                        image: imageProvider,
-                                                        fit: BoxFit.cover,
-                                                        colorFilter:
-                                                            ColorFilter.mode(
-                                                                Colors.red,
-                                                                BlendMode
-                                                                    .colorBurn)),
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
                                                   ),
                                                 ),
                                                 placeholder: (context, url) =>

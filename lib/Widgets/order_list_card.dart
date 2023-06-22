@@ -100,7 +100,7 @@ class OrderListCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 190.w,
+                        width: 210.w,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -112,10 +112,11 @@ class OrderListCard extends StatelessWidget {
                               ),
                             ),
                             Container(
-                              width: 80.w,
+                              width: 110.w,
                               alignment: Alignment.topLeft,
                               child: CustomText(
                                 compeny,
+                                maxLines: 1,
                                 fontSize: 11.sp,
                                 color: AppColors.orange,
                               ),

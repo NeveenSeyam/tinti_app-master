@@ -397,7 +397,7 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                                 colorFilter:
                                                                     ColorFilter.mode(
                                                                         Colors
-                                                                            .red,
+                                                                            .white,
                                                                         BlendMode
                                                                             .dst)),
                                                           ),
