@@ -1,3 +1,5 @@
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -233,7 +235,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                               children: [
                                 SizedBox(
                                   // width: 350.w,
-                                  height: 150.h,
+                                  height: 170.h,
                                   child: Consumer(
                                     builder: (context, ref, child) =>
                                         FutureBuilder(
@@ -270,127 +272,44 @@ class _MainPageState extends ConsumerState<MainPage> {
 
                                           print(
                                               'linght ${companyModel.companies?.length}');
-                                          return PageView(
-                                            scrollDirection: Axis.horizontal,
-                                            // controller: _pageController,
-                                            physics:
-                                                const BouncingScrollPhysics(),
-                                            onPageChanged: (int currentPage) {
-                                              setState(() =>
-                                                  _currentPage = currentPage);
-                                            },
-                                            children: [
-                                              OnBoardingContentHome(
-                                                image: companyModel
-                                                        .companies?[0].image ??
-                                                    'assets/images/sa1.jpeg',
-                                                text: companyModel
-                                                        .companies?[0].name ??
-                                                    'جونسون اند جونسون',
-                                                about: companyModel
-                                                        .companies?[0].about ??
-                                                    '',
-                                                id: companyModel
-                                                        .companies?[0].id ??
-                                                    0,
-                                              ),
-                                              OnBoardingContentHome(
-                                                image: companyModel
-                                                        .companies?[1].image ??
-                                                    'assets/images/sa2.jpeg',
-                                                text: companyModel
-                                                        .companies?[1].name ??
-                                                    'جونسون اند جونسون',
-                                                about: companyModel
-                                                        .companies?[1].about ??
-                                                    '',
-                                                id: companyModel
-                                                        .companies?[1].id ??
-                                                    0,
-                                              ),
-                                              OnBoardingContentHome(
-                                                image: companyModel
-                                                        .companies?[2].image ??
-                                                    'assets/images/sa3.jpeg',
-                                                text: companyModel
-                                                        .companies?[2].name ??
-                                                    'جونسون اند جونسون',
-                                                about: companyModel
-                                                        .companies?[2].about ??
-                                                    '',
-                                                id: companyModel
-                                                        .companies?[2].id ??
-                                                    0,
-                                              ),
-                                              OnBoardingContentHome(
-                                                image: companyModel
-                                                        .companies?[3].image ??
-                                                    'assets/images/sa4.jpeg',
-                                                text: companyModel
-                                                        .companies?[3].name ??
-                                                    'جونسون اند جونسون',
-                                                about: companyModel
-                                                        .companies?[3].about ??
-                                                    '',
-                                                id: companyModel
-                                                        .companies?[3].id ??
-                                                    0,
-                                              ),
-                                              //   OnBoardingContentHome(
-                                              //     image:
-                                              //         companyModel.companies?[4].image ??
-                                              //             'assets/images/sa5.jpeg',
-                                              //     text: companyModel.companies?[4].name ??
-                                              //         'جونسون اند جونسون',
-                                              //     about:
-                                              //         companyModel.companies?[4].about ??
-                                              //             '',
-                                              //     id: companyModel.companies?[4].id ?? 0,
-                                              //   ),
-                                              //
-                                            ],
+                                          return CarouselSlider.builder(
+                                            itemCount: companyModel
+                                                    .companies?.length ??
+                                                0,
+                                            itemBuilder: (BuildContext context,
+                                                    int itemIndex,
+                                                    int pageViewIndex) =>
+                                                OnBoardingContentHome(
+                                              image: companyModel
+                                                      .companies?[itemIndex]
+                                                      .image ??
+                                                  'assets/images/sa1.jpeg',
+                                              text: companyModel
+                                                      .companies?[itemIndex]
+                                                      .name ??
+                                                  'جونسون اند جونسون',
+                                              about: companyModel
+                                                      .companies?[itemIndex]
+                                                      .about ??
+                                                  '',
+                                              id: companyModel
+                                                      .companies?[itemIndex]
+                                                      .id ??
+                                                  0,
+                                            ),
+                                            options: CarouselOptions(
+                                              autoPlay: true,
+                                              enlargeCenterPage: true,
+                                              viewportFraction: 01,
+                                              aspectRatio: 2.0,
+                                              initialPage: 1,
+                                            ),
                                           );
                                         }
                                         return Container();
                                       },
                                     ),
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Visibility(
-                                      visible: _currentPage < 5,
-                                      maintainSize: true,
-                                      maintainState: true,
-                                      maintainAnimation: true,
-                                      child: Row(
-                                        children: [
-                                          PageViewIndicatorCustomHome(
-                                            isCurrentPage: _currentPage == 0,
-                                            // marginEnd: 1.w,
-                                          ),
-                                          PageViewIndicatorCustomHome(
-                                            isCurrentPage: _currentPage == 1,
-                                            // marginEnd: 1.w,
-                                          ),
-                                          PageViewIndicatorCustomHome(
-                                            // marginEnd: 1.w,
-                                            isCurrentPage: _currentPage == 2,
-                                          ),
-                                          PageViewIndicatorCustomHome(
-                                            // marginEnd: 1.w,
-                                            isCurrentPage: _currentPage == 3,
-                                          ),
-                                          PageViewIndicatorCustomHome(
-                                            // marginEnd: 1.w,
-                                            isCurrentPage: _currentPage == 4,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                  ],
                                 ),
                               ],
                             ),

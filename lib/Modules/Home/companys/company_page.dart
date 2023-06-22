@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -153,13 +154,35 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(10.w),
-                                                child: Image.network(
-                                                  comanyModel.companies?[index]
+                                                child: CachedNetworkImage(
+                                                  imageUrl: comanyModel
+                                                          .companies?[index]
                                                           .image ??
-                                                      'assets/images/sa1.jpeg',
-                                                  width: 90.w,
-                                                  height: 90.h,
-                                                  fit: BoxFit.fill,
+                                                      'https://www.sayyarte.com/img/1678171026.png',
+                                                  imageBuilder: (context,
+                                                          imageProvider) =>
+                                                      Container(
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          image: imageProvider,
+                                                          fit: BoxFit.cover,
+                                                          colorFilter:
+                                                              ColorFilter.mode(
+                                                                  Colors.red,
+                                                                  BlendMode
+                                                                      .colorBurn)),
+                                                    ),
+                                                  ),
+                                                  placeholder: (context, url) =>
+                                                      CircularProgressIndicator(),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Image.network(
+                                                    'https://www.sayyarte.com/img/1678171026.png',
+                                                    width: 90.w,
+                                                    height: 90.h,
+                                                    fit: BoxFit.fill,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -281,12 +304,33 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(12.w),
-                                              child: Image.network(
-                                                productsModel.success
+                                              child: CachedNetworkImage(
+                                                imageUrl: productsModel.success
                                                         ?.items?[index].image ??
-                                                    'assets/images/j_and_j.png',
-                                                width: 80.w, fit: BoxFit.fill,
-                                                // height: 70.h,
+                                                    'https://www.sayyarte.com/img/1678171026.png',
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover,
+                                                        colorFilter:
+                                                            ColorFilter.mode(
+                                                                Colors.red,
+                                                                BlendMode
+                                                                    .colorBurn)),
+                                                  ),
+                                                ),
+                                                placeholder: (context, url) =>
+                                                    CircularProgressIndicator(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Image.network(
+                                                  'https://www.sayyarte.com/img/1678171026.png',
+                                                  width: 80.w, fit: BoxFit.fill,
+                                                  // height: 70.h,
+                                                ),
                                               ),
                                             ),
                                           ),

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_svg_image/cached_svg_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -28,7 +29,15 @@ class OnBoardingContentCustom extends StatelessWidget {
               height: 360.h,
               width: 300,
               fit: BoxFit.fill,
-              // placeholder: (context, url) => new CircularProgressIndicator(),
+              placeholderBuilder: (context) {
+                return Container(
+                    height: 360.h,
+                    width: 300,
+                    child: CircularProgressIndicator(
+                      color: Colors.orange,
+                      strokeWidth: 1,
+                    ));
+              },
               // errorWidget: (context, url, error) => new Icon(Icons.error),
             ),
           ),

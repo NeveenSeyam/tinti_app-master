@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -375,17 +376,43 @@ class _MyCarPageState extends ConsumerState<MyCarsScreen> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               10.w),
-                                                      child: Image.network(
-                                                        serviceModel
+                                                      child: CachedNetworkImage(
+                                                        width: 180.w,
+                                                        height: 160.h,
+                                                        imageUrl: serviceModel
                                                                 .carModles?[
                                                                     index]
                                                                 .image ??
-                                                            '',
-                                                        width: 180.w,
-                                                        height: 160.h,
-                                                        fit: BoxFit.fill,
-                                                        alignment: Alignment
-                                                            .bottomRight,
+                                                            'https://www.sayyarte.com/img/1678171026.png',
+                                                        imageBuilder: (context,
+                                                                imageProvider) =>
+                                                            Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            image: DecorationImage(
+                                                                image:
+                                                                    imageProvider,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                colorFilter:
+                                                                    ColorFilter.mode(
+                                                                        Colors
+                                                                            .red,
+                                                                        BlendMode
+                                                                            .dst)),
+                                                          ),
+                                                        ),
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            CircularProgressIndicator(),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            Image.network(
+                                                          'https://www.sayyarte.com/img/1678171026.png',
+                                                          width: 180.w,
+                                                          height: 160.h,
+                                                          fit: BoxFit.fill,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),

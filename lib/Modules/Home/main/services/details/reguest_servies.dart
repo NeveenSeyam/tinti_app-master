@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -198,23 +199,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                       }
                       if (value != false) {
                         print('oooooooo3');
-                        // UIHelper.showNotification(value.toString());
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (context) {
-                        //     return AlertDialog(
-                        //       title: Text('شكرا '),
-                        //       content: Column(
-                        //         children: [
-                        //           ButtonWidget(
-                        //             title: 'تمت',
-                        //             onPressed: () {},
-                        //           )
-                        //         ],
-                        //       ),
-                        //     );
-                        //   },
-                        // );
+
                         Navigator.popAndPushNamed(
                             context, '/navegaitor_screen');
 
@@ -306,69 +291,6 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
     });
   }
 
-  // void executeDirectPaymentWithRecurring() {
-  //   int paymentMethod = 20;
-
-  //   var request = MFExecutePaymentRequest(
-  //       paymentMethod, double.parse(widget.price ?? '0'));
-
-  //   var mfCardInfo = MFCardInfo(
-  //       cardNumber: cardNumber,
-  //       expiryMonth: expiryMonth,
-  //       expiryYear: expiryYear,
-  //       securityCode: securityCode,
-  //       bypass3DS: true,
-  //       saveToken: true);
-
-  //   MFSDK.executeRecurringDirectPayment(
-  //       context,
-  //       request,
-  //       mfCardInfo,
-  //       MFRecurringType.monthly,
-  //       MFAPILanguage.EN,
-  //       (String invoiceId, MFResult<MFDirectPaymentResponse> result) async => {
-  //             if (result.isSuccess())
-  //               {
-  //                 await ordersModel
-  //                     .activeOrderRequset(id: order_id)
-  //                     .then((value) {
-  //                   if (value is! Failure) {
-  //                     if (value == null) {
-  //                       UIHelper.showNotification(value.toString());
-  //                       print(value);
-  //                     }
-  //                     if (value != false) {
-  //                       UIHelper.showNotification(value.status.toString());
-  //                       print(value);
-  //                     }
-  //                   }
-
-  //                   return isAvailble;
-  //                 }),
-  //                 setState(() {
-  //                   print(invoiceId);
-  //                   print(result.response?.toJson());
-  //                   _response = result.response?.toJson().toString();
-  //                 })
-  //               }
-  //             else
-  //               {
-  //                 setState(() {
-  //                   print(invoiceId);
-  //                   print(result.error?.toJson());
-  //                   _response = result.error?.message;
-  //                 })
-  //               }
-  //           });
-
-  //   setState(() {
-  //     _response = _loading;
-  //   });
-  // }
-
-  /*
-    Payment Enquiry
-   */
   void getPaymentStatus() {
     var request = MFPaymentStatusRequest(invoiceId: "12345");
 
@@ -674,7 +596,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
           children: [
             Consumer(
               builder: (context, ref, child) => FutureBuilder(
-                future: _fetchedRegioRequest,
+                future: _fetchedCarsRequest,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return SizedBox(
@@ -756,8 +678,6 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                               ?.regions ??
                                           [];
                                       setState(() {});
-
-                                      // log("carModelTaypesModel?.carModles?. ${carModelTaypesModel?.carModles?.length ?? 0}");
                                     },
                                   )),
                               // if (citiesModel?.regions?.isNotEmpty ?? false)
@@ -781,12 +701,6 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                               ?.firstWhere((element) =>
                                                   element.name == p0)
                                               .id;
-                                          // await _getCitiesData();
-                                          // citezModel = ref
-                                          //     .watch(staticsProvider)
-                                          //     .getCitiesDataList;
-
-                                          // setState(() {});
                                         },
                                       ))
                                   : Container(),
@@ -1456,7 +1370,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                           fontWeight: FontWeight.w500,
                         ),
                         CustomText(
-                          ' ر.س',
+                          '${"RS".tr()}',
                           fontSize: 18.sp,
                           color: AppColors.orange,
                           fontFamily: 'DINNextLTArabic',
@@ -1498,7 +1412,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                 "city_id": selectedCityId,
                                 "car_id": selectedCarId,
                                 "product_id": widget.serviceid,
-                                "payment_flag": 1,
+                                "payment_flag": 2,
                               }).then((value) async {
                                 if (value is! Failure) {
                                   if (value == null) {
@@ -1534,7 +1448,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                   'يجب اختار المنطقة والمدينة والسيارة المراد تنفيذ الخدمة عليها ');
                             }
                           },
-                          text: 'تنفيذ',
+                          text: 'pay now'.tr(),
                           circular: 10.w,
                           width: 240.w,
                         ),
@@ -1559,7 +1473,8 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                           ),
                           child: Center(
                             child: CustomText(
-                              '${widget.price} ر.س' ?? ' 100 ر.س',
+                              '${widget.price}${"RS".tr()}' ??
+                                  ' 100 ${"RS".tr()}',
                               color: AppColors.orange,
                               fontSize: 14.sp,
                               fontFamily: 'DINNextLTArabic',
@@ -1585,7 +1500,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                     const Padding(
                                       padding: EdgeInsets.all(5.0),
                                     ),
-                                    const Text("Select payment method"),
+                                    Text("Select payment method".tr()),
                                     const Padding(
                                       padding: EdgeInsets.all(5.0),
                                     ),
@@ -1618,11 +1533,50 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                                         MainAxisAlignment
                                                             .center,
                                                     children: <Widget>[
-                                                      Image.network(
-                                                          paymentMethods[index]
-                                                              .imageUrl!,
+                                                      CachedNetworkImage(
+                                                        width: 90.w,
+                                                        height: 90.h,
+                                                        imageUrl: paymentMethods[
+                                                                    index]
+                                                                .imageUrl ??
+                                                            'https://www.sayyarte.com/img/1678171026.png',
+                                                        imageBuilder: (context,
+                                                                imageProvider) =>
+                                                            Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            image: DecorationImage(
+                                                                image:
+                                                                    imageProvider,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                colorFilter:
+                                                                    ColorFilter.mode(
+                                                                        Colors
+                                                                            .red,
+                                                                        BlendMode
+                                                                            .dst)),
+                                                          ),
+                                                        ),
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            CircularProgressIndicator(),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            Image.network(
+                                                          'https://www.sayyarte.com/img/1678171026.png',
                                                           width: 90.w,
-                                                          height: 90.h),
+                                                          height: 90.h,
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                      ),
+
+                                                      // Image.network(
+                                                      //     paymentMethods[index]
+                                                      //             .imageUrl ??
+                                                      //         'https://www.sayyarte.com/img/1678171026.png',
+                                                      //     width: 90.w,
+                                                      //     height: 90.h),
                                                       Checkbox(
                                                           value:
                                                               isSelected[index],
@@ -1639,85 +1593,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                             );
                                           }),
                                     ),
-                                    // visibilityObs
-                                    //     ? Column(
-                                    //         children: <Widget>[
-                                    //           const Padding(
-                                    //             padding: EdgeInsets.all(5.0),
-                                    //           ),
-                                    //           TextField(
-                                    //             keyboardType:
-                                    //                 TextInputType.number,
-                                    //             decoration:
-                                    //                 const InputDecoration(
-                                    //                     labelText:
-                                    //                         "Card Number"),
-                                    //             controller:
-                                    //                 TextEditingController(
-                                    //                     text: cardNumber),
-                                    //             onChanged: (value) {
-                                    //               cardNumber = value;
-                                    //             },
-                                    //           ),
-                                    //           TextField(
-                                    //             keyboardType:
-                                    //                 TextInputType.number,
-                                    //             decoration:
-                                    //                 const InputDecoration(
-                                    //                     labelText:
-                                    //                         "Expiry Month"),
-                                    //             controller:
-                                    //                 TextEditingController(
-                                    //                     text: expiryMonth),
-                                    //             onChanged: (value) {
-                                    //               expiryMonth = value;
-                                    //             },
-                                    //           ),
-                                    //           TextField(
-                                    //             keyboardType:
-                                    //                 TextInputType.number,
-                                    //             decoration:
-                                    //                 const InputDecoration(
-                                    //                     labelText:
-                                    //                         "Expiry Year"),
-                                    //             controller:
-                                    //                 TextEditingController(
-                                    //                     text: expiryYear),
-                                    //             onChanged: (value) {
-                                    //               expiryYear = value;
-                                    //             },
-                                    //           ),
-                                    //           TextField(
-                                    //             keyboardType:
-                                    //                 TextInputType.number,
-                                    //             decoration:
-                                    //                 const InputDecoration(
-                                    //                     labelText:
-                                    //                         "Security Code"),
-                                    //             controller:
-                                    //                 TextEditingController(
-                                    //                     text: securityCode),
-                                    //             onChanged: (value) {
-                                    //               securityCode = value;
-                                    //             },
-                                    //           ),
-                                    //           TextField(
-                                    //             keyboardType:
-                                    //                 TextInputType.name,
-                                    //             decoration:
-                                    //                 const InputDecoration(
-                                    //                     labelText:
-                                    //                         "Card Holder Name"),
-                                    //             controller:
-                                    //                 TextEditingController(
-                                    //                     text: cardHolderName),
-                                    //             onChanged: (value) {
-                                    //               cardHolderName = value;
-                                    //             },
-                                    //           ),
-                                    //         ],
-                                    //       )
-                                    //     : Column(),
+
                                     Padding(
                                       padding: EdgeInsets.all(5.w),
                                     ),
@@ -1763,7 +1639,7 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                           }
                                         }
                                       },
-                                      title: 'Pay',
+                                      title: 'pay now'.tr(),
                                       textColor: AppColors.white,
                                       backgroundColor: AppColors.scadryColor,
                                     ),

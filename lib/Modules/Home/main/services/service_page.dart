@@ -42,6 +42,14 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
     return await prov.getServiecesDataRequset();
   }
 
+  Future _getServicesProductData(page, id) async {
+    final prov = ref.read(productsProvider);
+
+    return await prov.getProductDataByServisesRequset(id: id, page: page);
+  }
+
+  late Future _fetchedServiceProductsRequest;
+
   int updateServiceId(int service) {
     setState(() {
       serviceId = service;
@@ -70,6 +78,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
     _fetchedMyRequest = _getContentData();
     _fetchedProductRequest = _getProductsData(0);
     isSearch = false;
+    _fetchedServiceProductsRequest = _getServicesProductData(0, serviceId);
     super.initState();
   }
 
@@ -359,21 +368,93 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                       height: 48.h,
                                       child: Center(
                                         child: ListView.builder(
-                                            physics:
-                                                const ClampingScrollPhysics(),
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: serviecesModel
-                                                ?.services?.length,
-                                            itemBuilder: (BuildContext context,
-                                                    int index) =>
-                                                textButtonModel(
-                                                    serviecesModel
-                                                        ?.services?[index].name,
-                                                    serviecesModel
-                                                        ?.services?[index].id,
-                                                    serviecesModel
-                                                        ?.services?[index].id)),
+                                          physics:
+                                              const ClampingScrollPhysics(),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount:
+                                              serviecesModel?.services?.length,
+                                          itemBuilder: (BuildContext context,
+                                                  int index) =>
+                                              TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                pageIndex = index;
+                                                serviceId = serviecesModel
+                                                        ?.services?[index].id ??
+                                                    0;
+                                                _fetchedProductRequest =
+                                                    _getProductsData(0);
+                                                _fetchedServiceProductsRequest =
+                                                    _getServicesProductData(
+                                                        0,
+                                                        serviecesModel
+                                                            ?.services?[index]
+                                                            .id);
+                                              });
+                                            },
+                                            child: pageIndex == index
+                                                ? Container(
+                                                    padding:
+                                                        EdgeInsets.all(3.w),
+                                                    decoration: BoxDecoration(
+                                                      color: Color(0xffF57A38),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.w),
+                                                      // border: Border.all(color: Colors.grey),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        serviecesModel
+                                                                ?.services?[
+                                                                    index]
+                                                                .name ??
+                                                            '',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 12.sp,
+                                                            fontFamily:
+                                                                'DINNEXTLTARABIC',
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    // width: 60.w,
+                                                    // height: 30.h,
+                                                    padding:
+                                                        EdgeInsets.all(3.w),
+                                                    decoration: BoxDecoration(
+                                                      // color: Colors.orange[300],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.w),
+                                                      border: Border.all(
+                                                        color: const Color(
+                                                            0xffF57A38),
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      serviecesModel
+                                                              ?.services?[index]
+                                                              .name ??
+                                                          '',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12.sp,
+                                                          fontFamily:
+                                                              'DINNEXTLTARABIC',
+                                                          fontWeight: FontWeight
+                                                              .normal),
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),

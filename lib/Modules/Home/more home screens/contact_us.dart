@@ -64,6 +64,32 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
     _fetchedContactRequest = _getContactsData();
   }
 
+  Future<void> _makePhoneCall(String phoneNumber, scheme) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: scheme,
+      path: phoneNumber,
+    );
+    print("$launchUri");
+    await launch(launchUri.toString());
+  }
+
+  Future<void> _makePhoneEmailCall(String phoneNumber, scheme) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: scheme,
+      path: phoneNumber,
+    );
+    print("$launchUri");
+    await launch(launchUri.toString());
+  }
+
   var logo = Constants.blackLogo;
   @override
   Widget build(BuildContext context) {
@@ -257,16 +283,22 @@ class _ContactUsScreenScreenState extends ConsumerState<ContactUsScreen> {
                                             appContactDataModel
                                                     ?.info?.first.email ??
                                                 '', () {
-                                          _launchURL(appContactDataModel
-                                              ?.info?.first.email);
+                                          _makePhoneCall(
+                                              appContactDataModel
+                                                      ?.info?.first.email ??
+                                                  '***********',
+                                              'mailto');
                                         }),
                                         profCard(
                                             'mobile'.tr(),
                                             appContactDataModel
                                                     ?.info?.first.mobile ??
                                                 '', () {
-                                          _launchURL(appContactDataModel
-                                              ?.info?.first.mobile);
+                                          _makePhoneCall(
+                                              appContactDataModel
+                                                      ?.info?.first.mobile ??
+                                                  '00000',
+                                              'tel');
                                         }),
                                         profCard(
                                             'feacbook'.tr(),

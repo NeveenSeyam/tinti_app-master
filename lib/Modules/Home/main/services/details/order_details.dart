@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -48,7 +49,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
   int _currentPage = 0;
   late final _ratingController;
   bool? isShoow = false;
-  double rate = 0.0;
+  double rate = 1;
   double? _rating;
   IconData? _selectedIcon;
   Icon icon = Icon(
@@ -104,13 +105,20 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
               var productDetailsModel =
                   ref.watch(ordersProvider).getSingleOrder;
               var addToFavModel = ref.watch(favsProvider);
+              rate = ref
+                      .watch(ordersProvider)
+                      .getSingleOrder
+                      ?.order
+                      ?.rating
+                      ?.toDouble() ??
+                  0;
               // var removeFavModel = ref.watch(favsProvider);
               return ListView(
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 // mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
                         width: 180.w,
@@ -121,12 +129,30 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: Center(
-                                child: Image.network(
-                                  productDetailsModel?.order?.image ?? '',
-                                  alignment: Alignment.center,
-                                  fit: BoxFit.fill,
+                                child: CachedNetworkImage(
                                   width: 180.w,
                                   height: 150.h,
+                                  imageUrl: productDetailsModel?.order?.image ??
+                                      'https://www.sayyarte.com/img/1678171026.png',
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                          colorFilter: ColorFilter.mode(
+                                              Colors.red, BlendMode.dst)),
+                                    ),
+                                  ),
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Image.network(
+                                    'https://www.sayyarte.com/img/1678171026.png',
+                                    width: 180.w,
+                                    height: 150.h,
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                               ),
                             ),
@@ -138,51 +164,87 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                           // ),
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomText(
-                                productDetailsModel?.order?.name ??
-                                    'نانو سيراميك',
-                                color: AppColors.scadryColor,
-                                fontSize: 16.sp,
-                                fontFamily: 'DINNextLTArabic',
-                                textAlign: TextAlign.start,
-                              ),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              CustomText(
-                                productDetailsModel?.order?.service ??
-                                    'جونسون اند جونسون ',
-                                color: AppColors.orange,
-                                fontSize: 14.sp,
-                                fontFamily: 'DINNextLTArabic',
-                                textAlign: TextAlign.start,
-                              ),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              Row(
-                                children: [
-                                  CustomText(
-                                    "${productDetailsModel?.order?.rating ?? 0}",
+                      SizedBox(
+                        width: 15.w,
+                      ),
+                      Container(
+                        width: 160.w,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  productDetailsModel?.order?.name ??
+                                      'نانو سيراميك',
+                                  color: AppColors.scadryColor,
+                                  fontSize: 16.sp,
+                                  fontFamily: 'DINNextLTArabic',
+                                  textAlign: TextAlign.start,
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                SizedBox(
+                                  width: 160.w,
+                                  child: CustomText(
+                                    productDetailsModel?.order?.service ??
+                                        'جونسون اند جونسون ',
                                     color: AppColors.orange,
                                     fontSize: 14.sp,
                                     fontFamily: 'DINNextLTArabic',
                                     textAlign: TextAlign.start,
                                   ),
-                                  icon
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                Row(
+                                  children: [
+                                    CustomText(
+                                      "${productDetailsModel?.order?.rating ?? 0}",
+                                      color: AppColors.scadryColor,
+                                      fontSize: 14.sp,
+                                      fontFamily: 'DINNextLTArabic',
+                                      textAlign: TextAlign.start,
+                                    ),
+                                    SizedBox(
+                                      width: 15.w,
+                                    ),
+                                    if (rate >= 0 && rate < 1 ?? false)
+                                      Icon(
+                                        Icons.sentiment_very_dissatisfied,
+                                        color: Colors.red,
+                                      ),
+                                    if (rate >= 1 && rate < 2 ?? false)
+                                      Icon(
+                                        Icons.sentiment_neutral,
+                                        color: Colors.amber,
+                                      ),
+                                    if (rate >= 2 && rate < 3 ?? false)
+                                      Icon(
+                                        Icons.sentiment_satisfied,
+                                        color: Colors.lightGreen,
+                                      ),
+                                    if (rate >= 3 && rate < 4 ?? false)
+                                      Icon(
+                                        Icons.sentiment_very_satisfied,
+                                        color: Colors.green,
+                                      ),
+                                    if (rate >= 4 && rate <= 5 ?? false)
+                                      Icon(
+                                        Icons.sentiment_very_satisfied,
+                                        color: Colors.green,
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -196,26 +258,26 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                           height: 10.h,
                         ),
                         orderCard(
-                            'حالة الدفع',
+                            'payment states'.tr(),
                             productDetailsModel?.order?.paymentFlag ?? 'null',
                             false),
                         SizedBox(
                           height: 10.h,
                         ),
                         orderCard(
-                            'الشركة',
+                            'company'.tr(),
                             productDetailsModel?.order?.company ?? 'null',
                             false),
                         SizedBox(
                           height: 10.h,
                         ),
-                        orderCard('السيارة',
+                        orderCard('car'.tr(),
                             productDetailsModel?.order?.car ?? 'null', false),
                         SizedBox(
                           height: 10.h,
                         ),
                         orderCard(
-                            'الموقع',
+                            'address'.tr(),
                             productDetailsModel?.order?.region ?? 'null',
                             false),
                         SizedBox(
@@ -444,7 +506,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                       ],
                     ),
                   ),
-                  if (productDetailsModel?.order?.status == 'finnished' ||
+                  if (productDetailsModel?.order?.status == 'finished' ||
                           productDetailsModel?.order?.status == 'منتهي' ??
                       false)
                     Padding(
@@ -564,50 +626,6 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                                                             (rating) {
                                                           setState(() {
                                                             rate = rating;
-                                                            if (rating >= 1) {
-                                                              if (rating >= 2) {
-                                                                if (rating >=
-                                                                    3) {
-                                                                  if (rating >=
-                                                                      4) {
-                                                                    if (rating ==
-                                                                        5) {
-                                                                      icon =
-                                                                          Icon(
-                                                                        Icons
-                                                                            .sentiment_very_satisfied,
-                                                                        color: Colors
-                                                                            .green,
-                                                                      );
-                                                                    }
-                                                                    icon = Icon(
-                                                                      Icons
-                                                                          .sentiment_very_satisfied,
-                                                                      color: Colors
-                                                                          .green,
-                                                                    );
-                                                                  } else
-                                                                    icon = Icon(
-                                                                      Icons
-                                                                          .sentiment_satisfied,
-                                                                      color: Colors
-                                                                          .lightGreen,
-                                                                    );
-                                                                }
-                                                                icon = Icon(
-                                                                  Icons
-                                                                      .sentiment_neutral,
-                                                                  color: Colors
-                                                                      .amber,
-                                                                );
-                                                              } else
-                                                                icon = Icon(
-                                                                  Icons
-                                                                      .sentiment_very_dissatisfied,
-                                                                  color: Colors
-                                                                      .red,
-                                                                );
-                                                            }
                                                           });
                                                           print(rating);
                                                         },
@@ -644,27 +662,54 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                                                         height: 48.h,
                                                         circular: 10.w,
                                                         onPressed: () async {
-                                                          if (productDetailsModel
-                                                                  ?.order
-                                                                  ?.rating
-                                                                  .toString()
-                                                                  .isEmpty ??
-                                                              false)
-                                                            await ref
-                                                                .read(
-                                                                    ordersProvider)
-                                                                .addRateDataRequset(
-                                                                  id: productDetailsModel
-                                                                      ?.order
-                                                                      ?.id,
-                                                                  comments:
-                                                                      _comment
-                                                                          .text,
-                                                                  star_rating:
-                                                                      rate,
-                                                                );
-                                                          UIHelper.showNotification(
-                                                              'تم التقييم مسبقا');
+                                                          await ref
+                                                              .read(
+                                                                  ordersProvider)
+                                                              .addRateDataRequset(
+                                                                id: productDetailsModel
+                                                                    ?.order?.id,
+                                                                comments:
+                                                                    _comment
+                                                                        .text,
+                                                                star_rating:
+                                                                    rate,
+                                                              )
+                                                              .onError((error,
+                                                                      stackTrace) =>
+                                                                  UIHelper.showNotification(
+                                                                      ' تم التقييم مسبقا',
+                                                                      backgroundColor:
+                                                                          AppColors
+                                                                              .green))
+                                                              .then((value) {
+                                                            if (value !=
+                                                                false) {
+                                                              if (value ==
+                                                                  'الطلب غير موجود ') {
+                                                                UIHelper.showNotification(
+                                                                    ' تم التقييم مسبقا',
+                                                                    backgroundColor:
+                                                                        AppColors
+                                                                            .green);
+                                                              } else {
+                                                                UIHelper.showNotification(
+                                                                    'تم التقييم ',
+                                                                    backgroundColor:
+                                                                        AppColors
+                                                                            .green);
+                                                                setState(() {
+                                                                  _fetchedProducDetailsRequest =
+                                                                      _getProducDetailsData();
+                                                                  rate = productDetailsModel
+                                                                          ?.order
+                                                                          ?.rating
+                                                                          ?.toDouble() ??
+                                                                      0;
+                                                                });
+                                                              }
+                                                            } else {}
+                                                          });
+
                                                           Navigator.pop(
                                                               context);
                                                         },
@@ -726,8 +771,8 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                                 borderRadius: BorderRadius.circular(10.w)),
                             child: Center(
                               child: CustomText(
-                                '${productDetailsModel?.order?.price}   ر.س' ??
-                                    'ر.س 100 ',
+                                '${productDetailsModel?.order?.price}  ${"RS".tr()}' ??
+                                    ' 100 ${"RS".tr()}',
                                 color: AppColors.orange,
                                 fontSize: 14.sp,
                                 fontFamily: 'DINNextLTArabic',
@@ -766,8 +811,8 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                                 borderRadius: BorderRadius.circular(10.w)),
                             child: Center(
                               child: CustomText(
-                                '${productDetailsModel?.order?.price}   ر.س' ??
-                                    'ر.س 100 ',
+                                '${productDetailsModel?.order?.price}   ${"RS".tr()} ' ??
+                                    '${"RS".tr()} 100',
                                 color: AppColors.orange,
                                 fontSize: 14.sp,
                                 fontFamily: 'DINNextLTArabic',

@@ -126,6 +126,7 @@
     "services-companes":"Company's services",
     "search":"Search",
     "companys":"Companies",
+    "company":"Companiy",
     "rating":"Rating",
     "people":"People",
     "card-num":"Card number",
@@ -191,7 +192,29 @@
 "model_type":"Car Model type",
 "emailormobile":"Enter your email or mobile number ",
 
-"payment":"Payment Data "
+"payment":"Payment Data ",
+
+
+
+
+
+
+"try again":"Try again",
+"RS":"S.R",
+"pay now":"Pay now",
+"payment states":"Payment states ",
+"Select payment method":"Select payment method "
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

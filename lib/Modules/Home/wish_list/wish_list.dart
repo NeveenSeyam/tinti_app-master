@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -442,11 +443,28 @@ class _WishListCardState extends ConsumerState<WishListCard> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.w),
-                      child: Image.network(
-                        widget.image,
-                        fit: BoxFit.fill,
+                      child: CachedNetworkImage(
                         width: 148.w,
                         height: 150.h,
+                        imageUrl: widget.image ??
+                            'https://www.sayyarte.com/img/1678171026.png',
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.fill,
+                                colorFilter: ColorFilter.mode(
+                                    Colors.red, BlendMode.dst)),
+                          ),
+                        ),
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Image.network(
+                          'https://www.sayyarte.com/img/1678171026.png',
+                          width: 148.w,
+                          height: 150.h,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
                   ),
@@ -488,7 +506,7 @@ class _WishListCardState extends ConsumerState<WishListCard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              widget.price,
+                              "${widget.price} ${"RS".tr()}",
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 color: AppColors.scadryColor,
@@ -496,7 +514,7 @@ class _WishListCardState extends ConsumerState<WishListCard> {
                               ),
                             ),
                             CustomText(
-                              widget.salePrice,
+                              "${widget.salePrice} ${"RS".tr()}",
                               fontSize: 13.sp,
                               color: AppColors.orange,
                             ),
@@ -528,18 +546,19 @@ class _WishListCardState extends ConsumerState<WishListCard> {
                                   child: Container(
                                     width: 25.w,
                                     height: 24.h,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(3.w),
-                                      // border: Border.all(color: Colors.grey),
-                                    ),
+                                    // decoration: BoxDecoration(
+                                    //   color: Colors.grey[300],
+                                    //   borderRadius: BorderRadius.circular(3.w),
+                                    //   // border: Border.all(color: Colors.grey),
+                                    // ),
                                     child: Icon(
                                       widget.isFavorite == 0
-                                          ? Icons.favorite_border
+                                          ? Icons.favorite
                                           : Icons.favorite,
                                       color: widget.isFavorite == 0
-                                          ? AppColors.grey
+                                          ? AppColors.grey.withOpacity(0.5)
                                           : AppColors.orange,
+                                      size: 22.w,
                                     ),
                                   ),
                                 ),
@@ -547,15 +566,14 @@ class _WishListCardState extends ConsumerState<WishListCard> {
                                   width: 5,
                                 ),
                                 Container(
-                                  decoration: BoxDecoration(
-                                      color: AppColors.grey.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(5.w)),
+                                  // decoration: BoxDecoration(
+                                  //     color: AppColors.grey.withOpacity(0.2),
+                                  //     borderRadius: BorderRadius.circular(5.w)),
                                   padding: EdgeInsets.all(4.w),
-                                  child: Image.asset(
-                                    'assets/images/aaddd.png',
-                                    fit: BoxFit.fill,
-                                    width: 20.w,
+                                  child: Icon(
+                                    Icons.shopping_bag_outlined,
                                     color: AppColors.orange,
+                                    size: 23.w,
                                   ),
                                 ),
                               ],

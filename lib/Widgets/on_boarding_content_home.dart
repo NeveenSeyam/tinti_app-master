@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -96,12 +97,27 @@ class OnBoardingContentHome extends StatelessWidget {
                 padding: EdgeInsets.only(top: 10.w),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    image,
-                    alignment: Alignment.center,
-                    fit: BoxFit.fill,
+                  child: CachedNetworkImage(
                     width: 130.h,
                     height: 130.h,
+                    imageUrl:
+                        image ?? 'https://www.sayyarte.com/img/1678171026.png',
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.fill,
+                            colorFilter:
+                                ColorFilter.mode(Colors.red, BlendMode.dst)),
+                      ),
+                    ),
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Image.network(
+                      'https://www.sayyarte.com/img/1678171026.png',
+                      width: 130.h,
+                      height: 130.h,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
               ),

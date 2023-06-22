@@ -291,7 +291,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         border: Border.all(color: AppColors.lightgrey),
         color: AppColors.lightgrey),
   );
-
+  var smsId;
   var logo = Constants.logo;
 
   @override
@@ -568,7 +568,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                         }
                                         Navigator.pop(context);
 
-                                        var smsId = await authProvider
+                                        smsId = await authProvider
                                             .getSmsResultModel?.id;
                                         print('smsId $smsId');
                                         // ignore: use_build_context_synchronously
@@ -710,7 +710,33 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                                                   width: 5.w,
                                                                 ),
                                                                 GestureDetector(
-                                                                  onTap: () {},
+                                                                  onTap:
+                                                                      () async {
+                                                                    final smsSending =
+                                                                        await authProvider
+                                                                            .SentOtp(
+                                                                      lang: Constants
+                                                                              .lang ??
+                                                                          'ar',
+                                                                      number: mob
+                                                                          .replaceAll(
+                                                                              ' ',
+                                                                              '')
+                                                                          .replaceAll(
+                                                                              '-',
+                                                                              ''),
+                                                                      userName:
+                                                                          'mycar',
+                                                                      apiKey:
+                                                                          '91e86fe240dccf44aeaa51563ed0c03c',
+                                                                      userSender:
+                                                                          'sayyarte|سيارتي',
+                                                                    ).then((value) async {
+                                                                      smsId = await authProvider
+                                                                          .getSmsResultModel
+                                                                          ?.id;
+                                                                    });
+                                                                  },
                                                                   child:
                                                                       CustomText(
                                                                     'resent'

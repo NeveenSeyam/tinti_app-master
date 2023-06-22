@@ -17,7 +17,7 @@ class PageViewIndicatorCustom extends StatelessWidget {
       child: Container(
         height: 5.h,
         width: isCurrentPage ? 33.w : 18.w,
-        margin: EdgeInsetsDirectional.only(end: marginEnd),
+        margin: EdgeInsetsDirectional.only(start: marginEnd),
         decoration: BoxDecoration(
           color:
               isCurrentPage ? const Color(0xffF57A38) : const Color(0xffCCCCCC),

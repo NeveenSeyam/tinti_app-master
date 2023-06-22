@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,11 +51,28 @@ class _latestOffersCardState extends ConsumerState<latestOffersCard> {
                 : Container(),
             widget.img2 != ''
                 ? Center(
-                    child: Image.network(
-                      widget.image,
-                      fit: BoxFit.fill,
+                    child: CachedNetworkImage(
                       width: 148.w,
                       height: 106.h,
+                      imageUrl: widget.image ??
+                          'https://www.sayyarte.com/img/1678171026.png',
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
+                              colorFilter:
+                                  ColorFilter.mode(Colors.red, BlendMode.dst)),
+                        ),
+                      ),
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Image.network(
+                        'https://www.sayyarte.com/img/1678171026.png',
+                        width: 148.w,
+                        height: 106.h,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   )
                 : Center(
@@ -104,7 +123,7 @@ class _latestOffersCardState extends ConsumerState<latestOffersCard> {
                     ),
                   ),
                   Text(
-                    '${widget.price} ر.س',
+                    '${widget.price} ${"RS".tr()}',
                     style: TextStyle(
                       // fontWeight: FontWeight.bold,
                       fontSize: 13.sp,
@@ -133,18 +152,21 @@ class _latestOffersCardState extends ConsumerState<latestOffersCard> {
                     child: Container(
                       width: 25.w,
                       height: 24.h,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(3.w),
-                        // border: Border.all(color: Colors.grey),
-                      ),
-                      child: Icon(
-                        widget.is_favorite == 0
-                            ? Icons.favorite_border
-                            : Icons.favorite,
-                        color: widget.is_favorite == 0
-                            ? AppColors.grey
-                            : AppColors.orange,
+                      // decoration: BoxDecoration(
+                      //   color: Colors.grey[100],
+                      //   borderRadius: BorderRadius.circular(3.w),
+                      //   // border: Border.all(color: Colors.grey),
+                      // ),
+                      child: Center(
+                        child: Icon(
+                          widget.is_favorite == 0
+                              ? Icons.favorite
+                              : Icons.favorite,
+                          color: widget.is_favorite == 0
+                              ? AppColors.grey.withOpacity(0.5)
+                              : AppColors.orange,
+                          size: 23.w,
+                        ),
                       ),
                     ),
                   )

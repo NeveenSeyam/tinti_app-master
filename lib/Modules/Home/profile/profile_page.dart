@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -394,7 +395,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                           img ??
                                                                               File('path'),
                                                                           fit: BoxFit
-                                                                              .fill,
+                                                                              .cover,
                                                                         ),
                                                                       ),
                                                                     ),
@@ -465,11 +466,46 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                           child: SizedBox(
                                             width: 85.w,
                                             height: 85.h,
-                                            child: Image.network(
-                                              '${serviceModel.user?.img}',
-                                              fit: BoxFit.fill,
-                                              width: 85.w,
-                                              height: 85.w,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.w),
+                                              child: CachedNetworkImage(
+                                                width: 85.w,
+                                                height: 85.w,
+                                                imageUrl: serviceModel
+                                                        .user?.img ??
+                                                    'https://www.sayyarte.com/img/1678171026.png',
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover,
+                                                        colorFilter:
+                                                            ColorFilter.mode(
+                                                                Colors.red,
+                                                                BlendMode.dst)),
+                                                  ),
+                                                ),
+                                                placeholder: (context, url) =>
+                                                    CircularProgressIndicator(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Image.network(
+                                                  'https://www.sayyarte.com/img/1678171026.png',
+                                                  width: 85.w,
+                                                  height: 85.w,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+
+                                              //  Image.network(
+                                              //   '${serviceModel.user?.img ?? 'https://www.sayyarte.com/img/1678171026.png'}',
+                                              //   fit: BoxFit.cover,
+                                              //   width: 85.w,
+                                              //   height: 85.w,
+                                              // ),
                                             ),
                                           ),
                                         ),

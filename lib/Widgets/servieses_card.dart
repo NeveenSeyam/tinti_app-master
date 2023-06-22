@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -57,7 +58,8 @@ class _ServicesCardState extends ConsumerState<ServicesCard> {
                   )
                 : Center(
                     child: Image.network(
-                      widget.image,
+                      widget.image ??
+                          'https://www.sayyarte.com/img/1678171026.png',
                       fit: BoxFit.fill,
                       width: double.infinity,
                       height: 106.h,
@@ -101,7 +103,7 @@ class _ServicesCardState extends ConsumerState<ServicesCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomText(
-                        '${widget.price} ر.س',
+                        '${widget.price}${"RS".tr()}',
 
                         // fontWeight: FontWeight.bold,
                         fontSize: 13.sp, overflow: TextOverflow.ellipsis,
@@ -136,11 +138,12 @@ class _ServicesCardState extends ConsumerState<ServicesCard> {
                           // ),
                           child: Icon(
                             widget.is_favorite == 0
-                                ? Icons.favorite_border
+                                ? Icons.favorite
                                 : Icons.favorite,
                             color: widget.is_favorite == 0
-                                ? AppColors.grey
+                                ? AppColors.grey.withOpacity(0.5)
                                 : AppColors.orange,
+                            size: 23.w,
                           ),
                         ),
                       )

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,11 +67,28 @@ class OrderListCard extends StatelessWidget {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.w),
-                      child: Image.network(
-                        image,
-                        fit: BoxFit.fill,
-                        width: 148.w,
-                        height: 106.h,
+                      child: CachedNetworkImage(
+                        width: 130.h,
+                        height: 130.h,
+                        imageUrl: image ??
+                            'https://www.sayyarte.com/img/1678171026.png',
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.fill,
+                                colorFilter: ColorFilter.mode(
+                                    Colors.red, BlendMode.dst)),
+                          ),
+                        ),
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Image.network(
+                          'https://www.sayyarte.com/img/1678171026.png',
+                          width: 130.h,
+                          height: 130.h,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
                   ),
@@ -121,9 +139,18 @@ class OrderListCard extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CustomText(
-                              '\$ ${price}  ',
-                              fontSize: 13.sp,
+                            Row(
+                              children: [
+                                CustomText(
+                                  '${price} ',
+                                  fontSize: 13.sp,
+                                ),
+                                CustomText(
+                                  '${"RS".tr()} ',
+                                  color: AppColors.orange,
+                                  fontSize: 13.sp,
+                                ),
+                              ],
                             ),
                             Container(
                               height: 34.h,
@@ -131,7 +158,7 @@ class OrderListCard extends StatelessWidget {
                               decoration: BoxDecoration(
                                   color: stats != 'finished'.tr()
                                       ? AppColors.orange
-                                      : AppColors.grey.withOpacity(0.5),
+                                      : AppColors.scadryColor.withOpacity(0.5),
                                   borderRadius: BorderRadius.circular(10.w)),
                               child: Center(
                                 child: TextButton(
@@ -141,7 +168,7 @@ class OrderListCard extends StatelessWidget {
                                       textAlign: TextAlign.center,
                                       color: stats != 'finished'.tr()
                                           ? AppColors.white
-                                          : AppColors.black,
+                                          : AppColors.white,
                                       fontFamily: 'DINNextLTArabic',
                                       fontSize: 12.sp,
                                     )),

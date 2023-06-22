@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,6 +43,8 @@ class _SaelsScreenCardCardState extends ConsumerState<SaelsScreenCardCard> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.w), color: AppColors.white),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,123 +57,133 @@ class _SaelsScreenCardCardState extends ConsumerState<SaelsScreenCardCard> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.w),
-                    child: Image.network(
-                      widget.image,
-                      fit: BoxFit.fill,
-                      width: 148.w,
+                    child: CachedNetworkImage(
                       height: 150.h,
+                      imageUrl: widget.image ??
+                          'https://www.sayyarte.com/img/1678171026.png',
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
+                              colorFilter:
+                                  ColorFilter.mode(Colors.red, BlendMode.dst)),
+                        ),
+                      ),
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Image.network(
+                        'https://www.sayyarte.com/img/1678171026.png',
+                        height: 150.h,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(
                   width: 10.w,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 200.w,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CustomText(
-                            widget.title,
-                            fontSize: 13.sp,
-                          ),
-                        ],
+                Container(
+                  height: 150.h,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SizedBox(
+                        width: 200.w,
+                        child: CustomText(
+                          widget.title,
+                          fontSize: 13.sp,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 200.w,
-                      child: CustomText(
-                        widget.details,
-                        fontSize: 12.sp,
-                        color: AppColors.grey,
+                      SizedBox(
+                        width: 200.w,
+                        child: CustomText(
+                          widget.details,
+                          fontSize: 12.sp,
+                          color: AppColors.grey,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 200.w,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            widget.lastPrice,
-                            style: TextStyle(
-                              color: Colors.orange,
-                              // fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.lineThrough,
+                      SizedBox(
+                        width: 200.w,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${widget.lastPrice}${"RS".tr()}",
+                              style: TextStyle(
+                                color: Colors.orange,
+                                // fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.lineThrough,
 
-                              fontSize: 12.sp,
-                              fontFamily: 'DINNextLTArabic',
+                                fontSize: 12.sp,
+                                fontFamily: 'DINNextLTArabic',
+                              ),
                             ),
-                          ),
-                          CustomText(
-                            widget.price,
-                            fontSize: 13.sp,
-                          ),
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    widget.isFavorite == 1
-                                        ? widget.isFavorite = 0
-                                        : widget.isFavorite = 1;
+                            CustomText(
+                              "${widget.price}${"RS".tr()}",
+                              fontSize: 13.sp,
+                            ),
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      widget.isFavorite == 1
+                                          ? widget.isFavorite = 0
+                                          : widget.isFavorite = 1;
 
-                                    widget.isFavorite == 1
-                                        ? isFav = 0
-                                        : isFav = 1;
-                                    var favModel = ref.watch(favsProvider);
+                                      widget.isFavorite == 1
+                                          ? isFav = 0
+                                          : isFav = 1;
+                                      var favModel = ref.watch(favsProvider);
 
-                                    if (widget.isFavorite != 0) {
-                                      favModel.addFavRequset(id: widget.id);
-                                    } else {
-                                      favModel.removeFavRequset(id: widget.id);
-                                      //  _fetchedFvsRequest = _getFavsData();
+                                      if (widget.isFavorite != 0) {
+                                        favModel.addFavRequset(id: widget.id);
+                                      } else {
+                                        favModel.removeFavRequset(
+                                            id: widget.id);
+                                        //  _fetchedFvsRequest = _getFavsData();
 
-                                      //   _fetchedFvsRequest;
-                                    }
-                                  });
-                                },
-                                child: Container(
-                                  width: 25.w,
-                                  height: 24.h,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(3.w),
-                                    // border: Border.all(color: Colors.grey),
+                                        //   _fetchedFvsRequest;
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 25.w,
+                                    height: 24.h,
+                                    child: Icon(
+                                      widget.isFavorite == 0
+                                          ? Icons.favorite
+                                          : Icons.favorite,
+                                      color: widget.isFavorite == 0
+                                          ? AppColors.grey.withOpacity(0.5)
+                                          : AppColors.orange,
+                                      size: 22.w,
+                                    ),
                                   ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Container(
+                                  // decoration: BoxDecoration(
+                                  //     color: AppColors.grey.withOpacity(0.2),
+                                  //     borderRadius: BorderRadius.circular(5.w)),
+                                  padding: EdgeInsets.all(4.w),
                                   child: Icon(
-                                    widget.isFavorite == 0
-                                        ? Icons.favorite_border
-                                        : Icons.favorite,
-                                    color: widget.isFavorite == 0
-                                        ? AppColors.grey
-                                        : AppColors.orange,
+                                    Icons.shopping_bag_outlined,
+                                    color: AppColors.orange,
+                                    size: 23.w,
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: AppColors.grey.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(5.w)),
-                                padding: EdgeInsets.all(4.w),
-                                child: Image.asset(
-                                  'assets/images/aaddd.png',
-                                  fit: BoxFit.fill,
-                                  width: 20.w,
-                                  color: AppColors.orange,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

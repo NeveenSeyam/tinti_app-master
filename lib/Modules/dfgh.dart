@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -118,10 +119,25 @@ class _InfiniteScrollPackageState extends State<InfiniteScrollPackage> {
       child: Column(
         children: [
           //
-          Image.network(
-            imageUrl,
-            width: 64,
+          CachedNetworkImage(
+            imageUrl: imageUrl,
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                    colorFilter:
+                        ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+              ),
+            ),
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
+
+          // Image.network(
+          //   imageUrl,
+          //   width: 64,
+          // ),
           //
           SizedBox(
             height: 12.0,

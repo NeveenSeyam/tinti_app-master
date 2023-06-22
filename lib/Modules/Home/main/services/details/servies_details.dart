@@ -94,6 +94,17 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
               var productDetailsModel =
                   ref.watch(productsProvider).getSingleProduct;
               var addToFavModel = ref.watch(favsProvider);
+              var length = ref
+                  .watch(productsProvider)
+                  .getSingleProduct
+                  ?.product
+                  ?.productImages
+                  ?.length;
+              var images = ref
+                  .watch(productsProvider)
+                  .getSingleProduct
+                  ?.product
+                  ?.productImages;
               // var removeFavModel = ref.watch(favsProvider);
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,25 +115,44 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                       width: 370.w,
                       height: 200.h,
                       child: SizedBox(
-                        child: CarouselSlider.builder(
-                          itemCount: productDetailsModel
-                                  ?.product?.productImages?.length ??
-                              0,
-                          itemBuilder: (BuildContext context, int itemIndex,
-                                  int pageViewIndex) =>
-                              ServiesImages(
-                            image: productDetailsModel?.product
-                                    ?.productImages?[itemIndex].image ??
-                                'http://sayyarte.com/img/1676279090.jpg',
-                          ),
-                          options: CarouselOptions(
-                            autoPlay: true,
-                            enlargeCenterPage: true,
-                            viewportFraction: 01,
-                            aspectRatio: 2.0,
-                            initialPage: 1,
-                          ),
-                        ),
+                        child: length != 0
+                            ? CarouselSlider.builder(
+                                itemCount: productDetailsModel
+                                        ?.product?.productImages?.length ??
+                                    0,
+                                itemBuilder: (BuildContext context,
+                                        int itemIndex, int pageViewIndex) =>
+                                    ServiesImages(
+                                  image: productDetailsModel?.product
+                                          ?.productImages?[itemIndex].image ??
+                                      'https://www.sayyarte.com/img/1678171026.png',
+                                ),
+                                options: CarouselOptions(
+                                  autoPlay: true,
+                                  enlargeCenterPage: true,
+                                  viewportFraction: 01,
+                                  aspectRatio: 2.0,
+                                  initialPage: 1,
+                                ),
+                              )
+                            : CarouselSlider.builder(
+                                itemCount: productDetailsModel
+                                        ?.product?.productImages?.length ??
+                                    0,
+                                itemBuilder: (BuildContext context,
+                                        int itemIndex, int pageViewIndex) =>
+                                    ServiesImages(
+                                  image:
+                                      'https://www.sayyarte.com/img/1678171026.png',
+                                ),
+                                options: CarouselOptions(
+                                  autoPlay: true,
+                                  enlargeCenterPage: true,
+                                  viewportFraction: 01,
+                                  aspectRatio: 2.0,
+                                  initialPage: 1,
+                                ),
+                              ),
                       ),
                     ),
                   ),
@@ -178,18 +208,19 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                               child: Container(
                                 width: 25.w,
                                 height: 24.h,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(3.w),
-                                  // border: Border.all(color: Colors.grey),
-                                ),
+                                // decoration: BoxDecoration(
+                                //   color: Colors.grey[300],
+                                //   borderRadius: BorderRadius.circular(3.w),
+                                //   // border: Border.all(color: Colors.grey),
+                                // ),
                                 child: Icon(
                                   widget.isFavorite == 0
-                                      ? Icons.favorite_border
+                                      ? Icons.favorite
                                       : Icons.favorite,
                                   color: widget.isFavorite == 0
-                                      ? AppColors.grey
+                                      ? AppColors.grey.withOpacity(0.5)
                                       : AppColors.orange,
+                                  size: 30.w,
                                 ),
                               ),
                             )
@@ -421,8 +452,8 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                               ],
                               borderRadius: BorderRadius.circular(10.w)),
                           child: CustomText(
-                            'ر.س ${productDetailsModel?.product?.salePrice}' ??
-                                'ر.س 100 ',
+                            ' ${productDetailsModel?.product?.salePrice} ${"RS".tr()}' ??
+                                ' 100 ${"RS".tr()}',
                             color: AppColors.orange,
                             fontSize: 12.sp,
                             fontFamily: 'DINNextLTArabic',
