@@ -9,6 +9,7 @@ import 'package:tinti_app/Widgets/custom_text.dart';
 import 'package:tinti_app/provider/products_provider.dart';
 
 import '../../../Helpers/failure.dart';
+import '../../../Models/product/company_products_model copy.dart';
 import '../../../Widgets/custom_appbar.dart';
 import '../../../Widgets/loader_widget.dart';
 import '../../../Widgets/text_widget.dart';
@@ -40,13 +41,47 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
   }
 
   late Future _fetchedMyRequest;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
-    _fetchedMyRequest = _getContentData(0);
+    _fetchedMyRequest = _getContentData(1);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _scrollController.addListener(() async {
+        print("object");
+
+        if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+          var portalRequset =
+              ref.watch(productsProvider).getProductsCompanyDataList;
+          if ((portalRequset?.success?.pageNumber ?? 0) <
+              (portalRequset?.success?.totalPages ?? 0)) {
+            print("has more pages");
+            setState(() {
+              showLoding = true;
+            });
+            final prov = ref.read(productsProvider);
+
+            await prov
+                .getProductDataByCompanyRequsett(
+                    id: widget.id,
+                    page: (portalRequset?.success?.pageNumber ?? 0) + 1,
+                    isNewProduct: false)
+                .then((value) {
+              setState(() {
+                showLoding = false;
+              });
+              setState(() {});
+            });
+          }
+        }
+      });
+    });
 
     super.initState();
   }
+
+  bool showLoding = false;
 
   @override
   Widget build(BuildContext context) {
@@ -222,8 +257,8 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                                             ref.watch(productsProvider);
                                         // print('linght ${productModel}');
                                         return GridView.builder(
-                                            physics:
-                                                const ClampingScrollPhysics(),
+                                            physics: BouncingScrollPhysics(),
+                                            controller: _scrollController,
                                             gridDelegate:
                                                 const SliverGridDelegateWithMaxCrossAxisExtent(
                                               maxCrossAxisExtent: 240,
@@ -321,20 +356,6 @@ class _CompanyProfileState extends ConsumerState<CompanyProfile> {
                                                               fit: BoxFit.fill,
                                                             ),
                                                           ),
-
-                                                          //  Image.network(
-                                                          //   productModel
-                                                          //           .getProductsCompanyDataList
-                                                          //           ?.success
-                                                          //           ?.items?[
-                                                          //               index]
-                                                          //           .image ??
-                                                          //       'https://www.sayyarte.com/img/1678171026.png',
-                                                          //   height: 100.h,
-                                                          //   width:
-                                                          //       double.infinity,
-                                                          //   fit: BoxFit.fill,
-                                                          // ),
                                                         ),
                                                         Padding(
                                                           padding:

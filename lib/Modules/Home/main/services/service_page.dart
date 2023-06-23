@@ -34,7 +34,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
   int serviceId = 1;
   bool isSearch = false;
   int pageIndex = 1;
-
+  var hight = 620.h;
   String? dataSearch;
   Future _getContentData() async {
     final prov = ref.read(servicesProvider);
@@ -42,6 +42,55 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
     return await prov.getServiecesDataRequset();
   }
 
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    ref.read(productsProvider).cleanProductsBySirvesList();
+    _fetchedMyRequest = _getContentData();
+    _fetchedProductRequest = _getProductsData(1);
+    isSearch = false;
+    _fetchedServiceProductsRequest = _getServicesProductData(0, serviceId);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _scrollController.addListener(() async {
+        print("object");
+
+        if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+          var portalRequset =
+              ref.watch(productsProvider).getProductsSellsDataList ??
+                  ProductModel();
+          if ((portalRequset.success?.pageNumber ?? 0) <
+              (portalRequset.success?.totalPages ?? 0)) {
+            print("has more pages");
+            setState(() {
+              showLoding = true;
+              hight = 590.h;
+            });
+            final prov = ref.read(productsProvider);
+
+            await prov
+                .getProductDataByServisesRequset(
+                    id: serviceId,
+                    page: (portalRequset.success?.pageNumber ?? 0) + 1,
+                    isNewProduct: false)
+                .then((value) {
+              setState(() {
+                showLoding = false;
+                hight = 620.h;
+              });
+              setState(() {});
+            });
+          }
+        }
+      });
+    });
+    super.initState();
+  }
+// try now
+
+  bool showLoding = false;
   Future _getServicesProductData(page, id) async {
     final prov = ref.read(productsProvider);
 
@@ -72,15 +121,6 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
   }
 
   late Future _fetchedProductRequest;
-
-  @override
-  void initState() {
-    _fetchedMyRequest = _getContentData();
-    _fetchedProductRequest = _getProductsData(0);
-    isSearch = false;
-    _fetchedServiceProductsRequest = _getServicesProductData(0, serviceId);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -499,95 +539,97 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                                 bottom: 20.h),
                                             child: SizedBox(
                                               height: 620.h,
-                                              child: GridView.builder(
-                                                  // physics: BouncingScrollPhysics(),
-                                                  shrinkWrap: true,
-                                                  gridDelegate:
-                                                      const SliverGridDelegateWithMaxCrossAxisExtent(
-                                                          maxCrossAxisExtent:
-                                                              300,
-                                                          childAspectRatio:
-                                                              2 / 2.3,
-                                                          crossAxisSpacing: 10,
-                                                          mainAxisSpacing: 10),
-                                                  itemCount:
-                                                      productByServiceModel
-                                                              .success
-                                                              ?.items
-                                                              ?.length ??
-                                                          0,
-                                                  itemBuilder:
-                                                      (BuildContext ctx,
-                                                          index) {
-                                                    return GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  ServiceDetailsScreen(
-                                                                    id: productByServiceModel
-                                                                            .success
-                                                                            ?.items?[index]
-                                                                            .id ??
-                                                                        0,
-                                                                    row_id: productByServiceModel
-                                                                            .success
-                                                                            ?.items?[index]
-                                                                            .id ??
-                                                                        0,
-                                                                    isFavorite: productByServiceModel
-                                                                            .success
-                                                                            ?.items?[index]
-                                                                            .is_favorite ??
-                                                                        0,
-                                                                  )),
-                                                        );
-                                                        print(
-                                                            ' sssssssss ${productByServiceModel.success?.items?.length}');
-                                                      },
-                                                      child: ServicesCard(
-                                                          // productByServiceModel.Products.length ??
-                                                          productByServiceModel
-                                                                  .success
-                                                                  ?.items?[
-                                                                      index]
-                                                                  .image ??
-                                                              'assets/images/sa1.jpeg',
-                                                          productByServiceModel
-                                                                  .success
-                                                                  ?.items?[
-                                                                      index]
-                                                                  .name ??
-                                                              ' تظليل',
-                                                          productByServiceModel
-                                                                  .success
-                                                                  ?.items?[
-                                                                      index]
-                                                                  .description ??
-                                                              'شركة جونسون اد جونسون.',
-                                                          productByServiceModel
-                                                                  .success
-                                                                  ?.items?[
-                                                                      index]
-                                                                  .price ??
-                                                              '355',
-                                                          '',
-                                                          '',
-                                                          productByServiceModel
-                                                                  .success
-                                                                  ?.items?[
-                                                                      index]
-                                                                  .is_favorite ??
-                                                              0,
-                                                          productByServiceModel
-                                                                  .success
-                                                                  ?.items?[
-                                                                      index]
-                                                                  .id ??
-                                                              0),
-                                                    );
-                                                  }),
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(
+                                                    height: hight,
+                                                    child: GridView.builder(
+                                                        // physics: BouncingScrollPhysics(),
+                                                        shrinkWrap: true,
+                                                        controller:
+                                                            _scrollController,
+                                                        gridDelegate:
+                                                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                                                maxCrossAxisExtent:
+                                                                    300,
+                                                                childAspectRatio:
+                                                                    2 / 2.3,
+                                                                crossAxisSpacing:
+                                                                    10,
+                                                                mainAxisSpacing:
+                                                                    10),
+                                                        itemCount:
+                                                            productByServiceModel
+                                                                    .success
+                                                                    ?.items
+                                                                    ?.length ??
+                                                                0,
+                                                        itemBuilder:
+                                                            (BuildContext ctx,
+                                                                index) {
+                                                          return GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            ServiceDetailsScreen(
+                                                                              id: productByServiceModel.success?.items?[index].id ?? 0,
+                                                                              row_id: productByServiceModel.success?.items?[index].id ?? 0,
+                                                                              isFavorite: productByServiceModel.success?.items?[index].is_favorite ?? 0,
+                                                                            )),
+                                                              );
+                                                              print(
+                                                                  ' sssssssss ${productByServiceModel.success?.items?.length}');
+                                                            },
+                                                            child: ServicesCard(
+                                                                // productByServiceModel.Products.length ??
+                                                                productByServiceModel
+                                                                        .success
+                                                                        ?.items?[
+                                                                            index]
+                                                                        .image ??
+                                                                    'assets/images/sa1.jpeg',
+                                                                productByServiceModel
+                                                                        .success
+                                                                        ?.items?[
+                                                                            index]
+                                                                        .name ??
+                                                                    ' تظليل',
+                                                                productByServiceModel
+                                                                        .success
+                                                                        ?.items?[
+                                                                            index]
+                                                                        .description ??
+                                                                    'شركة جونسون اد جونسون.',
+                                                                productByServiceModel
+                                                                        .success
+                                                                        ?.items?[
+                                                                            index]
+                                                                        .price ??
+                                                                    '355',
+                                                                '',
+                                                                '',
+                                                                productByServiceModel
+                                                                        .success
+                                                                        ?.items?[
+                                                                            index]
+                                                                        .is_favorite ??
+                                                                    0,
+                                                                productByServiceModel
+                                                                        .success
+                                                                        ?.items?[
+                                                                            index]
+                                                                        .id ??
+                                                                    0),
+                                                          );
+                                                        }),
+                                                  ),
+                                                  if (showLoding)
+                                                    CircularProgressIndicator(),
+                                                ],
+                                              ),
                                             ),
                                           );
                                         }
@@ -595,9 +637,6 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                       },
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 20.h,
-                                  )
                                 ],
                               );
                             }

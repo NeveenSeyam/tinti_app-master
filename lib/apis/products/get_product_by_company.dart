@@ -8,13 +8,11 @@ class GetProductByCompanyApi extends BaseDioApi {
   GetProductByCompanyApi({
     required this.id,
     required this.page,
-  }) : super(ApiUrls.showproductByCompany(id: id));
+  }) : super(ApiUrls.showproductByCompany(id: id, page: page));
 
   @override
   body() {
-    return {
-      "page": page,
-    };
+    return {};
   }
 
   Future fetch() async {

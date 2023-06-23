@@ -5,13 +5,11 @@ class GetSalesProductsDataApi extends BaseDioApi {
   int page;
 
   GetSalesProductsDataApi({required this.page})
-      : super(ApiUrls.salePoductsPage);
+      : super(ApiUrls.salePoductsPage(page: page));
 
   @override
   body() {
-    return {
-      "page": page,
-    };
+    return {};
   }
 
   Future fetch() async {

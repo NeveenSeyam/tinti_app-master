@@ -51,15 +51,17 @@ class ApiUrls {
       '${baseUrl}api/favorites/${id.toString()}}';
 
   //api/products
-  static String allProductsPage = '${baseUrl}api/all_products';
-  static String salePoductsPage = '${baseUrl}api/sale_products';
+  static String allProductsPage({required page}) =>
+      '${baseUrl}api/all_products?page=$page';
+  static String salePoductsPage({required page}) =>
+      '${baseUrl}api/sale_products?page=$page';
 
   static String singleProductPage({required id}) =>
       '${baseUrl}api/product/${id.toString()}';
-  static String showproductByServises({required id}) =>
-      '${baseUrl}api/products/${id.toString()}';
-  static String showproductByCompany({required id}) =>
-      '${baseUrl}api/products_company/${id.toString()}';
+  static String showproductByServises({required id, page}) =>
+      '${baseUrl}api/products/${id.toString()}?page=$page';
+  static String showproductByCompany({required id, page}) =>
+      '${baseUrl}api/products_company/${id.toString()}?page=$page';
 
   //api/services
   static String servicesList = '${baseUrl}api/services';

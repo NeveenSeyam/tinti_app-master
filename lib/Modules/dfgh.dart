@@ -124,10 +124,9 @@ class _InfiniteScrollPackageState extends State<InfiniteScrollPackage> {
             imageBuilder: (context, imageProvider) => Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                    colorFilter:
-                        ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             placeholder: (context, url) => CircularProgressIndicator(),

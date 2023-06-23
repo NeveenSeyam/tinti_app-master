@@ -6,13 +6,11 @@ class GetProductByServisesApi extends BaseDioApi {
   int page;
 
   GetProductByServisesApi({required this.id, required this.page})
-      : super(ApiUrls.showproductByServises(id: id));
+      : super(ApiUrls.showproductByServises(id: id, page: page));
 
   @override
   body() {
-    return {
-      "page": page,
-    };
+    return {};
   }
 
   Future fetch() async {

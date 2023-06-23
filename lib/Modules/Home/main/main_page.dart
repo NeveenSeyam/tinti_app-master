@@ -79,18 +79,52 @@ class _MainPageState extends ConsumerState<MainPage> {
 
   late Future _fetchedMyRequest;
   late Future _fetchedSalesProductsRequest;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     _fetchedServiceRequest = _getServicesContentData();
-    _fetchedServiceProductsRequest = _getServicesProductData(0);
+    _fetchedServiceProductsRequest = _getServicesProductData(1);
     _fetchedMyRequest = _getContentData();
-    _fetchedSalesProductsRequest = _getSalesProductContentData(0);
+    _fetchedSalesProductsRequest = _getSalesProductContentData(1);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _scrollController.addListener(() async {
+        print("object");
+
+        if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+          var portalRequset =
+              ref.watch(productsProvider).getProductsSellsDataList ??
+                  ProductModel();
+          if ((portalRequset.success?.pageNumber ?? 0) <
+              (portalRequset.success?.totalPages ?? 0)) {
+            print("has more pages");
+            setState(() {
+              showLoding = true;
+            });
+            final prov = ref.read(productsProvider);
+
+            await prov
+                .getSalesProductDataRequset(
+                    page: (portalRequset.success?.pageNumber ?? 0) + 1,
+                    isNewProduct: false)
+                .then((value) {
+              setState(() {
+                showLoding = false;
+              });
+              setState(() {});
+            });
+          }
+        }
+      });
+    });
 
     super.initState();
     _pageController = PageController();
   }
+
+  bool showLoding = false;
 
   @override
   void dispose() {
@@ -362,112 +396,139 @@ class _MainPageState extends ConsumerState<MainPage> {
                         ),
                         SizedBox(
                           height: 235.h,
-                          child: Consumer(
-                            builder: (context, ref, child) => FutureBuilder(
-                              future: _fetchedSalesProductsRequest,
-                              builder: (context, snapshot) {
-                                // if (snapshot.connectionState ==
-                                //     ConnectionState.waiting) {
-                                //   return SizedBox(
-                                //     height: 70.h,
-                                //     child: const Center(
-                                //       child: LoaderWidget(),
-                                //     ),
-                                //   );
-                                // }
-                                if (snapshot.hasError) {
-                                  return Center(
-                                    child: Text('Error: ${snapshot.error}'),
-                                  );
-                                }
-                                if (snapshot.hasData) {
-                                  if (snapshot.data is Failure) {
-                                    return Center(
-                                        child: TextWidget(
-                                            snapshot.data.toString()));
-                                  }
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Consumer(
+                                  builder: (context, ref, child) =>
+                                      FutureBuilder(
+                                    future: _fetchedSalesProductsRequest,
+                                    builder: (context, snapshot) {
+                                      // if (snapshot.connectionState ==
+                                      //     ConnectionState.waiting) {
+                                      //   return SizedBox(
+                                      //     height: 70.h,
+                                      //     child: const Center(
+                                      //       child: LoaderWidget(),
+                                      //     ),
+                                      //   );
+                                      // }
+                                      if (snapshot.hasError) {
+                                        return Center(
+                                          child:
+                                              Text('Error: ${snapshot.error}'),
+                                        );
+                                      }
+                                      if (snapshot.hasData) {
+                                        if (snapshot.data is Failure) {
+                                          return Center(
+                                              child: TextWidget(
+                                                  snapshot.data.toString()));
+                                        }
 
-                                  var productModel = ref
-                                      .watch(productsProvider)
-                                      .getProductsSellsDataList;
-                                  print(
-                                      'aaaa ${productModel?.success?.items?.length}');
+                                        var productModel = ref
+                                            .watch(productsProvider)
+                                            .getProductsSellsDataList;
+                                        print(
+                                            'aaaa ${productModel?.success?.items?.length}');
 
-                                  return Padding(
-                                    padding: EdgeInsetsDirectional.only(
-                                        start: 15.w, top: 5.h),
-                                    child: ListView.builder(
-                                      physics: const BouncingScrollPhysics(),
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount:
-                                          productModel?.success?.items?.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) =>
-                                              GestureDetector(
-                                        onTap: () {
-                                          // Navigator.push(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //       builder: (context) => SaelsScreen()),
-                                          // );
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ServiceDetailsScreen(
-                                                      id: productModel
-                                                              ?.success
-                                                              ?.items?[index]
-                                                              .id ??
-                                                          0,
-                                                      row_id: productModel
-                                                              ?.success
-                                                              ?.items?[index]
-                                                              .id ??
-                                                          0,
-                                                      isFavorite: productModel
-                                                              ?.success
-                                                              ?.items?[index]
-                                                              .is_favorite ??
-                                                          0,
-                                                    )),
-                                          );
-                                        },
-                                        child: latestOffersCard(
-                                            // productModel?.image ??
-                                            productModel?.success?.items?[index]
-                                                    .image ??
-                                                'assets/images/sa1.jpeg',
-                                            productModel?.success?.items?[index]
-                                                    .name ??
-                                                'تنظيف بالبخار ',
-                                            productModel?.success?.items?[index]
-                                                    .service ??
-                                                'شركة ليومار',
-                                            productModel?.success?.items?[index]
-                                                    .salePrice ??
-                                                '355',
-                                            'assets/images/cardtile.png',
-                                            productModel?.success?.items?[index]
-                                                    .price ??
-                                                '460 ر.س',
-                                            productModel?.success?.items?[index]
-                                                    .is_favorite ??
-                                                0,
-                                            productModel
-                                                    ?.success?.items?[index].id
-                                                    .toString() ??
-                                                '0'),
-                                      ),
-                                    ),
-                                  );
-                                }
-                                return Container();
-                              },
-                            ),
+                                        return Padding(
+                                          padding: EdgeInsetsDirectional.only(
+                                              start: 15.w, top: 5.h),
+                                          child: ListView.builder(
+                                            physics:
+                                                const BouncingScrollPhysics(),
+                                            shrinkWrap: true,
+                                            controller: _scrollController,
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: productModel
+                                                ?.success?.items?.length,
+                                            itemBuilder: (BuildContext context,
+                                                    int index) =>
+                                                GestureDetector(
+                                              onTap: () {
+                                                // Navigator.push(
+                                                //   context,
+                                                //   MaterialPageRoute(
+                                                //       builder: (context) => SaelsScreen()),
+                                                // );
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ServiceDetailsScreen(
+                                                            id: productModel
+                                                                    ?.success
+                                                                    ?.items?[
+                                                                        index]
+                                                                    .id ??
+                                                                0,
+                                                            row_id: productModel
+                                                                    ?.success
+                                                                    ?.items?[
+                                                                        index]
+                                                                    .id ??
+                                                                0,
+                                                            isFavorite: productModel
+                                                                    ?.success
+                                                                    ?.items?[
+                                                                        index]
+                                                                    .is_favorite ??
+                                                                0,
+                                                          )),
+                                                );
+                                              },
+                                              child: latestOffersCard(
+                                                  // productModel?.image ??
+                                                  productModel
+                                                          ?.success
+                                                          ?.items?[index]
+                                                          .image ??
+                                                      'assets/images/sa1.jpeg',
+                                                  productModel
+                                                          ?.success
+                                                          ?.items?[index]
+                                                          .name ??
+                                                      'تنظيف بالبخار ',
+                                                  productModel
+                                                          ?.success
+                                                          ?.items?[index]
+                                                          .service ??
+                                                      'شركة ليومار',
+                                                  productModel
+                                                          ?.success
+                                                          ?.items?[index]
+                                                          .salePrice ??
+                                                      '355',
+                                                  'assets/images/cardtile.png',
+                                                  productModel
+                                                          ?.success
+                                                          ?.items?[index]
+                                                          .price ??
+                                                      '460 ر.س',
+                                                  productModel
+                                                          ?.success
+                                                          ?.items?[index]
+                                                          .is_favorite ??
+                                                      0,
+                                                  productModel?.success
+                                                          ?.items?[index].id
+                                                          .toString() ??
+                                                      '0'),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      return Container();
+                                    },
+                                  ),
+                                ),
+                              ),
+                              // if (showLoding) CircularProgressIndicator(),
+                            ],
                           ),
                         ),
+
                         Padding(
                           padding: EdgeInsetsDirectional.only(
                               start: 15.w, top: 12.h),

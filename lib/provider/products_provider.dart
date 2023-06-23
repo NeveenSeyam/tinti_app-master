@@ -37,10 +37,23 @@ class ProductsProvider extends ChangeNotifier {
   ProductModel? _productList = ProductModel();
 //! create get method for the data object
   ProductModel? get getProductsDataList => _productList;
-  void setDataList(ProductModel productModel) {
-    _productList = productModel;
-
+  void setDataList(ProductModel productModel, isNewProduct) {
+    if (isNewProduct == true) {
+      _productList = productModel;
+    } else {
+      if (_productList?.success != null) {
+        _productList?.success?.items?.addAll(productModel.success?.items ?? []);
+        _productList?.success?.pageNumber = productModel.success?.pageNumber;
+        _productList?.success?.totalPages = productModel.success?.totalPages;
+      } else {
+        _productList = productModel;
+      }
+    }
     notifyListeners();
+  }
+
+  cleanAllProductsList() {
+    _productList = null;
   }
 
   //==============
@@ -48,30 +61,80 @@ class ProductsProvider extends ChangeNotifier {
   ProductModel? _productSellsList = ProductModel();
 //! create get method for the data object
   ProductModel? get getProductsSellsDataList => _productSellsList;
-  void setDataSellsList(ProductModel productModel) {
-    _productSellsList = productModel;
-
+  void setDataSellsList(ProductModel productModel, isNewProduct) {
+    if (isNewProduct == true) {
+      _productSellsList = productModel;
+    } else {
+      if (_productSellsList?.success != null) {
+        _productSellsList?.success?.items
+            ?.addAll(productModel.success?.items ?? []);
+        _productSellsList?.success?.pageNumber =
+            productModel.success?.pageNumber;
+        _productSellsList?.success?.totalPages =
+            productModel.success?.totalPages;
+      } else {
+        _productSellsList = productModel;
+      }
+    }
     notifyListeners();
+  }
+
+  cleanSalesProductsList() {
+    _productSellsList = null;
   }
 
 // =========
   ServiceProductModel? _productsBySirvesList = ServiceProductModel();
 //! create get method for the data object
   ServiceProductModel? get getProductsSirvesDataList => _productsBySirvesList;
-  void setDataSirvesList(ServiceProductModel serviceProductModel) {
-    _productsBySirvesList = serviceProductModel;
-
+  void setDataSirvesList(
+      ServiceProductModel serviceProductModel, isNewProduct) {
+    if (isNewProduct == true) {
+      _productsBySirvesList = serviceProductModel;
+    } else {
+      if (_productsBySirvesList?.success != null) {
+        _productsBySirvesList?.success?.items
+            ?.addAll(serviceProductModel.success?.items ?? []);
+        _productsBySirvesList?.success?.pageNumber =
+            serviceProductModel.success?.pageNumber;
+        _productsBySirvesList?.success?.totalPages =
+            serviceProductModel.success?.totalPages;
+      } else {
+        _productsBySirvesList = serviceProductModel;
+      }
+    }
     notifyListeners();
+  }
+
+  cleanProductsBySirvesList() {
+    _productsBySirvesList = null;
   }
 
 // =========
   CompanyProductModel? _productsByCompanyList = CompanyProductModel();
 //! create get method for the data object
   CompanyProductModel? get getProductsCompanyDataList => _productsByCompanyList;
-  void setDataCompanyList(CompanyProductModel companyProductModel) {
-    _productsByCompanyList = companyProductModel;
-
+  void setDataCompanyList(
+      CompanyProductModel companyProductModel, isNewProduct) {
+    if (isNewProduct == true) {
+      _productsByCompanyList = companyProductModel;
+    } else {
+      if (_productsByCompanyList?.success != null) {
+        _productsByCompanyList?.success?.items
+            ?.addAll(companyProductModel.success?.items ?? []);
+        _productsByCompanyList?.success?.pageNumber =
+            companyProductModel.success?.pageNumber;
+        _productsByCompanyList?.success?.totalPages =
+            companyProductModel.success?.totalPages;
+      } else {
+        _productsByCompanyList = companyProductModel;
+      }
+    }
     notifyListeners();
+  }
+
+  cleanProductsByCompanysList() {
+    _productsByCompanyList = null;
   }
 //-------------------------
 
@@ -88,14 +151,16 @@ class ProductsProvider extends ChangeNotifier {
   SingleProductModel? _singleProductModel = SingleProductModel();
 //! create get method for the data object
   SingleProductModel? get getSingleProduct => _singleProductModel;
-  void setSingleProductList(SingleProductModel singleProductModel) {
+  void setSingleProductList(
+    SingleProductModel singleProductModel,
+  ) {
     _singleProductModel = singleProductModel;
 
     notifyListeners();
   }
 
   Future getProductDataByServisesRequset(
-      {required int id, required int page}) async {
+      {required int id, required int page, isNewProduct = true}) async {
     //! we create this object to set new data to the data object
     ServiceProductModel? serviceProductModel = ServiceProductModel();
 
@@ -108,7 +173,7 @@ class ProductsProvider extends ChangeNotifier {
       //! use FormJson method to convert the data to the data object
       serviceProductModel = ServiceProductModel.fromJson(response);
       //! set the new data to the data object
-      setDataSirvesList(serviceProductModel);
+      setDataSirvesList(serviceProductModel, isNewProduct);
 
       return serviceProductModel;
     } on Failure catch (f) {
@@ -117,7 +182,7 @@ class ProductsProvider extends ChangeNotifier {
   }
 
   Future getProductDataByCompanyRequsett(
-      {required int id, required int page}) async {
+      {required int id, required int page, isNewProduct = true}) async {
     //! we create this object to set new data to the data object
     CompanyProductModel? productList = CompanyProductModel();
 
@@ -130,7 +195,7 @@ class ProductsProvider extends ChangeNotifier {
       //! use FormJson method to convert the data to the data object
       productList = CompanyProductModel.fromJson(response);
       //! set the new data to the data object
-      setDataCompanyList(productList);
+      setDataCompanyList(productList, isNewProduct);
 
       return productList;
     } on Failure catch (f) {
@@ -138,7 +203,8 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  Future getAllProductDataRequset({required int page}) async {
+  Future getAllProductDataRequset(
+      {required int page, isNewProduct = true}) async {
     //! we create this object to set new data to the data object
     ProductModel? productList = ProductModel();
 
@@ -150,7 +216,7 @@ class ProductsProvider extends ChangeNotifier {
       //! use FormJson method to convert the data to the data object
       productList = ProductModel.fromJson(response);
       //! set the new data to the data object
-      setDataList(productList);
+      setDataList(productList, isNewProduct);
 
       return productList;
     } on Failure catch (f) {
@@ -158,7 +224,8 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  Future getSalesProductDataRequset({required int page}) async {
+  Future getSalesProductDataRequset(
+      {required int page, isNewProduct = true}) async {
     //! we create this object to set new data to the data object
     ProductModel? productList = ProductModel();
 
@@ -170,7 +237,7 @@ class ProductsProvider extends ChangeNotifier {
       //! use FormJson method to convert the data to the data object
       productList = ProductModel.fromJson(response);
       //! set the new data to the data object
-      setDataSellsList(productList);
+      setDataSellsList(productList, isNewProduct);
 
       return productList;
     } on Failure catch (f) {

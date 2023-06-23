@@ -12,6 +12,7 @@ import 'package:tinti_app/provider/company_provider.dart';
 import 'package:tinti_app/provider/products_provider.dart';
 
 import '../../../Helpers/failure.dart';
+import '../../../Models/product/sales_products_model.dart';
 import '../../../Widgets/custom_text.dart';
 import '../../../Widgets/loader_widget.dart';
 import '../../../Widgets/text_widget.dart';
@@ -38,13 +39,48 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
     return await prov.getAllProductDataRequset(page: page);
   }
 
+  final ScrollController _scrollController = ScrollController();
+
   late Future _fetchedAllProductsRequest;
   @override
   void initState() {
     _fetchedMyRequest = _getContentData();
-    _fetchedAllProductsRequest = _getAllProductsData(0);
+    _fetchedAllProductsRequest = _getAllProductsData(1);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _scrollController.addListener(() async {
+        print("object");
+
+        if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+          var portalRequset =
+              ref.watch(productsProvider).getProductsDataList ?? ProductModel();
+          if ((portalRequset.success?.pageNumber ?? 0) <
+              (portalRequset.success?.totalPages ?? 0)) {
+            print("has more pages");
+            setState(() {
+              showLoding = true;
+            });
+            final prov = ref.read(productsProvider);
+
+            await prov
+                .getAllProductDataRequset(
+                    page: (portalRequset.success?.pageNumber ?? 0) + 1,
+                    isNewProduct: false)
+                .then((value) {
+              setState(() {
+                showLoding = false;
+              });
+              setState(() {});
+            });
+          }
+        }
+      });
+    });
+
     super.initState();
   }
+
+  bool showLoding = false;
 
   @override
   Widget build(BuildContext context) {
@@ -262,6 +298,7 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                       padding: EdgeInsets.all(10.w),
                       child: GridView.builder(
                           physics: BouncingScrollPhysics(),
+                          controller: _scrollController,
                           gridDelegate:
                               const SliverGridDelegateWithMaxCrossAxisExtent(
                                   maxCrossAxisExtent: 150,
@@ -335,12 +372,13 @@ class _CampanyPageState extends ConsumerState<CampanyPage> {
                                             color: AppColors.white,
                                             fontWeight: FontWeight.w400,
                                             fontFamily: 'DINNextLTArabic',
+                                            maxLines: 1,
                                             fontSize: 10.sp,
                                           ),
                                           CustomText(
                                             productsModel.success?.items?[index]
                                                     .price ??
-                                                'جدة ',
+                                                'مدينتك ',
                                             color: AppColors.orange,
                                             fontWeight: FontWeight.w600,
                                             fontFamily: 'DINNextLTArabic',

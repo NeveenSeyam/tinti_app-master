@@ -84,6 +84,7 @@ class _SaelsScreenCardCardState extends ConsumerState<SaelsScreenCardCard> {
                   width: 10.w,
                 ),
                 Container(
+                  alignment: Alignment.center,
                   height: 150.h,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,12 +101,14 @@ class _SaelsScreenCardCardState extends ConsumerState<SaelsScreenCardCard> {
                         width: 200.w,
                         child: CustomText(
                           widget.details,
+                          maxLines: 4,
                           fontSize: 12.sp,
                           color: AppColors.grey,
                         ),
                       ),
                       SizedBox(
                         width: 200.w,
+                        height: 40.h,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -116,7 +119,7 @@ class _SaelsScreenCardCardState extends ConsumerState<SaelsScreenCardCard> {
                                 // fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.lineThrough,
 
-                                fontSize: 12.sp,
+                                fontSize: 13.sp,
                                 fontFamily: 'DINNextLTArabic',
                               ),
                             ),
@@ -151,7 +154,7 @@ class _SaelsScreenCardCardState extends ConsumerState<SaelsScreenCardCard> {
                                   },
                                   child: Container(
                                     width: 25.w,
-                                    height: 24.h,
+                                    // height: 24.h,
                                     child: Icon(
                                       widget.isFavorite == 0
                                           ? Icons.favorite

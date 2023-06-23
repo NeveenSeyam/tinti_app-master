@@ -32,7 +32,7 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
   int pageIndex = 1;
   int currentPage = 0;
   // int currentPage = 0;
-
+  var hight = 680.h;
   TextEditingController _search = TextEditingController();
   ScrollController _scrollController = ScrollController();
   bool isSearch = false;
@@ -73,14 +73,44 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
     _fetchedProductRequest = _getProductsData(0);
     isSearch = false;
     _search.text = '';
-    _scrollController.addListener(() {
-      if (_scrollController.position.maxScrollExtent ==
-          _scrollController.offset) {
-        fetch(currentPage);
-      }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _scrollController.addListener(() async {
+        print("object");
+
+        if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+          var portalRequset =
+              ref.watch(productsProvider).getProductsSellsDataList ??
+                  ProductModel();
+          if ((portalRequset.success?.pageNumber ?? 0) <
+              (portalRequset.success?.totalPages ?? 0)) {
+            print("has more pages");
+            setState(() {
+              showLoding = true;
+              hight = 650.h;
+            });
+            final prov = ref.read(productsProvider);
+
+            await prov
+                .getSalesProductDataRequset(
+                    page: (portalRequset.success?.pageNumber ?? 0) + 1,
+                    isNewProduct: false)
+                .then((value) {
+              setState(() {
+                showLoding = false;
+                hight = 680.h;
+              });
+              setState(() {});
+            });
+          }
+        }
+      });
     });
+
     super.initState();
   }
+
+  bool showLoding = false;
 
   @override
   void dispose() {
@@ -451,63 +481,71 @@ class _SaelsScreenState extends ConsumerState<SaelsScreen> {
                                                                 top: 5.h),
                                                     child: SizedBox(
                                                       height: 680.h,
-                                                      child: ListView.builder(
-                                                          // physics: BouncingScrollPhysics(),
-                                                          shrinkWrap: false,
-                                                          itemCount:
-                                                              lenght + 1 ?? 0,
-                                                          controller:
-                                                              _scrollController,
-                                                          itemBuilder:
-                                                              (BuildContext ctx,
-                                                                  index) {
-                                                            return index <
-                                                                    lenght
-                                                                ? Container(
-                                                                    width: double
-                                                                        .infinity,
-                                                                    child:
-                                                                        GestureDetector(
-                                                                      onTap:
-                                                                          () {
-                                                                        Navigator
-                                                                            .push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => ServiceDetailsScreen(
-                                                                                    id: productList?.success?.items?[index].id ?? 0,
-                                                                                    row_id: 0,
-                                                                                    isFavorite: productList?.success?.items?[index].is_favorite ?? 1,
-                                                                                  )),
-                                                                        );
-                                                                      },
-                                                                      child:
-                                                                          SaelsScreenCardCard(
-                                                                        details:
-                                                                            productList?.success?.items?[index].description ??
-                                                                                '',
-                                                                        isFavorite:
-                                                                            productList?.success?.items?[index].is_favorite ??
+                                                      child: Column(
+                                                        children: [
+                                                          SizedBox(
+                                                            height: hight,
+                                                            child: ListView
+                                                                .builder(
+                                                                    // physics: BouncingScrollPhysics(),
+                                                                    shrinkWrap:
+                                                                        false,
+                                                                    itemCount:
+                                                                        lenght,
+                                                                    controller:
+                                                                        _scrollController,
+                                                                    itemBuilder:
+                                                                        (BuildContext
+                                                                                ctx,
+                                                                            index) {
+                                                                      return Container(
+                                                                        width: double
+                                                                            .infinity,
+                                                                        child:
+                                                                            GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                                  builder: (context) => ServiceDetailsScreen(
+                                                                                        id: productList?.success?.items?[index].id ?? 0,
+                                                                                        row_id: 0,
+                                                                                        isFavorite: productList?.success?.items?[index].is_favorite ?? 1,
+                                                                                      )),
+                                                                            );
+                                                                          },
+                                                                          child:
+                                                                              SaelsScreenCardCard(
+                                                                            details:
+                                                                                productList?.success?.items?[index].description ?? '',
+                                                                            isFavorite:
+                                                                                productList?.success?.items?[index].is_favorite ?? 0,
+                                                                            image:
+                                                                                productList?.success?.items?[index].image ?? '',
+                                                                            lastPrice:
+                                                                                productList?.success?.items?[index].price ?? '',
+                                                                            price:
+                                                                                productList?.success?.items?[index].salePrice ?? '',
+                                                                            title:
+                                                                                productList?.success?.items?[index].name ?? '',
+                                                                            id: productList?.success?.items?[index].id ??
                                                                                 0,
-                                                                        image: productList?.success?.items?[index].image ??
-                                                                            '',
-                                                                        lastPrice:
-                                                                            productList?.success?.items?[index].price ??
-                                                                                '',
-                                                                        price: productList?.success?.items?[index].salePrice ??
-                                                                            '',
-                                                                        title: productList?.success?.items?[index].name ??
-                                                                            '',
-                                                                        id: productList?.success?.items?[index].id ??
-                                                                            0,
-                                                                      ),
-                                                                    ),
-                                                                  )
-                                                                : Center(
-                                                                    child:
-                                                                        CircularProgressIndicator(),
-                                                                  );
-                                                          }),
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    }),
+                                                          ),
+                                                          if (showLoding)
+                                                            SizedBox(
+                                                              height: 30.h,
+                                                              child: Center(
+                                                                child:
+                                                                    CircularProgressIndicator(),
+                                                              ),
+                                                            )
+                                                        ],
+                                                      ),
                                                     ),
                                                   );
                                                 }
