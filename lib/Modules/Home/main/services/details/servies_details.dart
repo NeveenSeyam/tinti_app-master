@@ -390,6 +390,124 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                               3
                                           ? "rat service".tr()
                                           : "bad rat service".tr()),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        color:
+                                            AppColors.orange.withOpacity(0.8),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                        child: CustomText(
+                                          'comment'.tr(),
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  SizedBox(
+                                    height: 150.h,
+                                    width: 350.w,
+                                    child: CarouselSlider.builder(
+                                      itemCount: productDetailsModel?.product
+                                              ?.productRating?.length ??
+                                          0,
+                                      itemBuilder: (BuildContext context,
+                                              int itemIndex,
+                                              int pageViewIndex) =>
+                                          Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors.scadryColor
+                                                .withOpacity(0.1),
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        width: 150.w,
+                                        height: 150.h,
+                                        child: Padding(
+                                          padding: EdgeInsets.all(12.w),
+                                          child: ListView(
+                                            //   mainAxisAlignment:
+                                            //       MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  CustomText(
+                                                    'name'.tr(),
+                                                  ),
+                                                  CustomText(
+                                                    productDetailsModel
+                                                            ?.product
+                                                            ?.productRating?[
+                                                                itemIndex]
+                                                            .user ??
+                                                        'comment',
+                                                    color: AppColors.orange,
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  CustomText(
+                                                    'ratting'.tr(),
+                                                  ),
+                                                  CustomText(
+                                                    productDetailsModel
+                                                            ?.product
+                                                            ?.productRating?[
+                                                                itemIndex]
+                                                            .rating ??
+                                                        'comment',
+                                                    maxLines: 1,
+                                                    color: AppColors.orange,
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  CustomText(
+                                                    'comment'.tr(),
+                                                  ),
+                                                  CustomText(
+                                                    productDetailsModel
+                                                            ?.product
+                                                            ?.productRating?[
+                                                                itemIndex]
+                                                            .comments ??
+                                                        'comment',
+                                                    color: AppColors.orange,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      options: CarouselOptions(
+                                        autoPlay: true,
+                                        enlargeCenterPage: true,
+                                        viewportFraction: 0.5,
+                                        aspectRatio: 2.0,
+                                        initialPage: 1,
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                       ],

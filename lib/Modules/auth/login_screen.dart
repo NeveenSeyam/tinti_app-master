@@ -140,8 +140,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   padding: EdgeInsets.all(20.w),
                   child: SizedBox(
                     width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: ListView(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           padding: EdgeInsetsDirectional.only(start: 15.w),
