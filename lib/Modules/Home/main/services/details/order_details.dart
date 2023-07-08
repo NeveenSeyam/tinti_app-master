@@ -512,247 +512,307 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                     Padding(
                       padding: EdgeInsets.all(12.w),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          RaisedGradientButton(
-                            text: 'ratting'.tr(),
-                            color: Constants.isQuest == false
-                                ? AppColors.scadryColor
-                                : AppColors.grey,
-                            width: 100.w,
-                            height: 48.h,
-                            circular: 10.w,
-                            onPressed: Constants.isQuest == false
-                                ? () {
-                                    showDialog(
-                                        barrierDismissible: false,
-                                        context: context,
-                                        builder: (context) {
-                                          // Future.delayed(
-                                          //     Duration(seconds: 1000), () {
-                                          //   Navigator.of(context).pop(true);
-                                          // });
-                                          return AlertDialog(
-                                              insetPadding: EdgeInsets.all(8.0),
-                                              title: CustomText(
-                                                "ratting".tr(),
-                                                fontSize: 24.sp,
-                                                textAlign: TextAlign.center,
-                                                fontFamily: 'DINNEXTLTARABIC',
-                                                color: AppColors.scadryColor,
-                                              ),
-                                              content: Container(
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20.w)),
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      100,
-                                                  height: 300.h,
-                                                  child: Column(
-                                                    children: [
-                                                      CustomText(
-                                                        'يمكنك اضافة تعليق الان ',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        fontFamily:
-                                                            'DINNEXTLTARABIC',
-                                                        fontSize: 16.sp,
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 22.h,
-                                                      ),
-                                                      RatingBar.builder(
-                                                        initialRating: 3,
-                                                        minRating: 1,
-                                                        direction:
-                                                            Axis.horizontal,
-                                                        allowHalfRating: true,
-                                                        itemCount: 5,
-                                                        itemPadding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    4.0),
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          switch (index) {
-                                                            case 0:
-                                                              return Icon(
-                                                                Icons
-                                                                    .sentiment_very_dissatisfied,
-                                                                color:
-                                                                    Colors.red,
-                                                              );
-                                                            case 1:
-                                                              return Icon(
-                                                                Icons
-                                                                    .sentiment_dissatisfied,
-                                                                color: Colors
-                                                                    .redAccent,
-                                                              );
-                                                            case 2:
-                                                              return Icon(
-                                                                Icons
-                                                                    .sentiment_neutral,
-                                                                color: Colors
-                                                                    .amber,
-                                                              );
-                                                            case 3:
-                                                              return Icon(
-                                                                Icons
-                                                                    .sentiment_satisfied,
-                                                                color: Colors
-                                                                    .lightGreen,
-                                                              );
-                                                            case 4:
-                                                              return Icon(
-                                                                Icons
-                                                                    .sentiment_very_satisfied,
-                                                                color: Colors
-                                                                    .green,
-                                                              );
-                                                          }
-                                                          return Icon(
-                                                            Icons
-                                                                .sentiment_very_satisfied,
-                                                            color: Colors.green,
-                                                          );
-                                                        },
-                                                        onRatingUpdate:
-                                                            (rating) {
-                                                          setState(() {
-                                                            rate = rating;
-                                                          });
-                                                          print(rating);
-                                                        },
-                                                      ),
-                                                      SizedBox(
-                                                        height: 30.h,
-                                                      ),
-                                                      RoundedInputField(
-                                                        hintText:
-                                                            'comment'.tr(),
-                                                        onChanged: (value) {},
-                                                        hintColor:
-                                                            AppColors.hint,
-                                                        color:
-                                                            AppColors.lightgrey,
-                                                        keyboardType:
-                                                            TextInputType.text,
-                                                        maxLingth: 100,
-                                                        circuler: 10.w,
-                                                        height: 48.h,
+                          productDetailsModel?.order?.rating == null
+                              // productDetailsModel?.order?.rating == 0
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    RaisedGradientButton(
+                                      text: 'ratting'.tr(),
+                                      color: Constants.isQuest == false
+                                          ? AppColors.scadryColor
+                                          : AppColors.grey,
+                                      width: 100.w,
+                                      height: 48.h,
+                                      circular: 10.w,
+                                      onPressed: Constants.isQuest == false
+                                          ? () {
+                                              showDialog(
+                                                  barrierDismissible: false,
+                                                  context: context,
+                                                  builder: (context) {
+                                                    // Future.delayed(
+                                                    //     Duration(seconds: 1000), () {
+                                                    //   Navigator.of(context).pop(true);
+                                                    // });
+                                                    return AlertDialog(
+                                                        insetPadding: EdgeInsets
+                                                            .all(8.0),
+                                                        title: CustomText(
+                                                          "ratting".tr(),
+                                                          fontSize: 24.sp,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          fontFamily:
+                                                              'DINNEXTLTARABIC',
+                                                          color: AppColors
+                                                              .scadryColor,
+                                                        ),
+                                                        content: Container(
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(20
+                                                                            .w)),
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width -
+                                                                100,
+                                                            height: 300.h,
+                                                            child: Column(
+                                                              children: [
+                                                                CustomText(
+                                                                  'يمكنك اضافة تعليق الان ',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  fontFamily:
+                                                                      'DINNEXTLTARABIC',
+                                                                  fontSize:
+                                                                      16.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 22.h,
+                                                                ),
+                                                                RatingBar
+                                                                    .builder(
+                                                                  initialRating:
+                                                                      3,
+                                                                  minRating: 1,
+                                                                  direction: Axis
+                                                                      .horizontal,
+                                                                  allowHalfRating:
+                                                                      true,
+                                                                  itemCount: 5,
+                                                                  itemPadding: EdgeInsets
+                                                                      .symmetric(
+                                                                          horizontal:
+                                                                              4.0),
+                                                                  itemBuilder:
+                                                                      (context,
+                                                                          index) {
+                                                                    switch (
+                                                                        index) {
+                                                                      case 0:
+                                                                        return Icon(
+                                                                          Icons
+                                                                              .sentiment_very_dissatisfied,
+                                                                          color:
+                                                                              Colors.red,
+                                                                        );
+                                                                      case 1:
+                                                                        return Icon(
+                                                                          Icons
+                                                                              .sentiment_dissatisfied,
+                                                                          color:
+                                                                              Colors.redAccent,
+                                                                        );
+                                                                      case 2:
+                                                                        return Icon(
+                                                                          Icons
+                                                                              .sentiment_neutral,
+                                                                          color:
+                                                                              Colors.amber,
+                                                                        );
+                                                                      case 3:
+                                                                        return Icon(
+                                                                          Icons
+                                                                              .sentiment_satisfied,
+                                                                          color:
+                                                                              Colors.lightGreen,
+                                                                        );
+                                                                      case 4:
+                                                                        return Icon(
+                                                                          Icons
+                                                                              .sentiment_very_satisfied,
+                                                                          color:
+                                                                              Colors.green,
+                                                                        );
+                                                                    }
+                                                                    return Icon(
+                                                                      Icons
+                                                                          .sentiment_very_satisfied,
+                                                                      color: Colors
+                                                                          .green,
+                                                                    );
+                                                                  },
+                                                                  onRatingUpdate:
+                                                                      (rating) {
+                                                                    setState(
+                                                                        () {
+                                                                      rate =
+                                                                          rating;
+                                                                    });
+                                                                    print(
+                                                                        rating);
+                                                                  },
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 30.h,
+                                                                ),
+                                                                RoundedInputField(
+                                                                  hintText:
+                                                                      'comment'
+                                                                          .tr(),
+                                                                  onChanged:
+                                                                      (value) {},
+                                                                  hintColor:
+                                                                      AppColors
+                                                                          .hint,
+                                                                  color: AppColors
+                                                                      .lightgrey,
+                                                                  keyboardType:
+                                                                      TextInputType
+                                                                          .text,
+                                                                  maxLingth:
+                                                                      100,
+                                                                  circuler:
+                                                                      10.w,
+                                                                  height: 48.h,
 
-                                                        // validator: validateEmail,
-                                                        seen: false,
-                                                        controller: _comment,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 22.h,
-                                                      ),
-                                                      RaisedGradientButton(
-                                                        text: 'التالي',
-                                                        width: 340.w,
-                                                        color: AppColors
-                                                            .scadryColor,
-                                                        height: 48.h,
-                                                        circular: 10.w,
-                                                        onPressed: () async {
-                                                          await ref
-                                                              .read(
-                                                                  ordersProvider)
-                                                              .addRateDataRequset(
-                                                                id: productDetailsModel
-                                                                    ?.order?.id,
-                                                                comments:
-                                                                    _comment
-                                                                        .text,
-                                                                star_rating:
-                                                                    rate,
-                                                              )
-                                                              .onError((error,
-                                                                      stackTrace) =>
-                                                                  UIHelper.showNotification(
-                                                                      ' تم التقييم مسبقا',
-                                                                      backgroundColor:
-                                                                          AppColors
-                                                                              .green))
-                                                              .then((value) {
-                                                            if (value !=
-                                                                false) {
-                                                              if (value ==
-                                                                  'الطلب غير موجود ') {
-                                                                UIHelper.showNotification(
-                                                                    ' تم التقييم مسبقا',
-                                                                    backgroundColor:
-                                                                        AppColors
-                                                                            .green);
-                                                              } else {
-                                                                UIHelper.showNotification(
-                                                                    'تم التقييم ',
-                                                                    backgroundColor:
-                                                                        AppColors
-                                                                            .green);
-                                                                setState(() {
-                                                                  _fetchedProducDetailsRequest =
-                                                                      _getProducDetailsData();
-                                                                  rate = productDetailsModel
-                                                                          ?.order
-                                                                          ?.rating
-                                                                          ?.toDouble() ??
-                                                                      0;
-                                                                });
-                                                              }
-                                                            } else {}
-                                                          });
+                                                                  // validator: validateEmail,
+                                                                  seen: false,
+                                                                  controller:
+                                                                      _comment,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 22.h,
+                                                                ),
+                                                                RaisedGradientButton(
+                                                                  text:
+                                                                      'التالي',
+                                                                  width: 340.w,
+                                                                  color: AppColors
+                                                                      .scadryColor,
+                                                                  height: 48.h,
+                                                                  circular:
+                                                                      10.w,
+                                                                  onPressed:
+                                                                      () async {
+                                                                    await ref
+                                                                        .read(
+                                                                            ordersProvider)
+                                                                        .addRateDataRequset(
+                                                                          id: productDetailsModel
+                                                                              ?.order
+                                                                              ?.id,
+                                                                          comments:
+                                                                              _comment.text,
+                                                                          star_rating:
+                                                                              rate,
+                                                                        )
+                                                                        .onError((error, stackTrace) => UIHelper.showNotification(
+                                                                            ' تم التقييم مسبقا',
+                                                                            backgroundColor: AppColors
+                                                                                .green))
+                                                                        .then(
+                                                                            (value) {
+                                                                      if (value !=
+                                                                          false) {
+                                                                        if (value ==
+                                                                            'الطلب غير موجود ') {
+                                                                          UIHelper.showNotification(
+                                                                              ' تم التقييم مسبقا',
+                                                                              backgroundColor: AppColors.green);
+                                                                        } else {
+                                                                          UIHelper.showNotification(
+                                                                              'تم التقييم ',
+                                                                              backgroundColor: AppColors.green);
+                                                                          setState(
+                                                                              () {
+                                                                            _fetchedProducDetailsRequest =
+                                                                                _getProducDetailsData();
+                                                                            rate =
+                                                                                productDetailsModel?.order?.rating?.toDouble() ?? 0;
+                                                                          });
+                                                                        }
+                                                                      } else {}
+                                                                    });
 
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                      ),
-                                                      SizedBox(
-                                                        height: 16.h,
-                                                      ),
-                                                    ],
-                                                  )));
-                                        });
-                                  }
-                                : () {},
-                          ),
-                          SizedBox(
-                            width: 10.w,
-                          ),
-                          RaisedGradientButton(
-                            text: 'service details'.tr(),
-                            color: Constants.isQuest == false
-                                ? AppColors.scadryColor
-                                : AppColors.grey,
-                            width: 100.w,
-                            height: 48.h,
-                            circular: 10.w,
-                            onPressed: Constants.isQuest == false
-                                ? () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ServiceDetailsScreen(
-                                                id: productDetailsModel
-                                                        ?.order?.productId ??
-                                                    0,
-                                                row_id: productDetailsModel
-                                                        ?.order?.id ??
-                                                    0,
-                                                isFavorite: 0,
-                                              )),
-                                    );
-                                  }
-                                : () {},
-                          ),
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 16.h,
+                                                                ),
+                                                              ],
+                                                            )));
+                                                  });
+                                            }
+                                          : () {},
+                                    ),
+                                    SizedBox(
+                                      width: 10.w,
+                                    ),
+                                    RaisedGradientButton(
+                                      text: 'service details'.tr(),
+                                      color: Constants.isQuest == false
+                                          ? AppColors.scadryColor
+                                          : AppColors.grey,
+                                      width: 100.w,
+                                      height: 48.h,
+                                      circular: 10.w,
+                                      onPressed: Constants.isQuest == false
+                                          ? () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ServiceDetailsScreen(
+                                                          id: productDetailsModel
+                                                                  ?.order
+                                                                  ?.productId ??
+                                                              0,
+                                                          row_id:
+                                                              productDetailsModel
+                                                                      ?.order
+                                                                      ?.id ??
+                                                                  0,
+                                                          isFavorite: 0,
+                                                        )),
+                                              );
+                                            }
+                                          : () {},
+                                    ),
+                                  ],
+                                )
+                              : RaisedGradientButton(
+                                  text: 'service details'.tr(),
+                                  color: Constants.isQuest == false
+                                      ? AppColors.scadryColor
+                                      : AppColors.grey,
+                                  width: 200.w,
+                                  height: 48.h,
+                                  circular: 10.w,
+                                  onPressed: Constants.isQuest == false
+                                      ? () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ServiceDetailsScreen(
+                                                      id: productDetailsModel
+                                                              ?.order
+                                                              ?.productId ??
+                                                          0,
+                                                      row_id:
+                                                          productDetailsModel
+                                                                  ?.order?.id ??
+                                                              0,
+                                                      isFavorite: 0,
+                                                    )),
+                                          );
+                                        }
+                                      : () {},
+                                ),
                           Container(
                             width: 150.w,
                             padding: EdgeInsets.all(15.w),
@@ -860,10 +920,15 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                           Icons.arrow_drop_down_circle_outlined,
                           color: AppColors.scadryColor,
                         ))
-                    : CustomText(
-                        value,
-                        color: AppColors.scadryColor,
-                        fontFamily: 'DINNextLTArabic',
+                    : Container(
+                        alignment: Alignment.centerLeft,
+                        width: 180.w,
+                        child: CustomText(
+                          value,
+                          color: AppColors.scadryColor,
+                          fontFamily: 'DINNextLTArabic',
+                          maxLines: 2,
+                        ),
                       ),
               ],
             ),

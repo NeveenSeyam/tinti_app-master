@@ -480,9 +480,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                         Container(
                                                   decoration: BoxDecoration(
                                                     image: DecorationImage(
-                                                        image: imageProvider,
-                                                        fit: BoxFit.cover,
-                                                      ),
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
                                                   ),
                                                 ),
                                                 placeholder: (context, url) =>
@@ -575,16 +575,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                     dataContainer(
                                                         170.w,
                                                         serviceModel
-                                                                .user?.lname ??
-                                                            'البلتاجي'),
+                                                                .user?.fname ??
+                                                            ''),
                                                     SizedBox(
                                                       width: 15.w,
                                                     ),
                                                     dataContainer(
                                                         170.w,
                                                         serviceModel
-                                                                .user?.fname ??
-                                                            'ناجي'),
+                                                                .user?.lname ??
+                                                            ''),
                                                   ],
                                                 ),
                                               ),
@@ -595,7 +595,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 child: dataContainer(
                                                     355.w,
                                                     serviceModel.user?.email ??
-                                                        'Naji@gmail.com'),
+                                                        ''),
                                               ),
                                               SizedBox(
                                                 height: 12.h,
@@ -604,7 +604,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 child: dataContainer(
                                                     355.w,
                                                     serviceModel.user?.mobile ??
-                                                        '+972597031739'),
+                                                        ''),
                                               ),
                                               SizedBox(
                                                 height: 12.h,
@@ -717,7 +717,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                     serviceModel
                                                                             .user
                                                                             ?.mobile ??
-                                                                        '+970595959834',
+                                                                        '',
                                                                   ),
                                                                 ),
                                                               ),
@@ -731,9 +731,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                     170.w,
                                                                     serviceModel
                                                                             .user
-                                                                            ?.lname ??
-                                                                        'البلتاجي',
-                                                                    _lnameController),
+                                                                            ?.fname ??
+                                                                        '',
+                                                                    _fnameController),
                                                                 SizedBox(
                                                                   width: 15.w,
                                                                 ),
@@ -741,9 +741,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                                     170.w,
                                                                     serviceModel
                                                                             .user
-                                                                            ?.fname ??
-                                                                        'ناجي',
-                                                                    _fnameController),
+                                                                            ?.lname ??
+                                                                        '',
+                                                                    _lnameController),
                                                               ],
                                                             ),
                                                             Center(

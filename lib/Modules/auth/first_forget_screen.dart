@@ -1,13 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pinput/pinput.dart';
 import 'package:regexpattern/regexpattern.dart';
 import '../../Helpers/failure.dart';
@@ -17,12 +13,9 @@ import '../../Util/theme/app_colors.dart';
 import '../../Widgets/custom_text.dart';
 import '../../Widgets/custom_text_field.dart';
 import '../../Widgets/gradint_button.dart';
-import '../../Widgets/loader_widget.dart';
 import '../../Widgets/loading_dialog.dart';
-import '../../Widgets/text_widget.dart';
 import '../../helpers/ui_helper.dart';
 import '../../provider/account_provider.dart';
-import '../Home/main/services/saels_page.dart';
 
 class FirstForgetScreen extends ConsumerStatefulWidget {
   const FirstForgetScreen({super.key});
@@ -31,9 +24,23 @@ class FirstForgetScreen extends ConsumerStatefulWidget {
   _FirstForgetScreenState createState() => _FirstForgetScreenState();
 }
 
-String? validatePassword(String? value) {
-  if (value!.length < 6) {
-    return 'يجب ان تكون كلمة السر 6 احرف على الاقل ';
+RegExp pass_valid = RegExp(r"(?=.*[a-z])(?=.*[A-Z])");
+
+bool validatePassword(String pass) {
+  String _password = pass.trim();
+  if (pass_valid.hasMatch(_password) && pass.length > 6) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool validateConfirmPassword(String pass) {
+  String _password = pass.trim();
+  if (_confirmPasswordController.text == _passwordController.text) {
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -55,13 +62,9 @@ String? validateEmail(String? value) {
 
 class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
   var validate = 1;
+  final _Key = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
-  // Future _getContentData() async {
-  //   final prov = ref.read(accountProvider);
-
-  //   return await prov.forgetPassRequest(email: _emailController.text);
-  // }
 
   final pinController = TextEditingController();
 
@@ -72,17 +75,10 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
   // late Future _fetchedMyRequest;
   late Future _fetchedUpdateRequest;
   var smsId;
-  // Future _getUpdateData() async {
-  //   final prov = ref.read(accountProvider);
-
-  //   return await prov.;
-  // }
 
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-
-    // _fetchedMyRequest = _getContentData();
 
     super.initState();
   }
@@ -290,20 +286,6 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                             Navigator.of(context).pop();
                                           }
                                         });
-
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //       builder: (context) =>
-                                        //           SecoundForgetScreen(
-                                        //               verificationID:
-                                        //                   verificationID,
-                                        //               otpVerfied:
-                                        //                   otpVerfied)),
-                                        // );
-
-                                        // Navigator.popAndPushNamed(
-                                        // context, '/secound_screen');
                                       },
                                     ),
                                   ],
@@ -444,13 +426,6 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                                   validate = 3;
                                                 });
                                               }
-                                              // await verifyOTP();
-
-                                              // if (_key.currentState!.validate()) {
-                                              //   _key.currentState!.save();
-                                              //   FocusScope.of(context).unfocus();
-
-                                              // }
                                             },
                                           ),
                                           SizedBox(
@@ -495,21 +470,24 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                   child: Container(
                                     alignment: Alignment.topCenter,
                                     height: 80.h,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CustomText(
-                                          'forget-pass'.tr(),
-                                          textAlign: TextAlign.start,
-                                          fontSize: 18.sp,
-                                          fontFamily: 'DINNEXTLTARABIC',
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.white,
-                                        ),
-                                      ],
+                                    child: Form(
+                                      key: _Key,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          CustomText(
+                                            'forget-pass'.tr(),
+                                            textAlign: TextAlign.start,
+                                            fontSize: 18.sp,
+                                            fontFamily: 'DINNEXTLTARABIC',
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.white,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -577,7 +555,23 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                                 color: AppColors.hint,
                                                 size: 17.w,
                                               ),
-                                              validator: validatePassword,
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return "null verfication"
+                                                      .tr();
+                                                } else {
+                                                  //call function to check password
+                                                  bool result =
+                                                      validatePassword(value);
+                                                  if (result) {
+                                                    // create account event
+                                                    return null;
+                                                  } else {
+                                                    return 'password verfication'
+                                                        .tr();
+                                                  }
+                                                }
+                                              },
                                               seen: true,
                                               controller: _passwordController,
                                             ),
@@ -594,7 +588,23 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                                 Icons.email,
                                                 color: AppColors.hint,
                                               ),
-                                              validator: validatePassword,
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return "null verfication"
+                                                      .tr();
+                                                } else {
+                                                  //call function to check password
+                                                  bool result =
+                                                      validatePassword(value);
+                                                  if (result) {
+                                                    // create account event
+                                                    return null;
+                                                  } else {
+                                                    return 'password verfication'
+                                                        .tr();
+                                                  }
+                                                }
+                                              },
                                               seen: true,
                                               controller:
                                                   _confirmPasswordController,
@@ -609,24 +619,31 @@ class _FirstForgetScreenState extends ConsumerState<FirstForgetScreen> {
                                               circular: 10.w,
                                               width: 340.w,
                                               onPressed: () async {
-                                                print(
-                                                    '${_emailController.text}');
-                                                var changPassModel =
-                                                    ref.watch(accountProvider);
-                                                await changPassModel
-                                                    .updatePass(data: {
-                                                  'email':
-                                                      _emailController.text,
-                                                  'password':
-                                                      _passwordController.text
-                                                });
-                                                // changPassModel
-                                                //     .getChangePassModel
-                                                //     ?.message;
-                                                Navigator.popAndPushNamed(
-                                                    context, '/final_screen');
+                                                if (_Key.currentState!
+                                                    .validate()) {
+                                                  _Key.currentState!.save();
+                                                  print(
+                                                      '${_emailController.text}');
+                                                  var changPassModel = await ref
+                                                      .watch(accountProvider);
+                                                  await changPassModel
+                                                      .updatePass(data: {
+                                                    'email':
+                                                        _emailController.text,
+                                                    'password':
+                                                        _passwordController.text
+                                                  });
+                                                  // changPassModel
+                                                  //     .getChangePassModel
+                                                  //     ?.message;
+                                                  Navigator.popAndPushNamed(
+                                                      context, '/final_screen');
 //
-                                                validate = 4;
+                                                  validate = 4;
+                                                } else {
+                                                  // UIHelper.showNotification(
+                                                  //     'error');
+                                                }
                                               },
                                             ),
                                           ],

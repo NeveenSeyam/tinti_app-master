@@ -123,7 +123,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
         ),
         centerTitle: true,
         flexibleSpace: Container(
-          height: 100.h,
+          // height: 100.h,
           decoration: BoxDecoration(
             color: AppColors.scadryColor,
             borderRadius: BorderRadius.only(

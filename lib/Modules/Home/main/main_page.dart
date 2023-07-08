@@ -306,37 +306,41 @@ class _MainPageState extends ConsumerState<MainPage> {
 
                                           print(
                                               'linght ${companyModel.companies?.length}');
-                                          return CarouselSlider.builder(
-                                            itemCount: companyModel
-                                                    .companies?.length ??
-                                                0,
-                                            itemBuilder: (BuildContext context,
-                                                    int itemIndex,
-                                                    int pageViewIndex) =>
-                                                OnBoardingContentHome(
-                                              image: companyModel
-                                                      .companies?[itemIndex]
-                                                      .image ??
-                                                  'assets/images/sa1.jpeg',
-                                              text: companyModel
-                                                      .companies?[itemIndex]
-                                                      .name ??
-                                                  'جونسون اند جونسون',
-                                              about: companyModel
-                                                      .companies?[itemIndex]
-                                                      .about ??
-                                                  '',
-                                              id: companyModel
-                                                      .companies?[itemIndex]
-                                                      .id ??
+                                          return Container(
+                                            width: 370.w,
+                                            child: CarouselSlider.builder(
+                                              itemCount: companyModel
+                                                      .companies?.length ??
                                                   0,
-                                            ),
-                                            options: CarouselOptions(
-                                              autoPlay: true,
-                                              enlargeCenterPage: true,
-                                              viewportFraction: 01,
-                                              aspectRatio: 2.0,
-                                              initialPage: 1,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                          int itemIndex,
+                                                          int pageViewIndex) =>
+                                                      OnBoardingContentHome(
+                                                image: companyModel
+                                                        .companies?[itemIndex]
+                                                        .image ??
+                                                    'assets/images/sa1.jpeg',
+                                                text: companyModel
+                                                        .companies?[itemIndex]
+                                                        .name ??
+                                                    'جونسون اند جونسون',
+                                                about: companyModel
+                                                        .companies?[itemIndex]
+                                                        .about ??
+                                                    '',
+                                                id: companyModel
+                                                        .companies?[itemIndex]
+                                                        .id ??
+                                                    0,
+                                              ),
+                                              options: CarouselOptions(
+                                                autoPlay: true,
+                                                enlargeCenterPage: true,
+                                                viewportFraction: 01,
+                                                aspectRatio: 2.0,
+                                                initialPage: 1,
+                                              ),
                                             ),
                                           );
                                         }
@@ -613,7 +617,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                                 return Center(
                                   child: SizedBox(
                                     width: 370.w,
-                                    height: 45.h,
+                                    height: 48.h,
                                     child: ListView.builder(
                                         physics: null,
                                         shrinkWrap: true,
@@ -816,14 +820,16 @@ class _MainPageState extends ConsumerState<MainPage> {
                   color: const Color(0xffF57A38),
                 ),
               ),
-              child: Text(
-                name,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12.sp,
-                    fontFamily: 'DINNEXTLTARABIC',
-                    fontWeight: FontWeight.normal),
+              child: Center(
+                child: Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.sp,
+                      fontFamily: 'DINNEXTLTARABIC',
+                      fontWeight: FontWeight.normal),
+                ),
               ),
             ),
     );

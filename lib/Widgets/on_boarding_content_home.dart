@@ -25,103 +25,107 @@ class OnBoardingContentHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    text,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontFamily: 'DINNextLTArabic',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 6.h,
-                  ),
-                  Container(
-                    width: 180.w,
-                    child: Text(
-                      about,
-                      maxLines: 3,
-                      textAlign: TextAlign.start,
+          Container(
+            width: 370.w,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      text,
                       style: TextStyle(
-                        fontSize: 11.sp,
+                        fontSize: 16.sp,
                         fontFamily: 'DINNextLTArabic',
-                        color: const Color(0xff042D4D),
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  Container(
-                    width: 120.w,
-                    height: 30.h,
-                    child: CustomButton(
-                      onpressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => CompanyProfile(
-                                  id: id,
-                                  name: text,
-                                  about: about,
-                                  img: image,
-                                )));
-                      },
-                      backgroundColor: const Color(0xffF57A38),
-                      childWidget: Text(
-                        'more'.tr(),
-                        style: GoogleFonts.cairo(
-                          color: const Color(0xffFFFFFF),
+                    SizedBox(
+                      height: 6.h,
+                    ),
+                    Container(
+                      width: 180.w,
+                      child: Text(
+                        about,
+                        maxLines: 3,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
                           fontSize: 11.sp,
+                          fontFamily: 'DINNextLTArabic',
+                          color: const Color(0xff042D4D),
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
-                      width: 135.w,
-                      height: 15.h,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Container(
+                      width: 120.w,
+                      height: 30.h,
+                      child: CustomButton(
+                        onpressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => CompanyProfile(
+                                    id: id,
+                                    name: text,
+                                    about: about,
+                                    img: image,
+                                  )));
+                        },
+                        backgroundColor: const Color(0xffF57A38),
+                        childWidget: Text(
+                          'more'.tr(),
+                          style: GoogleFonts.cairo(
+                            color: const Color(0xffFFFFFF),
+                            fontSize: 11.sp,
+                          ),
+                        ),
+                        width: 135.w,
+                        height: 15.h,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.w),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: CachedNetworkImage(
-                    width: 130.h,
-                    height: 130.h,
-                    imageUrl:
-                        image ?? 'https://www.sayyarte.com/img/1678171026.png',
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.fill,
-                            colorFilter:
-                                ColorFilter.mode(Colors.white, BlendMode.dst)),
-                      ),
-                    ),
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Image.network(
-                      'https://www.sayyarte.com/img/1678171026.png',
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.w),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: CachedNetworkImage(
                       width: 130.h,
                       height: 130.h,
-                      fit: BoxFit.fill,
+                      imageUrl: image ??
+                          'https://www.sayyarte.com/img/1678171026.png',
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
+                              colorFilter: ColorFilter.mode(
+                                  Colors.white, BlendMode.dst)),
+                        ),
+                      ),
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Image.network(
+                        'https://www.sayyarte.com/img/1678171026.png',
+                        width: 130.h,
+                        height: 130.h,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

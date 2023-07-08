@@ -1440,10 +1440,10 @@ class _RequestServiesesState extends ConsumerState<RequestServieses> {
                                 } else {
                                   Navigator.of(context).pop();
                                 }
-
                                 return isAvailble;
                               });
                             } else {
+                              Navigator.of(context).pop();
                               UIHelper.showNotification(
                                   'يجب اختار المنطقة والمدينة والسيارة المراد تنفيذ الخدمة عليها ');
                             }
